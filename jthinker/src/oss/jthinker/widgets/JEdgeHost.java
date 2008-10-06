@@ -32,7 +32,7 @@
 package oss.jthinker.widgets;
 
 /**
- * Manager of common {@see JEdge} containment operations.
+ * Manager of common {@see JEdge} and {@see JLeg} containment operations.
  * 
  * @author iappel
  */
@@ -48,7 +48,22 @@ public interface JEdgeHost {
      * Removes an edge from the container and stops and subsequent
      * management of one.
      * 
-     * @param edge edge to reverse.
+     * @param edge edge to remove.
      */    
     void deleteJEdge(JEdge edge);
+    
+    /**
+     * Removes a leg from the container and stops and subsequent
+     * management of one.
+     * 
+     * @param leg leg to remove
+     */    
+    void deleteJLeg(JLeg leg);    
+
+    /**
+     * Selects a peer for linking with the node, that was chosen
+     * via {@link startLinking(JNode)} method.
+     * @param end node that should be the end of the new edge
+     */
+    void endLinking(JEdge end);
 }

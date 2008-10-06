@@ -29,47 +29,18 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
-
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.JPopupMenu;
+package oss.jthinker.util;
 
 /**
- * A directed connection between two {@link JNode}s.
+ * {@link Mixer} implementation, that simply returns it's first argument
+ * as result.
  * 
  * @author iappel
+ * @param T type of mixed data
  */
-public class JEdge extends AbstractEdge<JNode> {
-    /**
-     * Creates a new instance of JEdge that connects two given {@link JNode}s
-     * and is managed by given {@link JEdgeHost}.
-     * 
-     * @param nodeA start of edge.
-     * @param nodeB end of edge.
-     * @param host manager of deletions and reversals of the edge.
-     */
-    public JEdge(JNode nodeA, JNode nodeB, JEdgeHost host) {
-        super(nodeA, nodeB, host, true);
-        nodeA.watch(this);
-        nodeB.watch(this);
-    }
-
+public class IgnoreMixer<T> implements Mixer<T> {
     /** {@inheritDoc} */
-    protected JPopupMenu createPopupMenu(final JEdgeHost host) {
-        JPopupMenu menu = new JPopupMenu();
-        final JEdge instance = this;
-        menu.add(new AbstractAction("Reverse") {
-            public void actionPerformed(ActionEvent e) {
-                host.reverseJEdge(instance);
-            }
-        });
-        
-        menu.add(new AbstractAction("Delete") {
-            public void actionPerformed(ActionEvent e) {
-                host.deleteJEdge(instance);
-            }
-        });
-        return menu;
+    public T mix(T arg1, T arg2) {
+        return arg1;
     }
 }

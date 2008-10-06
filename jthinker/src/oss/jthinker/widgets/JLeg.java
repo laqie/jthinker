@@ -36,38 +36,29 @@ import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 
 /**
- * A directed connection between two {@link JNode}s.
+ * Connection between a {@see JNode} and {@see JEdge}.
  * 
  * @author iappel
  */
-public class JEdge extends AbstractEdge<JNode> {
+public class JLeg extends AbstractEdge<JEdge> {
     /**
-     * Creates a new instance of JEdge that connects two given {@link JNode}s
-     * and is managed by given {@link JEdgeHost}.
+     * Creates a new instance of JLeg that connects given node and edge.
      * 
-     * @param nodeA start of edge.
-     * @param nodeB end of edge.
-     * @param host manager of deletions and reversals of the edge.
+     * @param node node to serve as a beginning of the leg
+     * @param edge edge to serve as leg's end
+     * @param host manager of deletions of the leg.
      */
-    public JEdge(JNode nodeA, JNode nodeB, JEdgeHost host) {
-        super(nodeA, nodeB, host, true);
-        nodeA.watch(this);
-        nodeB.watch(this);
+    public JLeg(JNode node, JEdge edge, JEdgeHost host) {
+        super(node, edge, host, true);
     }
 
     /** {@inheritDoc} */
-    protected JPopupMenu createPopupMenu(final JEdgeHost host) {
+    protected JPopupMenu createPopupMenu(final JEdgeHost edgeHost) {
         JPopupMenu menu = new JPopupMenu();
-        final JEdge instance = this;
-        menu.add(new AbstractAction("Reverse") {
-            public void actionPerformed(ActionEvent e) {
-                host.reverseJEdge(instance);
-            }
-        });
-        
+        final JLeg instance = this;
         menu.add(new AbstractAction("Delete") {
             public void actionPerformed(ActionEvent e) {
-                host.deleteJEdge(instance);
+                edgeHost.deleteJLeg(instance);
             }
         });
         return menu;
