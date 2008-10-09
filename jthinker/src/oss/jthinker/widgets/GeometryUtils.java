@@ -48,11 +48,20 @@ public class GeometryUtils {
      * Calculates location of component's center (in coordinates of
      * component's parent)
      * 
-     * @param c
+     * @param c component to calculate
      * @return component center location
      */
     public static Point computeCenterPoint(Component c) {
-        Rectangle r = c.getBounds();
+        return computeCenterPoint(c.getBounds());
+    }
+
+    /**
+     * Calculates location of area's center
+     * 
+     * @param r area 
+     * @return area center location
+     */
+    public static Point computeCenterPoint(Rectangle r) {
         return new Point(r.x + r.width / 2, r.y + r.height / 2);
     }
     
@@ -300,5 +309,80 @@ public class GeometryUtils {
         poly.addPoint(x2, y3);
         
         return poly;
+    }
+
+    /**
+     * Calculates intersection point between two lines.
+     * 
+     * @param p1 first line's start
+     * @param p2 first line's end
+     * @param q1 second line's start
+     * @param q2 second line's end
+     * @return intersection point or null if lines are parallel
+     */
+    public static Point lineIntersection(Point p1, Point p2, Point q1, Point q2) {
+        int dx1 = p1.x - p2.x,
+                dx2 = q1.x - q2.x,
+                dy1 = p1.y - p2.y,
+                dy2 = q1.y - q2.y;
+        if (dx1 * dy2 == dx2 * dy1) {
+            return null;
+        }
+        if (dx1 == 0) {
+            int retx = p1.x;
+            int rety = q1.y - ((q1.x - p1.x)*dy2)/dx2;
+            return new Point(retx, rety);
+        }
+        if (dx2 == 0) {
+            return lineIntersection(q1, q2, p1, p2);
+        }
+        double b = (dy1 * 1.0) / dx1;
+        double a = p1.y - p1.x * b;
+        double d = (dy2 * 1.0) / dx2;
+        double c = q1.y - q1.x * d;
+        double xdouble = (a - c) / (d - b);
+        int retx = (int)xdouble;
+        double ydouble = p1.y + dy1*(xdouble - p1.x) / dx1;
+        int rety = (int)ydouble;
+        return new Point(retx, rety);
+    }
+
+    /**
+     * Calculates the intersection point of rectangle's border (border has
+     * slightly softened corners) and line between rectangle's center and
+     * some outer point.
+     * 
+     * @param area rectangle's position
+     * @param outPoint outer point location
+     * @return intersection point of rectangle's border and line
+     * between rectangle's center and some outer point.
+     */
+    public static Point hexagonIntersection(Rectangle area, Point p) {
+        Point base = rectangleIntersection(area, p);
+        int delta = Math.min(15, area.width / 4);
+
+        boolean onVerticalBorder = (base.y == area.y) ||
+                (base.y == area.y + area.height);
+        boolean onLeft = (base.x - area.x) < delta;
+        boolean onRight = (area.x + area.width - base.x) < delta;
+        boolean onUpper = (base.y - area.y) < area.height / 2;
+        boolean onBottom = !onUpper;
+        if (onVerticalBorder && !onLeft && !onRight) {
+            return base;
+        }
+        Point p1 = GeometryUtils.computeCenterPoint(area);
+        Point p2 = p;
+        Point q1 = new Point(), q2 = new Point();
+        q1.y = area.y + (area.height / 2);
+        if (onLeft) {
+            q1.x = area.x;
+            q2.x = area.x + delta;
+        } else {
+            q1.x = area.x + area.width;
+            q2.x = area.x + area.width - delta;
+        }
+        q2.y = area.y + (onUpper ? 0 : area.height);
+        Point result = lineIntersection(p1, p2, q1, q2);
+        return result;
     }
 }

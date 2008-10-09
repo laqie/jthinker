@@ -54,6 +54,7 @@ public abstract class AbstractEdge<T extends Component> extends JWire
     
     protected AbstractEdge(JNode peerA, T peerZ, JEdgeHost host, boolean arrow) {
         super(JNodeAdjuster.makeTrigger(peerA, peerZ), arrow);
+        peerA.watch(this);
         this.peerA = peerA;
         this.peerZ = peerZ;
         popupMenu = createPopupMenu(host);

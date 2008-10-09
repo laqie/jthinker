@@ -136,9 +136,16 @@ public class JNodeAdjuster {
                                 bounds, outer);
                     }
                 };
-            case SHARP_RECT:
             case HEXAGON:
-               return new ComponentMixer(node) {
+                return new ComponentMixer(node) {
+                    @Override
+                    protected Point compute(Rectangle bounds, Point outer) {
+                        return GeometryUtils.hexagonIntersection(
+                                bounds, outer);
+                    }
+                };
+            case SHARP_RECT:                
+                return new ComponentMixer(node) {
                     @Override
                     protected Point compute(Rectangle bounds, Point outer) {
                         return GeometryUtils.rectangleIntersection(

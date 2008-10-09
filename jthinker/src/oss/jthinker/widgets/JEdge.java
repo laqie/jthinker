@@ -51,7 +51,6 @@ public class JEdge extends AbstractEdge<JNode> {
      */
     public JEdge(JNode nodeA, JNode nodeB, JEdgeHost host) {
         super(nodeA, nodeB, host, true);
-        nodeA.watch(this);
         nodeB.watch(this);
     }
 
