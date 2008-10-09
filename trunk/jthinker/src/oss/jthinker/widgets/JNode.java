@@ -133,10 +133,9 @@ public class JNode extends JSlide {
      * Adds a peer to the collection of watched components.
      * 
      * @param compo peer to add
-     * @return true is collection of connections was changed.
      */
-    public boolean unwatch(JComponent compo) {
-        return peers.add(compo);
+    public void unwatch(JComponent compo) {
+        peers.remove(compo);
     }
 
     /**
@@ -161,6 +160,20 @@ public class JNode extends JSlide {
         }
     }
 
+    /**
+     * Returns node's border type.
+     * 
+     * @return node's border type.
+     */
+    public BorderType getBorderType() {
+        return spec.getBorderType();
+    }
+
+    /**
+     * Returns node's building specification.
+     * 
+     * @return node's building specification.
+     */    
     public JNodeSpec getNodeSpec() {
         return spec.clone(spec.getContent(), GeometryUtils.computeCenterPoint(this));
     }

@@ -233,4 +233,65 @@ public class GeometryUtilsTest {
         assertEquals(isectPoint,
                 GeometryUtils.roundRectangleIntersection(area, outPoint));
     }
+    
+    /**
+     * Test on intersection with a hexagon.
+     */
+    @Test
+    public void hexagonTest() {
+        System.out.println("hexagonTest");
+        Rectangle area = new Rectangle(200, 200, 100, 100);
+        Point outPoint = new Point(250, 100);
+        Point isectPoint = new Point(250, 200);
+        assertEquals(isectPoint,
+                GeometryUtils.hexagonIntersection(area, outPoint));
+        outPoint = new Point(400, 250);
+        isectPoint = new Point(300, 250);
+        assertEquals(isectPoint,
+                GeometryUtils.hexagonIntersection(area, outPoint));
+       
+        outPoint = new Point(200, 200);
+        isectPoint = new Point(211, 211);
+        assertEquals(isectPoint,
+                GeometryUtils.hexagonIntersection(area, outPoint));
+        
+        outPoint = new Point(100, 100);
+        isectPoint = new Point(211, 211);
+        assertEquals(isectPoint,
+                GeometryUtils.hexagonIntersection(area, outPoint));
+        
+        outPoint = new Point(300, 300);
+        isectPoint = new Point(288, 288);
+        assertEquals(isectPoint,
+                GeometryUtils.hexagonIntersection(area, outPoint));
+        
+        outPoint = new Point(300, 200);
+        isectPoint = new Point(288, 211);
+        assertEquals(isectPoint,
+                GeometryUtils.hexagonIntersection(area, outPoint));
+    }
+
+    /**
+     * Test on intersection of two lines.
+     */
+    @Test
+    public void lineIntersectionTest() {
+        System.out.println("lineIntersectionTest");
+        Point p1 = new Point(100, 100);
+        Point p2 = new Point(100, 200);
+        Point q1 = new Point(200, 100);
+        Point q2 = new Point(200, 200);
+        assertNull(GeometryUtils.lineIntersection(p1, p2, q1, q2));
+        Point i = new Point(150, 150);
+        assertEquals(i, GeometryUtils.lineIntersection(p1, q2, q1, p2));
+        q1 = new Point(50, 150);
+        q2 = new Point(150, 150);
+        i = new Point(100, 150);
+        assertEquals(i, GeometryUtils.lineIntersection(p1, p2, q1, q2));
+        assertEquals(i, GeometryUtils.lineIntersection(q1, q2, p1, p2));
+        q1 = new Point(50, 140);
+        q2 = new Point(150, 160);
+        assertEquals(i, GeometryUtils.lineIntersection(p1, p2, q1, q2));
+        assertEquals(i, GeometryUtils.lineIntersection(q1, q2, p1, p2));
+    }
 }
