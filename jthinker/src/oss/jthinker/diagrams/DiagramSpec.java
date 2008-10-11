@@ -86,4 +86,43 @@ public class DiagramSpec {
             DiagramType type) {
         this(nodeSpecs, edgeSpecs, null, type);
     }
+    
+    /**
+     * Copies a DiagramSpec from another instance.
+     * 
+     * @param spec specificatio to copy
+     */
+    public DiagramSpec(DiagramSpec spec) {
+        this(spec.nodeSpecs, spec.edgeSpecs, spec.legSpecs, spec.type);
+    }
+    
+    /**
+     * Creates a new empty DiagramSpec instance.
+     * 
+     * @param type diagram's type
+     */
+    public DiagramSpec(DiagramType type) {
+        this(null, null, null, type);
+    }
+    
+    @Override
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (obj instanceof DiagramSpec) {
+            DiagramSpec spec = (DiagramSpec)obj;
+            return nodeSpecs.equals(spec.nodeSpecs) &&
+                    edgeSpecs.equals(spec.edgeSpecs) &&
+                    legSpecs.equals(spec.legSpecs) &&
+                    type.equals(spec.type);
+        } else {
+            return super.equals(obj);
+        }
+    }
+
+    @Override
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return nodeSpecs.hashCode() + edgeSpecs.hashCode() +
+                legSpecs.hashCode() + type.hashCode();
+    }
 }

@@ -35,11 +35,13 @@ import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -54,6 +56,8 @@ import oss.jthinker.widgets.JNodeSpec;
  * @author iappel
  */
 public class XMLUtils {
+    private static final Logger logger = Logger.getAnonymousLogger();
+    
     protected static String toXML(Point p) {
         StringBuilder sb = new StringBuilder();
         sb.append("<center x = \""+p.x+"\" y = \""+p.y+"\" />");
@@ -212,8 +216,13 @@ public class XMLUtils {
      */
     public static void save(File f, DiagramSpec spec)
             throws FileNotFoundException {
-        FileOutputStream fstream = new FileOutputStream(f);
-        PrintStream printer = new PrintStream(fstream);
+        PrintStream printer;
+        try {
+            printer = new PrintStream(f, "UTF-8");
+        } catch (UnsupportedEncodingException c) {
+            logger.log(Level.WARNING, "Unable to write UTF-8 file");
+            printer = new PrintStream(f);
+        }
         printer.print("<?xml version=\"1.0\"?>\n");
         printer.print(toXML(spec));
     }

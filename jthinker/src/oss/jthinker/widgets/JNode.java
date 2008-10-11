@@ -41,6 +41,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 /**
@@ -176,5 +177,43 @@ public class JNode extends JSlide {
      */    
     public JNodeSpec getNodeSpec() {
         return spec.clone(spec.getContent(), GeometryUtils.computeCenterPoint(this));
+    }
+    
+    /**
+     * Gets textual content of the node.
+     * 
+     * @return textual content of the node.
+     */
+    public String getContent() {
+        JLabelBundle bundle = (JLabelBundle)this.getComponent(0);
+        return bundle.getText();
+    }
+
+    /**
+     * Sets textual content for the node.
+     * 
+     * @param content textual content of the node.
+     */    
+    public void setContent(String content) {
+        JLabelBundle bundle = (JLabelBundle)this.getComponent(0);
+        bundle.setText(content);
+        bundle.setSize(bundle.getPreferredSize());
+        setSize(getPreferredSize());
+    }
+
+    /**
+     * Default operation of edit (via {@link JOptionPane}).
+     * 
+     * @return true if node content got modified.
+     */
+    public boolean defaultEditOperation() {
+        String oldVal = getContent();
+        String newVal = JOptionPane.showInputDialog("Enter text", oldVal);
+        if (newVal != null && !(newVal.equals(oldVal))) {
+            setContent(newVal);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -31,40 +31,21 @@
 
 package oss.jthinker.diagrams;
 
+import java.io.File;
+import java.io.IOException;
+import org.xml.sax.SAXException;
+
 /**
- * Saveable presentation of the edge on diagram.
+ * Simple {@link DiagramSpec} that is loads itself from XML file using
+ * {@link XMLUtils} and keeps the file name.
  * 
  * @author iappel
  */
-public class JEdgeSpec {
-    public final int idxA;
-    public final int idxZ;
+public class FileDiagramSpec extends DiagramSpec {
+    public final File file;
 
-    /**
-     * Creates a new JEdgeSpec instance.
-     * 
-     * @param idxA index of edge's start node
-     * @param idxZ index of edge's end node
-     */
-    public JEdgeSpec(int idxA, int idxZ) {
-        this.idxA = idxA;
-        this.idxZ = idxZ;
+    public FileDiagramSpec(File file) throws SAXException, IOException {
+        super(XMLUtils.load(file));
+        this.file = file;
     }
-    
-    @Override
-    /** {@inheritDoc} */
-    public boolean equals(Object obj) {
-        if (obj instanceof JEdgeSpec) {
-            JEdgeSpec edgeSpec = (JEdgeSpec)obj;
-            return (edgeSpec.idxA == idxA) && (edgeSpec.idxZ == idxZ);
-        } else {
-            return super.equals(obj);
-        }
-    }
-
-    @Override
-    /** {@inheritDoc} */
-    public int hashCode() {
-        return idxA + 42 * idxZ;
-    }    
 }
