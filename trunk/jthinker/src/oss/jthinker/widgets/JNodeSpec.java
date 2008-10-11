@@ -77,4 +77,23 @@ public class JNodeSpec extends JSlideSpec {
         sb.append(content);
         return sb.toString();
     }
+
+    @Override
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (obj instanceof JNodeSpec) {
+            JNodeSpec nspec = (JNodeSpec)obj;
+            return nspec.editable == editable &&
+                    nspec.content.equals(content) &&
+                    super.equals(obj);
+        } else {
+            return super.equals(obj);
+        }
+    }
+
+    @Override
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return super.hashCode() + content.hashCode();
+    }
 }

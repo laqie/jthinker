@@ -100,4 +100,22 @@ public abstract class JSlideSpec {
     public BorderType getBorderType() {
         return borderType;
     }
+
+    @Override
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (obj instanceof JSlideSpec) {
+            JSlideSpec slideSpec = (JSlideSpec)obj;
+            return slideSpec.borderType.equals(borderType) &&
+                    slideSpec.slideCenter.equals(slideCenter);
+        } else {
+            return super.equals(obj);
+        }
+    }
+
+    @Override
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return borderType.hashCode() + slideCenter.hashCode();
+    }
 }

@@ -50,4 +50,21 @@ public class JLegSpec {
         this.idxA = idxA;
         this.idxZ = idxZ;
     }
+
+    @Override
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (obj instanceof JLegSpec) {
+            JLegSpec legSpec = (JLegSpec)obj;
+            return (legSpec.idxA == idxA) && (legSpec.idxZ == idxZ);
+        } else {
+            return super.equals(obj);
+        }
+    }
+
+    @Override
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return idxA + 42 * idxZ;
+    }
 }
