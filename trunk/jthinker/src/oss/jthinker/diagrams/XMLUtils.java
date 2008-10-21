@@ -34,9 +34,14 @@ package oss.jthinker.diagrams;
 import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
 import java.awt.Point;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +50,7 @@ import java.util.logging.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.BorderType;
@@ -236,9 +242,28 @@ public class XMLUtils {
      * @throws IOException on I/O errors of loading a file
      */
     public static DiagramSpec load(File f) throws SAXException, IOException {
-        DOMParser parser = new DOMParser();
-        parser.parse(f.getAbsolutePath());
+        FileInputStream stream = new FileInputStream(f);
+        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+        char[] cData = new char[(int)f.length()];
+        reader.read(cData);
         
+        return parse(new String(cData));
+    }
+    
+    /**
+     * Loads a diagram specification from string buffer.
+     * 
+     * @param rawContent string buffer
+     * @return diagram specification
+     * @throws SAXException on parsing errors
+     * @throws IOException on I/O errors of loading a file
+     */
+    public static DiagramSpec parse(String rawContent) throws SAXException, IOException {
+        String content = rawContent.trim();
+        DOMParser parser = new DOMParser();
+        Reader reader = new StringReader(content);
+        InputSource source = new InputSource(reader);
+        parser.parse(source);
         return toDiagramSpec(parser.getDocument().getFirstChild());
     }
 }

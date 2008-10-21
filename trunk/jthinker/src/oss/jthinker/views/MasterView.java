@@ -94,10 +94,15 @@ public class MasterView extends DiagramDeck {
 
     /**
      * Saves the current diagram.
+     * 
+     * @param askName should name be asked if already known
      */
-    public void saveCurrent() {
+    public void saveCurrent(boolean askName) {
         DiagramPane pane = getCurrentDiagram();
-        pane.saveDiagram();
+        if (pane == null) {
+            return;
+        }
+        pane.saveDiagram(askName);
     }
 
     /**
@@ -114,22 +119,34 @@ public class MasterView extends DiagramDeck {
         }
         fileMenu.add(newSubMenu);
 
-        AbstractAction action = new AbstractAction("Save") {
-            public void actionPerformed(ActionEvent e) {
-                saveCurrent();
-            }
-        };
+        fileMenu.addSeparator();
 
-        fileMenu.add(new JMenuItem(action));
-
-        action = new AbstractAction("Load") {
+        AbstractAction action = new AbstractAction("Open") {
             public void actionPerformed(ActionEvent e) {
                 loadNew();
             }
         };
 
+        fileMenu.add(new JMenuItem(action));        
+        
+        action = new AbstractAction("Save") {
+            public void actionPerformed(ActionEvent e) {
+                saveCurrent(false);
+            }
+        };
+
         fileMenu.add(new JMenuItem(action));
 
+        action = new AbstractAction("Save as...") {
+            public void actionPerformed(ActionEvent e) {
+                saveCurrent(true);
+            }
+        };
+        
+        fileMenu.add(new JMenuItem(action));
+        
+        fileMenu.addSeparator();
+        
         return fileMenu;
     }
 
@@ -138,6 +155,7 @@ public class MasterView extends DiagramDeck {
      */
     public void loadNew() {
         JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new ThinkerFileFilter());
         int code = chooser.showOpenDialog(this);
         if (code != JFileChooser.APPROVE_OPTION) {
             return;

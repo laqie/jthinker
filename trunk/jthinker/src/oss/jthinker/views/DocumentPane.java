@@ -36,8 +36,10 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.JPanel;
+import oss.jthinker.util.AssociatedTrigger;
 import oss.jthinker.util.BoolStringTrigger;
 import oss.jthinker.util.CompositeStringTrigger;
+import oss.jthinker.util.FilenameTrigger;
 import oss.jthinker.util.MutableTrigger;
 import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerListener;
@@ -52,7 +54,7 @@ import oss.jthinker.widgets.MouseLocator;
 public abstract class DocumentPane extends JPanel implements TriggerListener<Point> {
     private final MutableTrigger<File> filenameTrigger;
     private final MutableTrigger<Boolean> modifiedTrigger;
-    private final MutableTrigger<String> tabTitleTrigger;
+    private final Trigger<String> tabTitleTrigger;
 
     /**
      * Creates a new DocumentPane instance with given string as title.
@@ -60,9 +62,10 @@ public abstract class DocumentPane extends JPanel implements TriggerListener<Poi
      * @param title string to use as a title.
      */
     public DocumentPane(String title) {
-        tabTitleTrigger = new MutableTrigger<String>(title);
-        modifiedTrigger = new MutableTrigger<Boolean>(false);
         filenameTrigger = new MutableTrigger<File>();
+        FilenameTrigger tmp = new FilenameTrigger(filenameTrigger);
+        tabTitleTrigger = new AssociatedTrigger<String>(title, tmp);
+        modifiedTrigger = new MutableTrigger<Boolean>(false);
         
         MouseLocator.getInstance().register(this);
         MouseLocator.getInstance().addStateConsumer(this);

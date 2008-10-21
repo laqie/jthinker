@@ -125,6 +125,9 @@ public class DiagramDeck extends JTabbedPane implements TriggerListener<String> 
      * @return diagram at the given index
      */
     public DiagramPane getDiagram(int i) {
+        if (i == -1) {
+            return null;
+        }
         JScrollPane scrollPane = (JScrollPane)this.getComponentAt(i);
         JViewport viewport = (JViewport)scrollPane.getComponent(0);
         DiagramPane result = (DiagramPane)viewport.getComponent(0);

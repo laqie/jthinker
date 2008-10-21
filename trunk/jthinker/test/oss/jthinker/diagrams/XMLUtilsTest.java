@@ -102,8 +102,37 @@ public class XMLUtilsTest {
             return;
         }
         assertEquals(diaSpec.edgeSpecs, spec.edgeSpecs);
+        assertEquals(diaSpec.nodeSpecs, spec.nodeSpecs);
+        assertEquals(diaSpec.legSpecs, spec.legSpecs);
+        assertEquals(diaSpec.type, spec.type);
         assertTrue(diaSpec.equals(spec));
         assertEquals(diaSpec, spec);
     }
-    
+
+    /**
+     * Test on whitespaces at the beginning of the file.
+     */
+    @Test
+    public void whitespaceTest() {
+        System.out.println("whitespaceTest");
+        String content = "\t\n   <?xml version=\"1.0\"?><diagram> </diagram>";
+        try {
+            DiagramSpec spec = XMLUtils.parse(content);
+        } catch (NullPointerException npe) {
+            
+        } catch (Throwable t) {
+            t.printStackTrace();
+            fail(t.toString());
+        }
+        
+        content = "\t\n   <?xml version=\"1.0\"?><diagram type=\"CURRENT_REALITY_TREE\"> </diagram>";
+        try {
+            DiagramSpec spec = XMLUtils.parse(content);
+            assertEquals(0, spec.nodeSpecs.size());
+            assertEquals(DiagramType.CURRENT_REALITY_TREE, spec.type);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            fail(t.toString());
+        }
+    }
 }
