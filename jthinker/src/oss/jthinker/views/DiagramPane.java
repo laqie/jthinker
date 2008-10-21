@@ -42,6 +42,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.filechooser.FileFilter;
 import oss.jthinker.diagrams.ComponentManager;
 import oss.jthinker.diagrams.DiagramSpec;
 import oss.jthinker.tocmodel.DiagramType;
@@ -271,7 +272,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         
         switch (option) {
             case JOptionPane.YES_OPTION:
-                saveDiagram();
+                saveDiagram(false);
             case JOptionPane.NO_OPTION:
                 return true;
             case JOptionPane.CANCEL_OPTION:
@@ -280,17 +281,41 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         }
     }
     
-    protected boolean saveDiagram() {
-        if (this.isSaved()) {
+    /**
+     * Saves the diagram.
+     * 
+     * @param askName should name be asked if it is already knows
+     * @return true if diagram was saved and false otherwise
+     */
+    protected boolean saveDiagram(boolean askName) {
+        if (this.isSaved() && !askName) {
             return true;
         }
-        if (!getFilenameTrigger().hasState()) {
+        if (!getFilenameTrigger().hasState() || askName) {
             JFileChooser chooser = new JFileChooser();
+            FileFilter filter = new ThinkerFileFilter();
+            chooser.setFileFilter(filter);
             int code = chooser.showSaveDialog(this);
             if (code != JFileChooser.APPROVE_OPTION) {
                 return false;
             }
-            getFilenameTrigger().setState(chooser.getSelectedFile());
+            File file = chooser.getSelectedFile();
+            if (chooser.getFileFilter() == filter) {
+                if (!file.getName().endsWith(".jthinker")) {
+                    file = new File(file.getAbsolutePath()+".jthinker");
+                }
+            }
+            if (file.exists()) {
+                int option = JOptionPane.showConfirmDialog(null,
+                        "'"+file.getAbsolutePath() +
+                        "' already exists.\n Should it be overwritten?",
+                        "File already exists", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                if (option != JOptionPane.YES_OPTION) {
+                    return false;
+                }
+            }
+            getFilenameTrigger().setState(file);
         }
 
         File file = getFilenameTrigger().getState();
