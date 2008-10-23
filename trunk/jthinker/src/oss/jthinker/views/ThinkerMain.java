@@ -30,6 +30,7 @@
  */
 package oss.jthinker.views;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -52,6 +53,7 @@ public class ThinkerMain extends JFrame {
 
     private static final Logger logger = Logger.getAnonymousLogger();
     private final MasterView masterView;
+    private final HelpView helpView;
 
     private class WindowCloser extends WindowAdapter {
         @Override
@@ -65,6 +67,9 @@ public class ThinkerMain extends JFrame {
 
         masterView = new MasterView();
         add(masterView);
+        
+        helpView = new HelpView();
+        
         initApplicationMenuBar();
         setBounds(100, 100, 500, 300);
         addWindowListener(new WindowCloser());
@@ -73,7 +78,8 @@ public class ThinkerMain extends JFrame {
 
     private void initApplicationMenuBar() {
         JMenu fileMenu = masterView.createApplicationFileMenu();
-
+        JMenu helpMenu = helpView.createApplicationHelpMenu();
+        
         AbstractAction action = new AbstractAction("Exit") {
             public void actionPerformed(ActionEvent e) {
                 applicationStop();
@@ -83,7 +89,9 @@ public class ThinkerMain extends JFrame {
         fileMenu.add(new JMenuItem(action));
 
         JMenuBar result = new JMenuBar();
-        result.add(fileMenu);
+        result.setLayout(new BorderLayout());
+        result.add(fileMenu, BorderLayout.WEST);
+        result.add(helpMenu, BorderLayout.EAST);
         setJMenuBar(result);
     }
     
