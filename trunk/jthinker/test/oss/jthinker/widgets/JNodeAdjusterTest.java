@@ -62,26 +62,7 @@ public class JNodeAdjusterTest {
 
     @Before
     public void setUp() {
-        stub = new JNodeHost() {
-            public void deleteJNode(JNode node) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            public void dispatchJNodeMove() {
-            }
-
-            public void editJNodeContent(JNode node) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            public void endLinking(JNode end) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            public void startLinking(JNode start) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        };
+        stub = new JNodeHost_Mock();
     }
 
     @After

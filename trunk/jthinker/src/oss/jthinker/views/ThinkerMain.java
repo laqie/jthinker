@@ -30,7 +30,6 @@
  */
 package oss.jthinker.views;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -38,6 +37,7 @@ import oss.jthinker.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -74,11 +74,13 @@ public class ThinkerMain extends JFrame {
         setBounds(100, 100, 500, 300);
         addWindowListener(new WindowCloser());
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        masterView.contentChanged(null);
     }
 
     private void initApplicationMenuBar() {
         JMenu fileMenu = masterView.createApplicationFileMenu();
         JMenu helpMenu = helpView.createApplicationHelpMenu();
+        JMenu diaoptMenu = masterView.createApplicationDiagramOptionsMenu();
         
         AbstractAction action = new AbstractAction("Exit") {
             public void actionPerformed(ActionEvent e) {
@@ -87,11 +89,12 @@ public class ThinkerMain extends JFrame {
         };
 
         fileMenu.add(new JMenuItem(action));
-
+        
         JMenuBar result = new JMenuBar();
-        result.setLayout(new BorderLayout());
-        result.add(fileMenu, BorderLayout.WEST);
-        result.add(helpMenu, BorderLayout.EAST);
+        result.add(fileMenu);
+        result.add(diaoptMenu);
+        result.add(Box.createHorizontalGlue());
+        result.add(helpMenu);
         setJMenuBar(result);
     }
     

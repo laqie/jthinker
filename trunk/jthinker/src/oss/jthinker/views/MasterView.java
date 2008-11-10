@@ -36,6 +36,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -54,6 +55,9 @@ public class MasterView extends DiagramDeck {
     private static final Logger logger = Logger.getAnonymousLogger();
     private final JXPopupMenu popupMenu;
 
+    private JMenuItem saveItem;
+    private JCheckBoxMenuItem numberingItem;
+    
     private class NewAction extends AbstractAction {
         private final DiagramDescription description;
         
@@ -83,6 +87,17 @@ public class MasterView extends DiagramDeck {
         }
     }
 
+    private class NumberingOptionAction extends AbstractAction {
+        private NumberingOptionAction() {
+            super("Numbering of statements");
+        }
+        
+        public void actionPerformed(ActionEvent e) {
+            DiagramPane pane = getCurrentDiagram();
+            pane.getOptions().invertNumbering();
+        }
+    }
+    
     /**
      * Creates a new MasterView instance.
      */
@@ -103,6 +118,7 @@ public class MasterView extends DiagramDeck {
             return;
         }
         pane.saveDiagram(askName);
+        contentChanged(pane);
     }
 
     /**
@@ -135,7 +151,9 @@ public class MasterView extends DiagramDeck {
             }
         };
 
-        fileMenu.add(new JMenuItem(action));
+        saveItem = new JMenuItem(action);
+        
+        fileMenu.add(saveItem);
 
         action = new AbstractAction("Save as...") {
             public void actionPerformed(ActionEvent e) {
@@ -151,6 +169,20 @@ public class MasterView extends DiagramDeck {
     }
 
     /**
+     * Creates application's "Diagram Options" menu.
+     * 
+     * @return newly created application's menu
+     */
+    public JMenu createApplicationDiagramOptionsMenu() {
+        JMenu diaoptMenu = new JMenu("Diagram Options");
+        numberingItem = new JCheckBoxMenuItem(new NumberingOptionAction());
+
+        diaoptMenu.add(numberingItem);
+        
+        return diaoptMenu;
+    }
+    
+    /**
      * Loads a diagram from file.
      */
     public void loadNew() {
@@ -165,6 +197,19 @@ public class MasterView extends DiagramDeck {
             addLinkPane(f);
         } catch (Throwable t) {
             logger.log(Level.SEVERE, "Unable to open", t);
+        }
+    }
+
+    @Override
+    /** {@inheritDoc} */
+    protected void contentChanged(DiagramPane pane) {
+        if (pane == null) {
+            saveItem.setEnabled(false);
+            numberingItem.setEnabled(false);
+        } else {
+            saveItem.setEnabled(!pane.isSaved());
+            numberingItem.setEnabled(true);
+            numberingItem.setState(pane.getOptions().isNumberingEnabled());
         }
     }
 }

@@ -34,6 +34,8 @@ package oss.jthinker.diagrams;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -99,6 +101,7 @@ public class XMLUtilsTest {
         try {
            spec = XMLUtils.load(new File("c:\\russian.xml"));
         } catch (Throwable t) {
+            t.printStackTrace();
             fail("No exception allowed");
             return;
         }
@@ -166,4 +169,45 @@ public class XMLUtilsTest {
         assertTrue(diaSpec.equals(spec));
         assertEquals(diaSpec, spec);
     }    
+
+    /**
+     * Test of treating leg info and options.
+     */
+    @Test
+    public void legOptionTest() {
+        System.out.println("legTest");
+        JNodeSpec node1 = new JNodeSpec(BorderType.ELLIPSE, false,
+                "sample", new Point(0,0), Color.PINK, "sample");
+        JNodeSpec node2 = new JNodeSpec(BorderType.ELLIPSE, false,
+                "sample", new Point(0,0), Color.PINK, "sample");
+        JNodeSpec node3 = new JNodeSpec(BorderType.ELLIPSE, false,
+                "sample", new Point(0,0), Color.PINK, "sample");
+        List<JNodeSpec> nodeList = new ArrayList<JNodeSpec>(3);
+        nodeList.add(node1);
+        nodeList.add(node2);
+        nodeList.add(node3);
+        JEdgeSpec edge1 = new JEdgeSpec(1, 2);
+        JLegSpec leg1 = new JLegSpec(0, 0);
+        List<JEdgeSpec> edgeList = new ArrayList<JEdgeSpec>(1);
+        edgeList.add(edge1);
+        List<JLegSpec> legList = new ArrayList<JLegSpec>(1);
+        legList.add(leg1);
+        DiagramSpec spec = new DiagramSpec(nodeList, edgeList, legList);
+        try {
+            XMLUtils.save(new File("c:\\test2.xml"), spec);
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+        
+        DiagramSpec spec2;
+        try {
+            spec2 = XMLUtils.load(new File("c:\\test2.xml"));
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+
+        assertEquals(spec.legSpecs, spec2.legSpecs);
+        assertEquals(spec.options, spec2.options);
+        assertEquals(spec, spec2);
+    }
 }

@@ -70,7 +70,7 @@ public class JLabelBundle extends JPanel {
             l.setAlignmentX(JLabel.CENTER_ALIGNMENT);
             add(l);
         }
-        doLayout();
+        invalidate();
         textInfo = text;
     }
     

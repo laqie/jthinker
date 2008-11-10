@@ -29,67 +29,38 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
-
-import java.util.LinkedList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import oss.jthinker.tocmodel.DiagramType;
-import oss.jthinker.widgets.JNodeSpec;
-import static org.junit.Assert.*;
+package oss.jthinker.widgets;
 
 /**
- * Unit-tests for DiagramSpec class.
+ * Minimalistic mock-emulator for JNodeHost interface.
  * 
  * @author iappel
  */
-public class DiagramSpecTest {
-
-    public DiagramSpecTest() {
+public class JNodeHost_Mock implements JNodeHost {
+    public void deleteJNode(JNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    public void dispatchJNodeMove() {
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
+    public void editJNodeContent(JNode node) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Before
-    public void setUp() {
+    public void endLinking(JNode end) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @After
-    public void tearDown() {
+    public void startLinking(JNode start) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Test
-    public void nullInConstructor() {
-        DiagramSpec spec = new DiagramSpec(new LinkedList<JNodeSpec>(),
-                    new LinkedList<JEdgeSpec>(),
-                    DiagramType.CURRENT_REALITY_TREE);
-        assertNotNull(spec.legSpecs);
-        spec = new DiagramSpec(null, null, new LinkedList<JLegSpec>());
-        assertNotNull(spec.nodeSpecs);
-        assertNotNull(spec.edgeSpecs);
+    public void enableNodeNumbering(boolean state) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    @Test
-    public void optionsTest() {
-        DiagramSpec spec1 = new DiagramSpec(new LinkedList<JNodeSpec>(),
-                    new LinkedList<JEdgeSpec>(),
-                    DiagramType.CURRENT_REALITY_TREE);
-        spec1.options.numbering = false;
-        DiagramSpec spec2 = new DiagramSpec(new LinkedList<JNodeSpec>(),
-                    new LinkedList<JEdgeSpec>(),
-                    DiagramType.CURRENT_REALITY_TREE);
-        spec2.options.numbering = false;
-        assertEquals(spec1, spec2);
-        spec1.options.numbering = true;
-        assertNotSame(spec1, spec2);
+
+    public int issueIndex(JNode node) {
+        return 0;
     }
 }

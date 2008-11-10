@@ -56,7 +56,8 @@ public class JNode extends JSlide {
     private final JNodeSpec spec;
     private WeakReference<JNodeModel> editorModelRef;
 
-    private String comment;
+    private String comment, content;
+    private boolean numbering;
     
     private void initListeners() {
         final JNode instance = this;
@@ -123,6 +124,7 @@ public class JNode extends JSlide {
         this.spec = spec;
         setLocation(spec.getSlideCenter());
         setComment(spec.getComment());
+        content = spec.getContent();
     }
 
     /**
@@ -180,7 +182,7 @@ public class JNode extends JSlide {
      * @return node's building specification.
      */    
     public JNodeSpec getNodeSpec() {
-        return spec.clone(spec.getContent(), GeometryUtils.computeCenterPoint(this),
+        return spec.clone(spec.getContent(), WindowUtils.computeCenterPoint(this),
                 getColor(), this.comment);
     }
     
@@ -190,8 +192,7 @@ public class JNode extends JSlide {
      * @return textual content of the node.
      */
     public String getContent() {
-        JLabelBundle bundle = (JLabelBundle)this.getComponent(0);
-        return bundle.getText();
+        return content;
     }
 
     /**
@@ -200,13 +201,27 @@ public class JNode extends JSlide {
      * @param content textual content of the node.
      */    
     public void setContent(String content) {
+        this.content = content;        
         JLabelBundle bundle = (JLabelBundle)this.getComponent(0);
-        bundle.setText(content);
+        int index = host.issueIndex(this) + 1;
+        boolean shouldNumber = numbering && hasContent();
+        String textToAdd = shouldNumber ? (index + ". ") : "";
+        bundle.setText(textToAdd + content);
         bundle.setSize(bundle.getPreferredSize());
         setSize(getPreferredSize());
         getParent().validate();
     }
 
+    /**
+     * Returns true if node has some non-whitespace content.
+     * 
+     * @return true if node has some non-whitespace content and
+     * false otherwise.
+     */
+    public boolean hasContent() {
+        return content.trim().length() != 0;
+    }
+    
     /**
      * Default operation of edit (via {@link JOptionPane}).
      * 
@@ -253,5 +268,15 @@ public class JNode extends JSlide {
      */    
     public String getComment() {
         return comment;
+    }
+
+    /**
+     * Enables showing statement's number.
+     * 
+     * @param state true if number should be shown and false otherwise
+     */
+    public void enableNumbering(boolean state) {
+        numbering = state;
+        setContent(this.content);
     }
 }

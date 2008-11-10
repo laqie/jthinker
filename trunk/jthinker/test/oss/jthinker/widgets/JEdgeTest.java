@@ -75,26 +75,7 @@ public class JEdgeTest {
         JNodeSpec rectSpec = new JNodeSpec(BorderType.ROUND_RECT,
                 true, "        ", new Point(100, 100));
         
-        JNodeHost stub = new JNodeHost() {
-            public void deleteJNode(JNode node) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            public void dispatchJNodeMove() {
-            }
-
-            public void editJNodeContent(JNode node) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            public void endLinking(JNode end) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-
-            public void startLinking(JNode start) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        };
+        JNodeHost stub = new JNodeHost_Mock();
         
         JNode nodeA = new JNode(stub, rectSpec);
         JNode nodeB = new JNode(stub, rectSpec);

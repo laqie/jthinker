@@ -47,7 +47,8 @@ public class DiagramSpec {
     public final List<JNodeSpec> nodeSpecs;
     public final List<JLegSpec> legSpecs;
     public final DiagramType type;
-
+    public final DiagramOptionSpec options = new DiagramOptionSpec();
+    
     private DiagramSpec(List<JNodeSpec> nodeSpecs, List<JEdgeSpec> edgeSpecs,
             List<JLegSpec> legSpecs, DiagramType type) {
         this.edgeSpecs = edgeSpecs != null ? edgeSpecs :
@@ -113,7 +114,8 @@ public class DiagramSpec {
             return nodeSpecs.equals(spec.nodeSpecs) &&
                     edgeSpecs.equals(spec.edgeSpecs) &&
                     legSpecs.equals(spec.legSpecs) &&
-                    type.equals(spec.type);
+                    type.equals(spec.type) &&
+                    options.equals(spec.options);
         } else {
             return super.equals(obj);
         }
@@ -123,6 +125,6 @@ public class DiagramSpec {
     /** {@inheritDoc} */
     public int hashCode() {
         return nodeSpecs.hashCode() + edgeSpecs.hashCode() +
-                legSpecs.hashCode() + type.hashCode();
+                legSpecs.hashCode() + type.hashCode() + options.hashCode();
     }
 }

@@ -31,65 +31,46 @@
 
 package oss.jthinker.diagrams;
 
-import java.util.LinkedList;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import oss.jthinker.tocmodel.DiagramType;
-import oss.jthinker.widgets.JNodeSpec;
-import static org.junit.Assert.*;
-
 /**
- * Unit-tests for DiagramSpec class.
+ * Simple value holder for diagram's options.
  * 
  * @author iappel
  */
-public class DiagramSpecTest {
+public class DiagramOptionSpec {
+    public boolean numbering;
 
-    public DiagramSpecTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    @Test
-    public void nullInConstructor() {
-        DiagramSpec spec = new DiagramSpec(new LinkedList<JNodeSpec>(),
-                    new LinkedList<JEdgeSpec>(),
-                    DiagramType.CURRENT_REALITY_TREE);
-        assertNotNull(spec.legSpecs);
-        spec = new DiagramSpec(null, null, new LinkedList<JLegSpec>());
-        assertNotNull(spec.nodeSpecs);
-        assertNotNull(spec.edgeSpecs);
+    /**
+     * Creates a new instance of DiagramOptionSpec with all values
+     * set to default.
+     */
+    public DiagramOptionSpec() {
+        numbering = true;
     }
     
-    @Test
-    public void optionsTest() {
-        DiagramSpec spec1 = new DiagramSpec(new LinkedList<JNodeSpec>(),
-                    new LinkedList<JEdgeSpec>(),
-                    DiagramType.CURRENT_REALITY_TREE);
-        spec1.options.numbering = false;
-        DiagramSpec spec2 = new DiagramSpec(new LinkedList<JNodeSpec>(),
-                    new LinkedList<JEdgeSpec>(),
-                    DiagramType.CURRENT_REALITY_TREE);
-        spec2.options.numbering = false;
-        assertEquals(spec1, spec2);
-        spec1.options.numbering = true;
-        assertNotSame(spec1, spec2);
+    @Override
+    /** {@inheritDoc} */
+    public boolean equals(Object obj) {
+        if (obj instanceof DiagramOptionSpec) {
+            return ((DiagramOptionSpec)obj).numbering == this.numbering;
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    /** {@inheritDoc} */
+    public int hashCode() {
+        return numbering ? 42 : -11;
+    }
+    
+    /**
+     * Copies values from some other DiagramOptionSpec instance.
+     * 
+     * @param spec specification to get values from.
+     */
+    public void fill(DiagramOptionSpec spec) {
+        if (spec == null) {
+            return;
+        }
+        numbering = spec.numbering;
     }
 }

@@ -33,6 +33,7 @@ package oss.jthinker.widgets;
 
 import java.awt.Color;
 import java.awt.Point;
+import javax.swing.JFrame;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -93,5 +94,75 @@ public class JNodeTest {
         assertEquals("sample", node.getToolTipText());
         JNodeSpec specRet = node.getNodeSpec();
         assertEquals("sample", specRet.getComment());
+    }    
+    
+    /**
+     * Tests of hasContent() method
+     */
+    @Test
+    public void hasContentTest() {
+        JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
+                new Point(0,0), Color.WHITE, "sample");
+        JNodeSpec spec2 = new JNodeSpec(BorderType.ROUND_RECT, true, "      ",
+                new Point(0,0), Color.WHITE, "sample");
+        
+        JNodeHost_Mock stub = new JNodeHost_Mock();
+        
+        JNode node1 = new JNode(stub, spec);
+        JNode node2 = new JNode(stub, spec2);
+        
+        assertTrue(node1.hasContent());
+        assertFalse(node2.hasContent());
+    }
+
+    /**
+     * Test for setContent() method.
+     */
+    @Test
+    public void setContentTest() {
+        JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "      ",
+                new Point(0,0), Color.WHITE, "sample");
+        JNodeHost_Mock stub = new JNodeHost_Mock();
+
+        JFrame frame = new JFrame();
+        JNode node1 = new JNode(stub, spec);
+        frame.add(node1);
+        JLabelBundle label = (JLabelBundle)node1.getComponent(0);
+        node1.enableNumbering(true);
+        
+        node1.setContent("  ");
+        assertEquals("  ", label.getText());
+
+        node1.setContent("foo");
+        assertEquals("1. foo", label.getText());
+    }
+    
+    /**
+     * Test for correct resizing on enabling numbering.
+     */
+    @Test
+    public void resizeTest() {
+        JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "foo",
+                new Point(0,0), Color.WHITE, "sample");
+        JNodeHost_Mock stub = new JNodeHost_Mock();
+
+        JFrame frame = new JFrame();
+        JNode node1 = new JNode(stub, spec);
+        frame.add(node1);
+        JLabelBundle label = (JLabelBundle)node1.getComponent(0);
+        assertEquals("foo", label.getText());
+        int before1 = node1.getWidth(),
+            before2 = label.getWidth(),
+            before3 = label.getPreferredSize().width;
+
+        assertEquals(before2, before3);
+        assertTrue(before1 > before2);
+        node1.enableNumbering(true);
+        
+        assertEquals("1. foo", label.getText());
+        
+        assertNotSame(before3, label.getPreferredSize().width);
+        
+        assertEquals(label.getSize().width, label.getPreferredSize().width);
     }    
 }
