@@ -37,11 +37,11 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 /**
@@ -54,7 +54,10 @@ public class JNode extends JSlide {
     private final HashSet<JComponent> peers = new HashSet<JComponent>();
     private final JNodeHost host;
     private final JNodeSpec spec;
+    private WeakReference<JNodeModel> editorModelRef;
 
+    private String comment;
+    
     private void initListeners() {
         final JNode instance = this;
         addMouseListener(new MouseAdapter() {
@@ -119,6 +122,7 @@ public class JNode extends JSlide {
         initListeners();
         this.spec = spec;
         setLocation(spec.getSlideCenter());
+        setComment(spec.getComment());
     }
 
     /**
@@ -176,7 +180,8 @@ public class JNode extends JSlide {
      * @return node's building specification.
      */    
     public JNodeSpec getNodeSpec() {
-        return spec.clone(spec.getContent(), GeometryUtils.computeCenterPoint(this));
+        return spec.clone(spec.getContent(), GeometryUtils.computeCenterPoint(this),
+                getColor(), this.comment);
     }
     
     /**
@@ -199,6 +204,7 @@ public class JNode extends JSlide {
         bundle.setText(content);
         bundle.setSize(bundle.getPreferredSize());
         setSize(getPreferredSize());
+        getParent().validate();
     }
 
     /**
@@ -207,13 +213,45 @@ public class JNode extends JSlide {
      * @return true if node content got modified.
      */
     public boolean defaultEditOperation() {
-        String oldVal = getContent();
-        String newVal = JOptionPane.showInputDialog("Enter text", oldVal);
-        if (newVal != null && !(newVal.equals(oldVal))) {
-            setContent(newVal);
-            return true;
-        } else {
-            return false;
+        JNodeEditor.startEditing(this);
+        
+        return true;
+    }
+
+    /**
+     * Returns table model for node editor.
+     * 
+     * @return table model for node editor.
+     */
+    public JNodeModel getEditorModel() {
+        JNodeModel model = null;
+        if (editorModelRef != null) {
+            model = editorModelRef.get();
         }
+        if (model == null) {
+            model = new JNodeModel(this);
+            editorModelRef = new WeakReference<JNodeModel>(model);
+        }
+        model.update();
+        return model;
+    }
+
+    /**
+     * Sets comment for the node.
+     * 
+     * @param comment text to be used as a tooltip comment.
+     */
+    public void setComment(String comment) {
+        setToolTipText(comment);
+        this.comment = comment;
+    }
+    
+    /**
+     * Returns node's comment.
+     * 
+     * @return text that's used as a tooltip comment.
+     */    
+    public String getComment() {
+        return comment;
     }
 }

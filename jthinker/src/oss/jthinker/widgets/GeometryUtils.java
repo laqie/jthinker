@@ -48,11 +48,13 @@ public class GeometryUtils {
      * Calculates location of component's center (in coordinates of
      * component's parent)
      * 
+     * @deprecated moved to {@link WindowUtils} class
      * @param c component to calculate
      * @return component center location
      */
+    @Deprecated
     public static Point computeCenterPoint(Component c) {
-        return computeCenterPoint(c.getBounds());
+        return WindowUtils.computeCenterPoint(c);
     }
 
     /**
@@ -71,26 +73,26 @@ public class GeometryUtils {
      * right after setting center must return the very same coordinate as
      * one that was set.
      * 
+     * @deprecated moved to {@link WindowUtils} class
      * @param c component to move
      * @param p point to set as center (in parent's coordinates)
      */
+    @Deprecated
     public static void setCenterPoint(Component c, Point p) {
-        int dw = c.getWidth() / 2;
-        int dh = c.getHeight() / 2;
-        c.setLocation(p.x - dw, p.y - dh);
+        WindowUtils.setCenterPoint(c, p);
     }
     
     /**
      * Similar to {@link setCenterPoint(Component, Point)} but operates
      * with component's own point of origin instead of parent's.
      * 
+     * @deprecated moved to {@link WindowUtils} class
      * @param c component to move
      * @param p
      */
+    @Deprecated
     public static void adjustCenterPoint(Component c, Point p) {
-        Point l = c.getLocation();
-        l.translate(p.x - c.getWidth() / 2, p.y - c.getHeight() / 2);
-        c.setLocation(l);
+        WindowUtils.adjustCenterPoint(c, p);
     }    
     
     /**

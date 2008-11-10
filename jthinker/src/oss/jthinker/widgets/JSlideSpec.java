@@ -31,6 +31,7 @@
 
 package oss.jthinker.widgets;
 
+import java.awt.Color;
 import java.awt.Point;
 import javax.swing.JComponent;
 
@@ -42,6 +43,7 @@ import javax.swing.JComponent;
 public abstract class JSlideSpec {
     private final Point slideCenter;
     private final BorderType borderType;
+    private final Color background;
     private JComponent component = null;
     
     /**
@@ -49,10 +51,12 @@ public abstract class JSlideSpec {
      * 
      * @param center desired center coordinate for the slide
      * @param border desired border type for the slide
+     * @param color background color for slide
      */
-    protected JSlideSpec(Point center, BorderType border) {
+    protected JSlideSpec(Point center, BorderType border, Color color) {
         slideCenter = center;
         borderType = border;
+        background = color == null ? Color.WHITE : color;
     }
     
     /**
@@ -107,7 +111,8 @@ public abstract class JSlideSpec {
         if (obj instanceof JSlideSpec) {
             JSlideSpec slideSpec = (JSlideSpec)obj;
             return slideSpec.borderType.equals(borderType) &&
-                    slideSpec.slideCenter.equals(slideCenter);
+                   slideSpec.background.equals(background) &&
+                   slideSpec.slideCenter.equals(slideCenter);
         } else {
             return super.equals(obj);
         }
@@ -116,6 +121,16 @@ public abstract class JSlideSpec {
     @Override
     /** {@inheritDoc} */
     public int hashCode() {
-        return borderType.hashCode() + slideCenter.hashCode();
+        return borderType.hashCode() + slideCenter.hashCode() +
+                background.hashCode();
+    }
+
+    /**
+     * Returns background color for the node.
+     * 
+     * @return background color for the node.
+     */
+    public Color getBackground() {
+        return background;
     }
 }

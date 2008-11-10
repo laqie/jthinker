@@ -31,7 +31,6 @@
 
 package oss.jthinker.views;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -122,6 +121,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
                 fspec.file.toString());        
         linker.setDiagramSpec(fspec);
         markModified(true);
+        getFilenameTrigger().setState(fspec.file);
     }
     
     /** {@inheritDoc} */
@@ -241,7 +241,6 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         super.add(node);
         node.validate();
         node.setPreferredSize(node.getPreferredSize());
-        node.setBackground(Color.WHITE);
         validate();
     }
     

@@ -32,11 +32,11 @@
 package oss.jthinker.diagrams;
 
 import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
+import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
@@ -80,6 +80,48 @@ public class XMLUtils {
         return new Point(x,y);
     }
 
+    protected static String toXML(Color c) {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("<color name=\"");
+        if (c.equals(Color.WHITE)) {
+            sb.append("white");
+        } else if (c.equals(Color.CYAN)) {
+            sb.append("cyan");
+        } else if (c.equals(Color.YELLOW)) {
+            sb.append("yellow");
+        } else if (c.equals(Color.PINK)) {
+            sb.append("pink");
+        } else if (c.equals(Color.GREEN)) {
+            sb.append("green");
+        } else {
+            sb.append("white");
+        }
+        sb.append("\" />");
+        return sb.toString();
+    }
+    
+    protected static Color toColor(Node n) throws SAXException {
+        if (!n.getNodeName().equals("color")) {
+            throw new SAXException();
+        }
+        NamedNodeMap map = n.getAttributes();
+        String s = map.getNamedItem("name").getNodeValue();
+        if (s.equals("white")) {
+            return Color.WHITE;
+        } else if (s.equals("green")) {
+            return Color.GREEN;
+        } else if (s.equals("pink")) {
+            return Color.PINK;
+        } else if (s.equals("cyan")) {
+            return Color.CYAN;
+        } else if (s.equals("yellow")) {
+            return Color.YELLOW;
+        } else {
+            return Color.WHITE;
+        }
+    }
+    
     protected static String toXML(JEdgeSpec edgeSpec) {
         int start = edgeSpec.idxA, end = edgeSpec.idxZ;
         StringBuilder sb = new StringBuilder();
@@ -117,12 +159,16 @@ public class XMLUtils {
     protected static String toXML(JNodeSpec nodeSpec) {
         BorderType type = nodeSpec.getBorderType();
         String content = nodeSpec.getContent();
+        String comment = nodeSpec.getComment();
+        Color color = nodeSpec.getBackground();
         Point point = nodeSpec.getSlideCenter();
         boolean b = nodeSpec.isEditable();
         StringBuilder sb = new StringBuilder();
         sb.append("<node type = \"" + type + "\" editable = \""+b+"\">");
         sb.append(toXML(point));
         sb.append("\n<content text = \""+content+"\" />\n");
+        sb.append(toXML(color));
+        sb.append("\n<comment text = \""+comment+"\" />\n");
         sb.append("</node>\n");
         return sb.toString();
     }
@@ -142,17 +188,23 @@ public class XMLUtils {
         
         String content = null;
         Point center = null;
+        Color color = null;
+        String comment = null;
         
         for (int i=0;i<children.getLength();i++) {
             Node n = children.item(i);
             if (n.getNodeName().equals("content")) {
                 content = n.getAttributes().getNamedItem("text").getNodeValue();
+            } else if (n.getNodeName().equals("color")) {
+                color = toColor(n);
+            } else if (n.getNodeName().equals("comment")) {
+                comment = n.getAttributes().getNamedItem("text").getNodeValue();
             } else if (n.getNodeName().equals("center")) {
                 center = toPoint(n);
             }
         }
         
-        return new JNodeSpec(type, edit, content, center);
+        return new JNodeSpec(type, edit, content, center, color, comment);
     }
     
     protected static String nodesToXML(List<JNodeSpec> specs) {
