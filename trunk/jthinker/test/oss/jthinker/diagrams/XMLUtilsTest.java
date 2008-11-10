@@ -31,6 +31,7 @@
 
 package oss.jthinker.diagrams;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import org.junit.After;
@@ -86,17 +87,17 @@ public class XMLUtilsTest {
     public void russianTest() {
         System.out.println("russianText");
         JNodeSpec nodeSpec = new JNodeSpec(BorderType.ELLIPSE, false,
-                "Пример текста на русском", new Point(0,0));
+                "Пример текста на русском", new Point(0,0), Color.WHITE, "");
         DiagramSpec diaSpec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION);
         diaSpec.nodeSpecs.add(nodeSpec);
         try {
-            XMLUtils.save(new File("c:\\sample.xml"), diaSpec);
+            XMLUtils.save(new File("c:\\russian.xml"), diaSpec);
         } catch (Throwable t) {
             fail("No exceptions allowed");
         }
         DiagramSpec spec;
         try {
-           spec = XMLUtils.load(new File("c:\\sample.xml"));
+           spec = XMLUtils.load(new File("c:\\russian.xml"));
         } catch (Throwable t) {
             fail("No exception allowed");
             return;
@@ -135,4 +136,34 @@ public class XMLUtilsTest {
             fail(t.toString());
         }
     }
+    
+    /**
+     * Test of treating color and comment parametres.
+     */
+    @Test
+    public void colorCommentsTest() {
+        System.out.println("russianText");
+        JNodeSpec nodeSpec = new JNodeSpec(BorderType.ELLIPSE, false,
+                "sample", new Point(0,0), Color.PINK, "sample");
+        DiagramSpec diaSpec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION);
+        diaSpec.nodeSpecs.add(nodeSpec);
+        try {
+            XMLUtils.save(new File("c:\\sample.xml"), diaSpec);
+        } catch (Throwable t) {
+            fail("No exceptions allowed");
+        }
+        DiagramSpec spec;
+        try {
+           spec = XMLUtils.load(new File("c:\\sample.xml"));
+        } catch (Throwable t) {
+            fail("No exception allowed");
+            return;
+        }
+        assertEquals(diaSpec.edgeSpecs, spec.edgeSpecs);
+        assertEquals(diaSpec.nodeSpecs, spec.nodeSpecs);
+        assertEquals(diaSpec.legSpecs, spec.legSpecs);
+        assertEquals(diaSpec.type, spec.type);
+        assertTrue(diaSpec.equals(spec));
+        assertEquals(diaSpec, spec);
+    }    
 }

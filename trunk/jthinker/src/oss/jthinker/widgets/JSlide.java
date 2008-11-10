@@ -52,9 +52,9 @@ import javax.swing.border.Border;
  * @author iappel
  */
 public class JSlide extends JPanel implements Switch {
-
     private final JSlide slideInstance = this;
     private final Border activeBorder,  inactiveBorder;
+    private Color background;
     private boolean switched;
 
     /**
@@ -63,8 +63,20 @@ public class JSlide extends JPanel implements Switch {
      * @param internal component to contain.
      * @param builder source of active/inactive borders to wrap around the
      * component.
-     */
+     */    
     public JSlide(JComponent internal, BorderBuilder builder) {
+        this(internal, builder, Color.WHITE);
+    }
+    
+    /**
+     * Creates a new instance of slidable container. 
+     * 
+     * @param internal component to contain.
+     * @param builder source of active/inactive borders to wrap around the
+     * component.
+     * @param background background color for slide
+     */
+    public JSlide(JComponent internal, BorderBuilder builder, Color background) {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -86,10 +98,12 @@ public class JSlide extends JPanel implements Switch {
         
         setVisible(true);
         setLayout(null);
+        
         activeBorder = builder.createBorder(Color.RED);
         inactiveBorder = builder.createBorder(Color.BLACK);
         setBorder(inactiveBorder);
         add(internal);
+        setColor(background);
     }
 
     /**
@@ -98,7 +112,8 @@ public class JSlide extends JPanel implements Switch {
      * @param slideSpec slide construction specification
      */
     public JSlide(JSlideSpec slideSpec) {
-        this(slideSpec.getComponent(), slideSpec.getBorderBuilder());
+        this(slideSpec.getComponent(), slideSpec.getBorderBuilder(),
+                slideSpec.getBackground());
     }
     
     /**
@@ -114,7 +129,7 @@ public class JSlide extends JPanel implements Switch {
      */
     @Override
     public Component add(Component comp) {
-        comp.setBackground(Color.WHITE);
+        comp.setBackground(background);
         comp.setSize(comp.getPreferredSize());
         removeAll();
         super.add(comp);
@@ -147,5 +162,25 @@ public class JSlide extends JPanel implements Switch {
     public void setSwitched(boolean switching) {
         switched = switching;        
         setBorder(switched ? activeBorder : inactiveBorder);
+    }
+
+    /**
+     * Sets color to be used as a background.
+     * 
+     * @param color to be used as a background.
+     */
+    public void setColor(Color color) {
+        this.setBackground(color);
+        getComponent(0).setBackground(color);
+        background = color;
+    }
+    
+    /**
+     * Returns node's background color.
+     * 
+     * @return node's background color.
+     */
+    public Color getColor() {
+        return background;
     }
 }
