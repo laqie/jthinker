@@ -55,7 +55,8 @@ public class ComponentHolder {
     private final GappedArray<JLeg> _legs = new GappedArray<JLeg>();
     protected final DiagramView _view;
     protected final DiagramType _type;
-
+    protected boolean numberingEnabled;
+    
     /**
      * Creates a new ComponentHolder instance.
      * 
@@ -75,6 +76,7 @@ public class ComponentHolder {
     public void add(JNode node) {
         _nodes.add(node);
         _view.add(node);
+        node.enableNumbering(numberingEnabled);
     }
     
     /**
@@ -302,5 +304,27 @@ public class ComponentHolder {
         ret.addAll(_edges.getContent());
         ret.addAll(_legs.getContent());
         return ret;
+    }
+    
+    /**
+     * Returns a numeric index of the node.
+     * 
+     * @param node node to seek
+     * @return node's numeric index
+     */
+    public int issueIndex(JNode node) {
+        return _nodes.locate(node);
+    }
+    
+    /**
+     * Enables or disables numbering of nodes.
+     * 
+     * @param bool should numbering be enabled or disabled
+     */
+    public void enableNodeNumbering(boolean bool) {
+        numberingEnabled = bool;
+        for (JNode node : this.getAllNodes()) {
+            node.enableNumbering(bool);
+        }
     }
 }

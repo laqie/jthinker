@@ -43,6 +43,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.filechooser.FileFilter;
 import oss.jthinker.diagrams.ComponentManager;
+import oss.jthinker.diagrams.DiagramOptionSpec;
 import oss.jthinker.diagrams.DiagramSpec;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.diagrams.DiagramView;
@@ -74,7 +75,8 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     private final JXPopupMenu menu;
     private final ComponentManager linker;
     private final DiagramType type;
-
+    private final DiagramOptions options;
+    
     /**
      * Creates a new DiagramPane. Provided diagram description specifies, which
      * types of nodes and connections are allowed in such diagram.
@@ -82,7 +84,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * @param description description of the diagram
      */
     public DiagramPane(DiagramDescription description) {
-        this(description, description.getTitle());
+        this(description, description.getTitle(), new DiagramOptionSpec());
     }
 
     /**
@@ -91,8 +93,10 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * 
      * @param description description of the diagram
      * @param title title to use
+     * @param optionSpec description of diagram's settings
      */    
-    public DiagramPane(DiagramDescription description, String title) {
+    public DiagramPane(DiagramDescription description, String title,
+            DiagramOptionSpec optionSpec) {
         super(title);
         
         menu = new JXPopupMenu();
@@ -109,6 +113,8 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         setLayout(null);
         type = description.getType();
         linker = new ComponentManager(this, type);
+        options = new DiagramOptions(this, optionSpec);
+        linker.enableNodeNumbering(options.isNumberingEnabled());
     }
 
     /**
@@ -118,7 +124,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      */    
     public DiagramPane(FileDiagramSpec fspec) {
         this(DescriptionStorage.getEntity(fspec.type),
-                fspec.file.toString());        
+                fspec.file.toString(), fspec.options);        
         linker.setDiagramSpec(fspec);
         markModified(true);
         getFilenameTrigger().setState(fspec.file);
@@ -319,6 +325,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
 
         File file = getFilenameTrigger().getState();
         DiagramSpec spec = linker.getDiagramSpec();
+        spec.options.numbering = options.isNumberingEnabled();
         
         try {
             XMLUtils.save(file, spec);
@@ -330,5 +337,14 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         }
         getModifiedTrigger().setState(false);
         return true;
+    }
+
+    /**
+     * Returns the holder of diagram's optional settings.
+     * 
+     * @return holder of diagram's optional settings.
+     */
+    public DiagramOptions getOptions() {
+        return options;
     }
 }

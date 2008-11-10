@@ -142,7 +142,7 @@ public class XMLUtils {
     protected static String toXML(JLegSpec legSpec) {
         int start = legSpec.idxA, end = legSpec.idxZ;
         StringBuilder sb = new StringBuilder();
-        sb.append("<leg start = \""+start+"\" end = \""+end+"\"\n");
+        sb.append("<leg start = \""+start+"\" end = \""+end+"\" />\n");
         return sb.toString();
     }
     
@@ -224,6 +224,7 @@ public class XMLUtils {
         List<JEdgeSpec> edges = new LinkedList<JEdgeSpec>();
         List<JNodeSpec> nodes = new LinkedList<JNodeSpec>();
         List<JLegSpec> legs = new LinkedList<JLegSpec>();
+        DiagramOptionSpec options = null;
         
         NodeList content = node.getChildNodes();
         
@@ -236,13 +237,20 @@ public class XMLUtils {
                 edges.add(toEdgeSpec(n));
             } else if (name.equals("leg")) {
                 legs.add(toLegSpec(n));
+            } else if (name.equals("options")) {
+                options = toOptionSpec(n);
             }
         }
-        if (type.equals(DiagramType.TRANSFORM_PLAN)) {
-            return new DiagramSpec(nodes, edges, legs);
+        
+        DiagramSpec result = null;
+        if (type.equals(DiagramType.TRANSITION_TREE)) {
+            result = new DiagramSpec(nodes, edges, legs);
         } else {
-            return new DiagramSpec(nodes, edges, type);
+            result = new DiagramSpec(nodes, edges, type);
         }
+        
+        result.options.fill(options);
+        return result;
     }
     
     protected static String edgesToXML(List<JEdgeSpec> specs) {
@@ -252,16 +260,49 @@ public class XMLUtils {
         }
         return sb.toString();
     }
+
+    protected static String legsToXML(List<JLegSpec> specs) {
+        StringBuilder sb = new StringBuilder();
+        for (JLegSpec spec : specs) {
+            sb.append(toXML(spec));
+        }
+        return sb.toString();
+    }    
     
     protected static String toXML(DiagramSpec spec) {
         StringBuilder sb = new StringBuilder();
         sb.append("<diagram type = \""+spec.type+"\">\n");
         sb.append(nodesToXML(spec.nodeSpecs));
         sb.append(edgesToXML(spec.edgeSpecs));
+        sb.append(legsToXML(spec.legSpecs));
+        sb.append(toXML(spec.options));
         sb.append("</diagram>");
         return sb.toString();
     }
 
+    protected static DiagramOptionSpec toOptionSpec(Node n) {
+        DiagramOptionSpec spec = new DiagramOptionSpec();
+        NodeList nodeList = n.getChildNodes();
+        for (int i=0;i<nodeList.getLength();i++) {
+            NamedNodeMap attrs = nodeList.item(i).getAttributes();
+            String name = attrs.getNamedItem("name").getNodeValue();
+            String value = attrs.getNamedItem("value").getNodeValue();
+            if (name.equals("numbering")) {
+                spec.numbering = Boolean.parseBoolean(value);
+            }
+        }
+        return spec;
+    }
+    
+    protected static String toXML(DiagramOptionSpec spec) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<options>\n");
+        sb.append("<option name = \"numbering\" value = \""+
+                spec.numbering+"\" />\n");
+        sb.append("</options>\n");
+        return sb.toString();
+    }
+    
     /**
      * Saves a diagram specification into an XML file.
      * 

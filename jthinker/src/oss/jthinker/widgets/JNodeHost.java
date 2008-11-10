@@ -37,4 +37,19 @@ public interface JNodeHost {
      * @param node node to edit
      */
     void editJNodeContent(JNode node);
+    
+    /**
+     * Enables or disables numbering of nodes.
+     * 
+     * @param state should numbering be enabled or disabled
+     */
+    void enableNodeNumbering(boolean state);
+
+    /**
+     * Returns a numeric index of the node.
+     * 
+     * @param node node to seek
+     * @return node's numeric index
+     */
+    int issueIndex(JNode node);
 }

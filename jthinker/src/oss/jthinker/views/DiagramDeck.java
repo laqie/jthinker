@@ -39,6 +39,8 @@ import java.util.List;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JViewport;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.xml.sax.SAXException;
 import oss.jthinker.diagrams.FileDiagramSpec;
 import oss.jthinker.tocmodel.DiagramDescription;
@@ -51,9 +53,20 @@ import oss.jthinker.util.TriggerListener;
  * 
  * @author iappel
  */
-public class DiagramDeck extends JTabbedPane implements TriggerListener<String> {
+public abstract class DiagramDeck extends JTabbedPane implements TriggerListener<String> {
     private final HashMap<Trigger<String>, DiagramPane> triggerPaneMap = 
             new HashMap<Trigger<String>, DiagramPane>();
+
+    /**
+     * Creates a new instance of DiagramDeck.
+     */
+    public DiagramDeck() {
+        this.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                contentChanged(getCurrentDiagram());
+            }
+        });
+    }
     
     /**
      * Adds a new empty {@link DiagramPane}.
@@ -94,6 +107,7 @@ public class DiagramDeck extends JTabbedPane implements TriggerListener<String> 
     public void stateChanged(TriggerEvent<? extends String> event) {
         int index = getDiagramIndex(triggerPaneMap.get(event.getSource()));
         setTitleAt(index, event.getState());
+        contentChanged(getCurrentDiagram());
     }
     
     /**
@@ -166,4 +180,11 @@ public class DiagramDeck extends JTabbedPane implements TriggerListener<String> 
         }
         return true;
     }
+
+    /**
+     * Method that is called each time the selection is changed.
+     * 
+     * @param pane newly selected diagram pane.
+     */
+    protected abstract void contentChanged(DiagramPane pane);
 }
