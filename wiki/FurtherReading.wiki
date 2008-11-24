@@ -3,5 +3,4 @@ Moreover, it's so free that everyone can develop it as well!
 
 However, to use it effectively you should know the Theory of Constraints ideas, without them jThinker is just a tool for drawing boxes. So, here I list several TOC books that I value high myself.
 
-|| <a href="http://www.amazon.com/gp/product/0884271781?ie=UTF8&tag=jthinkersoftw-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0884271781"><img border="0" src="51W2NXJAXHL._SL160_.jpg"><img src="http://www.assoc-amazon.com/e/ir?t=jthinkersoftw-20&l=as2&o=1&a=0884271781" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> || "The Goal" by Eliyahu M. Goldratt. A very inspiring business novel that contains the core ideas of TOC. The book that any TOC practioner have to start with. ||
-
+ * Eliyahu M. Goldratt. <a href="http://www.amazon.com/gp/product/0884271781?ie=UTF8&tag=jthinkersoftw-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0884271781">The Goal: A Process of Ongoing Improvement</a><img src="http://www.assoc-amazon.com/e/ir?t=jthinkersoftw-20&l=as2&o=1&a=0884271781" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />. A very inspiring business novel that contains the core ideas of TOC. The book that any TOC practioner have to start with.
