@@ -31,7 +31,6 @@
 
 package oss.jthinker.diagrams;
 
-import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
@@ -47,6 +46,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -124,8 +127,10 @@ public class XMLUtils {
     
     protected static String toXML(JEdgeSpec edgeSpec) {
         int start = edgeSpec.idxA, end = edgeSpec.idxZ;
+        boolean cf = edgeSpec.conflict;
         StringBuilder sb = new StringBuilder();
-        sb.append("<edge start = \""+start+"\" end = \""+end+"\" />\n");
+        sb.append("<edge start=\"" + start + "\" end=\"" + end + "\" ");
+        sb.append("conflict=\"" + cf + "\" />\n");
         return sb.toString();
     }
 
@@ -136,7 +141,9 @@ public class XMLUtils {
         NamedNodeMap map = n.getAttributes();
         int a = Integer.parseInt(map.getNamedItem("start").getNodeValue());
         int z = Integer.parseInt(map.getNamedItem("end").getNodeValue());
-        return new JEdgeSpec(a, z);
+        Node cf = map.getNamedItem("conflict");
+        boolean c = (cf == null) ? false : "true".equals(cf.getNodeValue());
+        return new JEdgeSpec(a, z, c);
     }
     
     protected static String toXML(JLegSpec legSpec) {
@@ -284,6 +291,9 @@ public class XMLUtils {
         DiagramOptionSpec spec = new DiagramOptionSpec();
         NodeList nodeList = n.getChildNodes();
         for (int i=0;i<nodeList.getLength();i++) {
+            if (!nodeList.item(i).hasAttributes()) {
+                continue;
+            }
             NamedNodeMap attrs = nodeList.item(i).getAttributes();
             String name = attrs.getNamedItem("name").getNodeValue();
             String value = attrs.getNamedItem("value").getNodeValue();
@@ -353,10 +363,18 @@ public class XMLUtils {
      */
     public static DiagramSpec parse(String rawContent) throws SAXException, IOException {
         String content = rawContent.trim();
-        DOMParser parser = new DOMParser();
-        Reader reader = new StringReader(content);
-        InputSource source = new InputSource(reader);
-        parser.parse(source);
-        return toDiagramSpec(parser.getDocument().getFirstChild());
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder parser = dbf.newDocumentBuilder();
+            Reader reader = new StringReader(content);
+            InputSource source = new InputSource(reader);
+            Document doc = parser.parse(source);
+            if (doc == null) {
+                throw new NullPointerException();
+            }
+            return toDiagramSpec(doc.getFirstChild());
+        } catch (ParserConfigurationException pex) {
+            throw new RuntimeException("Unable to load data");
+        }
     }
 }

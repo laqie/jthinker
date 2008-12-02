@@ -55,6 +55,9 @@ public class JLine extends JComponent {
     // specifies, should the arrow at endZ be drawn or not
     private final boolean drawArrow;
 
+    // for conflict resolution diagrams
+    private boolean _conflict = false;
+    
     /**
      * Creates a new JLine instance.
      * 
@@ -154,18 +157,39 @@ public class JLine extends JComponent {
         setBounds(minx - 5, miny - 5, dx + 10, dy + 10);
     }
 
+    private void draw(Graphics g, int x, int y1, int y2) {
+        if (_conflict) {
+            double lineLen = Math.hypot(x - 10, y1 - y2);
+            Point endA = new Point(5, y1);
+            Point endZ = new Point(x-5, y2);
+            Point[] arr1 = GeometryUtils.perpendicular(endA, endZ,
+                    lineLen*3 / 5, 4, true);
+            Point[] arr2 = GeometryUtils.perpendicular(endA, endZ,
+                    lineLen*2 / 5, 4, false);
+            
+            g.drawLine(5, y1, arr1[1].x, arr1[1].y);
+            g.drawLine(arr1[1].x, arr1[1].y, arr2[1].x, arr2[1].y);
+            g.drawLine(arr2[1].x, arr2[1].y, x - 5, y2);
+        } else {
+            g.drawLine(5, y1, x - 5, y2);
+        }
+    }
+    
     @Override
     /** {@inheritDoc} */
     public void paint(Graphics g) {
         int x = getWidth(), y = getHeight();
         g.setColor(getForeground());
         if (orientation) {
-            g.drawLine(5, 5, x - 5, y - 5);
+            draw(g, x, 5, y - 5);
         } else {
-            g.drawLine(5, y - 5, x - 5, 5);
+            draw(g, x, y - 5, 5);
         }
         if (drawArrow) {
-            paintArrow(g);
+            paintArrow(g, true);
+            if (_conflict) {
+                paintArrow(g, false);
+            }
         }
     }
 
@@ -196,23 +220,46 @@ public class JLine extends JComponent {
     }
 
     // Draws an arrowhead at endZ
-    private void paintArrow(Graphics g) {
-        Point endA = this.getEndA().getLocation();
+    private void paintArrow(Graphics g, boolean atEndZ) {
+        Point endA, endZ;
+        
+        if (atEndZ) {
+            endA = getEndA().getLocation();
+            endZ = getEndZ().getLocation();
+        } else {
+            endA = getEndZ().getLocation();
+            endZ = getEndA().getLocation();
+        }
+        
         endA.translate(-getX(), -getY());
-        Point endZ = this.getEndZ().getLocation();
         endZ.translate(-getX(), -getY());
-        double x = endA.getX() - endZ.getX();
-        double y = endA.getY() - endZ.getY();
-        double xy = Math.sqrt(x * x + y * y);
-        double dx = x / xy;
-        double dy = y / xy;
-        double x0 = endZ.getX() + 15 * dx, y0 = endZ.getY() + 15 * dy;
-        double x1 = x0 + 4 * dy, y1 = y0 - 4 * dx;
-        double x2 = x0 - 4 * dy, y2 = y0 + 4 * dx;
+        
+        Point[] arr1 = GeometryUtils.perpendicular(endZ, endA, 15, 4, true);
+        Point[] arr2 = GeometryUtils.perpendicular(endZ, endA, 15, 4, false);
+        
         Polygon poly = new Polygon();
         poly.addPoint(endZ.x, endZ.y);
-        poly.addPoint((int) (x1 + 0.5), (int) (y1 + 0.5));
-        poly.addPoint((int) (x2 + 0.5), (int) (y2 + 0.5));
+        poly.addPoint(arr1[1].x, arr1[1].y);
+        poly.addPoint(arr2[1].x, arr2[1].y);
         g.fillPolygon(poly);
+    }
+
+    /**
+     * Returns true if edge is drawn as a "conflict".
+     * 
+     * @return true if edge is drawn as a "conflict".
+     */
+    public boolean isConflict() {
+        return _conflict;
+    }
+
+    /**
+     * Sets, should this edge be displayed as a "conflict".
+     * 
+     * @param conflict true if edge is drawn as a "conflict".
+     */    
+    public void setConflict(boolean conflict) {
+        _conflict = conflict;
+        repaint();
     }
 }

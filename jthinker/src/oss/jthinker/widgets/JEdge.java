@@ -33,6 +33,7 @@ package oss.jthinker.widgets;
 
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 /**
@@ -41,6 +42,9 @@ import javax.swing.JPopupMenu;
  * @author iappel
  */
 public class JEdge extends AbstractEdge<JNode> {
+    private final boolean _conflictsAllowed;
+    private JMenuItem _conflictOn, _conflictOff;
+    
     /**
      * Creates a new instance of JEdge that connects two given {@link JNode}s
      * and is managed by given {@link JEdgeHost}.
@@ -52,6 +56,7 @@ public class JEdge extends AbstractEdge<JNode> {
     public JEdge(JNode nodeA, JNode nodeB, JEdgeHost host) {
         super(nodeA, nodeB, host, true);
         nodeB.watch(this);
+        _conflictsAllowed = host.allowsConflict();
     }
 
     /** {@inheritDoc} */
@@ -69,6 +74,39 @@ public class JEdge extends AbstractEdge<JNode> {
                 host.deleteJEdge(instance);
             }
         });
+
+        if (host.allowsConflict()) {
+            _conflictOn = new JMenuItem(new AbstractAction("Conflict") {
+                public void actionPerformed(ActionEvent e) {
+                    setConflict(true);
+                }
+            });
+            
+            _conflictOff = new JMenuItem(new AbstractAction("Not a conflict") {
+                public void actionPerformed(ActionEvent e) {
+                    setConflict(false);
+                }
+            });
+            
+            menu.addSeparator();
+            menu.add(_conflictOn);
+            menu.add(_conflictOff);
+        }
+        
+        return menu;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public JPopupMenu getPopupMenu() {
+        JPopupMenu menu = super.getPopupMenu();
+
+        boolean cb = super.isConflict();
+        if (_conflictsAllowed) {
+            _conflictOff.setVisible(cb);
+            _conflictOn.setVisible(!cb);
+        }
+        
         return menu;
     }
 }
