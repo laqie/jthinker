@@ -29,45 +29,32 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
+package oss.jthinker.widgets;
 
 /**
- * Saveable presentation of the edge on diagram.
+ * Minimalistic mock-emulator for JEdgeHost interface.
  * 
  * @author iappel
  */
-public class JEdgeSpec {
-    public final int idxA;
-    public final int idxZ;
-    public final boolean conflict;
-    
-    /**
-     * Creates a new JEdgeSpec instance.
-     * 
-     * @param idxA index of edge's start node
-     * @param idxZ index of edge's end node
-     * @param conflict true if line is "conflict-shaped"
-     */
-    public JEdgeSpec(int idxA, int idxZ, boolean conflict) {
-        this.idxA = idxA;
-        this.idxZ = idxZ;
-        this.conflict = conflict;
-    }
-    
-    @Override
-    /** {@inheritDoc} */
-    public boolean equals(Object obj) {
-        if (obj instanceof JEdgeSpec) {
-            JEdgeSpec edgeSpec = (JEdgeSpec)obj;
-            return (edgeSpec.idxA == idxA) && (edgeSpec.idxZ == idxZ);
-        } else {
-            return super.equals(obj);
-        }
+
+public class JEdgeHost_Mock implements JEdgeHost {
+    public boolean allowsConflict() {
+        return true;
     }
 
-    @Override
-    /** {@inheritDoc} */
-    public int hashCode() {
-        return idxA + 42 * idxZ;
-    }    
+    public void deleteJEdge(JEdge edge) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void deleteJLeg(JLeg leg) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void endLinking(JEdge end) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void reverseJEdge(JEdge edge) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

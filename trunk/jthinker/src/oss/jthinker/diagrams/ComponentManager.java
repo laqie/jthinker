@@ -151,6 +151,7 @@ public class ComponentManager extends ComponentHolder
         for (JEdgeSpec edgeSpec : spec.edgeSpecs) {
             int a = edgeSpec.idxA, z = edgeSpec.idxZ;
             JEdge edge = new JEdge(nodes.get(a), nodes.get(z), this);
+            edge.setConflict(edgeSpec.conflict);
             edges.add(edge);
             add(edge);
         }

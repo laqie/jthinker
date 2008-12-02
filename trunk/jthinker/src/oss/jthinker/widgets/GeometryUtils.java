@@ -359,8 +359,8 @@ public class GeometryUtils {
      * @return intersection point of rectangle's border and line
      * between rectangle's center and some outer point.
      */
-    public static Point hexagonIntersection(Rectangle area, Point p) {
-        Point base = rectangleIntersection(area, p);
+    public static Point hexagonIntersection(Rectangle area, Point outPoint) {
+        Point base = rectangleIntersection(area, outPoint);
         int delta = Math.min(15, area.width / 4);
 
         boolean onVerticalBorder = (base.y == area.y) ||
@@ -373,7 +373,7 @@ public class GeometryUtils {
             return base;
         }
         Point p1 = GeometryUtils.computeCenterPoint(area);
-        Point p2 = p;
+        Point p2 = outPoint;
         Point q1 = new Point(), q2 = new Point();
         q1.y = area.y + (area.height / 2);
         if (onLeft) {
@@ -386,5 +386,34 @@ public class GeometryUtils {
         q2.y = area.y + (onUpper ? 0 : area.height);
         Point result = lineIntersection(p1, p2, q1, q2);
         return result;
+    }
+
+    /**
+     * Calculates a perpendicular line to a given line.
+     * 
+     * @param a start of the line
+     * @param z end of the line
+     * @param aDist distance from start point of the base line
+     * to start point of the perpendicular
+     * @param size length of the perpendicular
+     * @param clockwise should it be placed clockwise or counter-clockwise
+     * relative to the base line
+     * @return
+     */
+    public static Point[] perpendicular(Point a, Point z, double aDist,
+            double size, boolean clockwise) {
+        double x = z.x - a.x, y = z.y - a.y;
+        double lineLength = Math.hypot(x, y);
+        double dx = x / lineLength, dy = y / lineLength;
+        double x1 = a.x + dx*aDist, y1 = a.y + dy*aDist;
+        if (!clockwise) {
+            dx *= -1;
+            dy *= -1;
+        }
+        
+        double x2 = x1 + dy*size, y2 = y1 - dx*size;
+        Point p1 = new Point((int)x1, (int)y1);
+        Point p2 = new Point((int)x2, (int)y2);
+        return new Point[]{p1, p2};
     }
 }

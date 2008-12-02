@@ -66,4 +66,13 @@ public interface JEdgeHost {
      * @param end node that should be the end of the new edge
      */
     void endLinking(JEdge end);
+
+    /**
+     * Returns true is diagram allows conflict-shaped arrows
+     * and false otherwise.
+     * 
+     * @return true is diagram allows conflict-shaped arrows
+     * and false otherwise.
+     */
+    boolean allowsConflict();
 }

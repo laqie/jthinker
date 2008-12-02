@@ -217,7 +217,7 @@ public class ComponentHolder {
         }
         int idxA = _nodes.locate(edge.getPeerA());
         int idxZ = _nodes.locate(edge.getPeerZ());
-        return new JEdgeSpec(idxA, idxZ);
+        return new JEdgeSpec(idxA, idxZ, edge.isConflict());
     }
     
     private JLegSpec getLegSpec(JLeg leg) {
@@ -326,5 +326,16 @@ public class ComponentHolder {
         for (JNode node : this.getAllNodes()) {
             node.enableNumbering(bool);
         }
+    }
+    
+    /**
+     * Returns true is diagram allows conflict-shaped arrows
+     * and false otherwise.
+     * 
+     * @return true is diagram allows conflict-shaped arrows
+     * and false otherwise.
+     */
+    public boolean allowsConflict() {
+        return _type.equals(DiagramType.CONFLICT_RESOLUTION);
     }
 }

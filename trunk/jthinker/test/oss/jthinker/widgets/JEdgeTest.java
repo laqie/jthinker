@@ -76,6 +76,7 @@ public class JEdgeTest {
                 true, "        ", new Point(100, 100));
         
         JNodeHost stub = new JNodeHost_Mock();
+        JEdgeHost stub2 = new JEdgeHost_Mock();
         
         JNode nodeA = new JNode(stub, rectSpec);
         JNode nodeB = new JNode(stub, rectSpec);
@@ -86,10 +87,10 @@ public class JEdgeTest {
         nodeA.setLocation(100, 100);
         nodeB.setLocation(500, 100);
 
-        JEdge edge = new JEdge(nodeA, nodeB, null);
+        JEdge edge = new JEdge(nodeA, nodeB, stub2);
 
         Point p1 = edge.getEndA();
-        Point p2 = GeometryUtils.computeCenterPoint(nodeA);
+        Point p2 = WindowUtils.computeCenterPoint(nodeA);
         
         assertNotSame(p1, p2);
         p2.translate(nodeA.getWidth() / 2, 0);
