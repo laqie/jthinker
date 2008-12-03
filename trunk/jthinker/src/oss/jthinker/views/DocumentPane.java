@@ -43,6 +43,7 @@ import oss.jthinker.util.FilenameTrigger;
 import oss.jthinker.util.MutableTrigger;
 import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerListener;
+import oss.jthinker.widgets.ImageProducer;
 import oss.jthinker.widgets.MouseLocator;
 
 /**
@@ -55,7 +56,8 @@ public abstract class DocumentPane extends JPanel implements TriggerListener<Poi
     private final MutableTrigger<File> filenameTrigger;
     private final MutableTrigger<Boolean> modifiedTrigger;
     private final Trigger<String> tabTitleTrigger;
-
+    private ImageProducer _imageMaker;
+    
     /**
      * Creates a new DocumentPane instance with given string as title.
      * 
@@ -162,5 +164,17 @@ public abstract class DocumentPane extends JPanel implements TriggerListener<Poi
         Trigger<Boolean> moded = getModifiedTrigger();
         Trigger<String> modedStr = new BoolStringTrigger(moded, "(*)");
         return new CompositeStringTrigger(title, modedStr);
+    }
+
+    /**
+     * Returns an image producer associated with this component.
+     * 
+     * @return image producer of this component.
+     */
+    public ImageProducer getImageMaker() {
+        if (_imageMaker == null) {
+            _imageMaker = new ImageProducer(this);
+        }
+        return _imageMaker;
     }
 }
