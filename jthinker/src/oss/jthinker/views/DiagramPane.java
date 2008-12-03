@@ -38,10 +38,8 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import javax.swing.filechooser.FileFilter;
 import oss.jthinker.diagrams.ComponentManager;
 import oss.jthinker.diagrams.DiagramOptionSpec;
 import oss.jthinker.diagrams.DiagramSpec;
@@ -61,6 +59,8 @@ import oss.jthinker.widgets.JNodeAdjuster;
 import oss.jthinker.widgets.JWire;
 import oss.jthinker.widgets.MouseLocator;
 import oss.jthinker.widgets.JXPopupMenu;
+
+import static oss.jthinker.widgets.ThinkerFileChooser.*;
 
 /**
  * {@link DocumentPane}-based implementation of {@link DiagramView}.
@@ -297,28 +297,9 @@ public class DiagramPane extends DocumentPane implements DiagramView {
             return true;
         }
         if (!getFilenameTrigger().hasState() || askName) {
-            JFileChooser chooser = new JFileChooser();
-            FileFilter filter = new ThinkerFileFilter();
-            chooser.setFileFilter(filter);
-            int code = chooser.showSaveDialog(this);
-            if (code != JFileChooser.APPROVE_OPTION) {
+            File file = chooseSave(JTHINKER_FILES);
+            if (file == null) {
                 return false;
-            }
-            File file = chooser.getSelectedFile();
-            if (chooser.getFileFilter() == filter) {
-                if (!file.getName().endsWith(".jthinker")) {
-                    file = new File(file.getAbsolutePath()+".jthinker");
-                }
-            }
-            if (file.exists()) {
-                int option = JOptionPane.showConfirmDialog(null,
-                        "'"+file.getAbsolutePath() +
-                        "' already exists.\n Should it be overwritten?",
-                        "File already exists", JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
-                if (option != JOptionPane.YES_OPTION) {
-                    return false;
-                }
             }
             getFilenameTrigger().setState(file);
         }

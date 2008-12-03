@@ -37,7 +37,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import oss.jthinker.tocmodel.DiagramDescription;
@@ -45,6 +44,7 @@ import oss.jthinker.tocmodel.DiagramDescription;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.JXPopupMenu;
 import static oss.jthinker.tocmodel.DescriptionStorage.getEntity;
+import static oss.jthinker.widgets.ThinkerFileChooser.*;
 
 /**
  * (@link DiagramDeck} that's extended with diagram save/load features.
@@ -56,6 +56,8 @@ public class MasterView extends DiagramDeck {
     private final JXPopupMenu popupMenu;
 
     private JMenuItem saveItem;
+    private JMenuItem saveAsItem;
+    private JMenuItem jpegExportItem;
     private JCheckBoxMenuItem numberingItem;
     
     private class NewAction extends AbstractAction {
@@ -152,7 +154,6 @@ public class MasterView extends DiagramDeck {
         };
 
         saveItem = new JMenuItem(action);
-        
         fileMenu.add(saveItem);
 
         action = new AbstractAction("Save as...") {
@@ -161,7 +162,22 @@ public class MasterView extends DiagramDeck {
             }
         };
         
-        fileMenu.add(new JMenuItem(action));
+        saveAsItem = new JMenuItem(action);
+        fileMenu.add(saveAsItem);
+
+        action = new AbstractAction("Export to JPEG/PNG") {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    File file = chooseSave(JPEG_FILES, PNG_FILES);
+                    getCurrentDiagram().getImageMaker().fileExport(file);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+
+        jpegExportItem = new JMenuItem(action);
+        fileMenu.add(jpegExportItem);
         
         fileMenu.addSeparator();
         
@@ -186,15 +202,12 @@ public class MasterView extends DiagramDeck {
      * Loads a diagram from file.
      */
     public void loadNew() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(new ThinkerFileFilter());
-        int code = chooser.showOpenDialog(this);
-        if (code != JFileChooser.APPROVE_OPTION) {
+        File file = chooseLoad(JTHINKER_FILES);
+        if (file == null) {
             return;
         }
-        File f = chooser.getSelectedFile();
         try {
-            addLinkPane(f);
+            addLinkPane(file);
         } catch (Throwable t) {
             logger.log(Level.SEVERE, "Unable to open", t);
         }
@@ -206,10 +219,14 @@ public class MasterView extends DiagramDeck {
         if (pane == null) {
             saveItem.setEnabled(false);
             numberingItem.setEnabled(false);
+            jpegExportItem.setEnabled(false);
+            saveAsItem.setEnabled(false);
         } else {
             saveItem.setEnabled(!pane.isSaved());
             numberingItem.setEnabled(true);
             numberingItem.setState(pane.getOptions().isNumberingEnabled());
+            jpegExportItem.setEnabled(true);
+            saveAsItem.setEnabled(true);
         }
     }
 }
