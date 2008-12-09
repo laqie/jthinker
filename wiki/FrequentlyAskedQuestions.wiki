@@ -4,6 +4,9 @@
 == What is the purpose of jThinker project? ==
 The purpose is to deliver a tool for computer-aided creation of thinking processes diagrams.
 
+== What is "thinking processes" and "theory of constraints"? ==
+There are several [http://code.google.com/p/jthinker/wiki/FurtherReading very good books] that contains all explanations of this kind.
+
 == Is it just a graphical application for drawing boxes? ==
 Of course no. The target is to create a system with many complex "helpers" that will assist in the creation of diagram. However, such work must be done atop a mature graphical software framework and so the majority of work now is done on improvements of graphical engine rather than on designing an automatic TOC-assistant. Nonetheless, most of this improvements are coming from feedback from the users, rather than on a "nice to have" basis.
 
