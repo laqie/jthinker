@@ -31,9 +31,27 @@
 
 package oss.jthinker.diagrams;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.LinkedList;
+import org.w3c.dom.Element;
 import oss.jthinker.tocmodel.DiagramType;
 import java.util.List;
+import javax.swing.JOptionPane;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import oss.jthinker.util.XMLStored;
 import oss.jthinker.widgets.JNodeSpec;
 
 /**
@@ -42,12 +60,48 @@ import oss.jthinker.widgets.JNodeSpec;
  * 
  * @author iappel
  */
-public class DiagramSpec {
+public class DiagramSpec implements XMLStored {
     public final List<JEdgeSpec> edgeSpecs;
     public final List<JNodeSpec> nodeSpecs;
     public final List<JLegSpec> legSpecs;
     public final DiagramType type;
     public final DiagramOptionSpec options = new DiagramOptionSpec();
+
+    protected DiagramSpec(Node data) {
+        if (!data.getNodeName().equals("diagram")) {
+            throw new IllegalArgumentException(data.getNodeName());
+        }
+        Node typeNode = data.getAttributes().getNamedItem("type");
+        if (typeNode == null) {
+            throw new IllegalArgumentException("Diagram type missing");
+        }
+        String typeStr = typeNode.getNodeValue();
+        type = DiagramType.valueOf(typeStr);
+        edgeSpecs = new LinkedList<JEdgeSpec>();
+        nodeSpecs = new LinkedList<JNodeSpec>();
+        legSpecs = new LinkedList<JLegSpec>();
+
+        NodeList content = data.getChildNodes();
+
+        DiagramOptionSpec tempOptions = null;
+        
+        for (int i = 0; i < content.getLength(); i++) {
+            Node n = content.item(i);
+            String name = n.getNodeName();
+            if (name.equals("node")) {
+                JNodeSpec spec = JNodeSpec.loadInstance(n);
+                nodeSpecs.add(spec);
+            } else if (name.equals("edge")) {
+                JEdgeSpec spec = new JEdgeSpec(n);
+                edgeSpecs.add(spec);
+            } else if (name.equals("leg")) {
+                JLegSpec spec = new JLegSpec(n);
+                boolean t = legSpecs.add(spec);
+            } else if (name.equals("options")) {
+                options.fill(new DiagramOptionSpec(n));
+            }
+        }
+    }
     
     private DiagramSpec(List<JNodeSpec> nodeSpecs, List<JEdgeSpec> edgeSpecs,
             List<JLegSpec> legSpecs, DiagramType type) {
@@ -126,5 +180,66 @@ public class DiagramSpec {
     public int hashCode() {
         return nodeSpecs.hashCode() + edgeSpecs.hashCode() +
                 legSpecs.hashCode() + type.hashCode() + options.hashCode();
+    }
+
+    /** {@inheritDoc} */
+    public Element saveToXML(Document document) {
+        Element result = document.createElement("diagram");
+        result.setAttribute("type", type.toString());
+        for (JNodeSpec spec : nodeSpecs) {
+            result.appendChild(spec.saveToXML(document));
+        }
+        for (JEdgeSpec spec : edgeSpecs){
+            result.appendChild(spec.saveToXML(document));
+        }
+        for (JLegSpec spec : legSpecs){
+            result.appendChild(spec.saveToXML(document));
+        }
+        result.appendChild(options.saveToXML(document));
+        return result;
+    }
+    
+    /**
+     * Saves a diagram specification into an XML file.
+     * 
+     * @param f file to use
+     * @throws FileNotFoundException if the file exists but is a directory
+     *                   rather than a regular file, does not exist but cannot
+     *                   be created, or cannot be opened for any other reason
+     * {@see FileOutputStream}
+     */
+    public void save(File f) throws FileNotFoundException {
+        DocumentBuilder builder;
+        Transformer writer;
+        PrintStream printer;
+
+        try {
+            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            writer = TransformerFactory.newInstance().newTransformer();
+            printer = new PrintStream(f, "UTF-8");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex,
+                    "Unable to save file due to internal problems",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Document doc = builder.newDocument();
+        Element data = saveToXML(doc);
+        doc.appendChild(data);
+        
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(printer);
+
+        writer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        try {
+            writer.transform(source, result);
+        } catch (TransformerException ex) {
+            JOptionPane.showMessageDialog(null, ex,
+                    "Unable to save file due to internal problems",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     }
 }

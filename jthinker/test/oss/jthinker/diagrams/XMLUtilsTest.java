@@ -73,33 +73,24 @@ public class XMLUtilsTest {
     }
 
     /**
-     * Test of edgesToXML method, of class XMLUtils.
-     */
-    @Test
-    public void pointToXML() {
-        System.out.println("pointToXML");
-        Point p = new Point(100, 200);
-        assertEquals("<center x = \"100\" y = \"200\" />", XMLUtils.toXML(p));
-    }
-
-    /**
      * Test of working with non-ASCII characters.
      */
     @Test
-    public void russianTest() {
+    public void russianQuotesTest() {
         System.out.println("russianText");
         JNodeSpec nodeSpec = new JNodeSpec(BorderType.ELLIPSE, false,
-                "Пример текста на русском", new Point(0,0), Color.WHITE, "");
+                "Пример \"текста\" на русском", new Point(0,0), Color.WHITE, "");
         DiagramSpec diaSpec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION);
         diaSpec.nodeSpecs.add(nodeSpec);
         try {
-            XMLUtils.save(new File("c:\\russian.xml"), diaSpec);
+            diaSpec.save(new File("c:\\russian.xml"));
         } catch (Throwable t) {
+            t.printStackTrace();
             fail("No exceptions allowed");
         }
         DiagramSpec spec;
         try {
-           spec = XMLUtils.load(new File("c:\\russian.xml"));
+           spec = new FileDiagramSpec(new File("c:\\russian.xml"));
         } catch (Throwable t) {
             t.printStackTrace();
             fail("No exception allowed");
@@ -121,8 +112,9 @@ public class XMLUtilsTest {
         System.out.println("whitespaceTest");
         String content = "\t\n   <?xml version=\"1.0\"?><diagram> </diagram>";
         try {
-            DiagramSpec spec = XMLUtils.parse(content);
-        } catch (NullPointerException npe) {
+            DiagramSpec spec = FileDiagramSpec.parse(content);
+            fail("Exception must be thrown");
+        } catch (IllegalArgumentException npe) {
             
         } catch (Throwable t) {
             t.printStackTrace();
@@ -131,7 +123,7 @@ public class XMLUtilsTest {
         
         content = "\t\n   <?xml version=\"1.0\"?><diagram type=\"CURRENT_REALITY_TREE\"> </diagram>";
         try {
-            DiagramSpec spec = XMLUtils.parse(content);
+            DiagramSpec spec = FileDiagramSpec.parse(content);
             assertEquals(0, spec.nodeSpecs.size());
             assertEquals(DiagramType.CURRENT_REALITY_TREE, spec.type);
         } catch (Throwable t) {
@@ -151,13 +143,13 @@ public class XMLUtilsTest {
         DiagramSpec diaSpec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION);
         diaSpec.nodeSpecs.add(nodeSpec);
         try {
-            XMLUtils.save(new File("c:\\sample.xml"), diaSpec);
+            diaSpec.save(new File("c:\\sample.xml"));
         } catch (Throwable t) {
             fail("No exceptions allowed");
         }
         DiagramSpec spec;
         try {
-           spec = XMLUtils.load(new File("c:\\sample.xml"));
+           spec = new FileDiagramSpec(new File("c:\\sample.xml"));
         } catch (Throwable t) {
             fail("No exception allowed");
             return;
@@ -186,7 +178,7 @@ public class XMLUtilsTest {
         nodeList.add(node1);
         nodeList.add(node2);
         nodeList.add(node3);
-        JEdgeSpec edge1 = new JEdgeSpec(1, 2);
+        JEdgeSpec edge1 = new JEdgeSpec(1, 2, true);
         JLegSpec leg1 = new JLegSpec(0, 0);
         List<JEdgeSpec> edgeList = new ArrayList<JEdgeSpec>(1);
         edgeList.add(edge1);
@@ -194,20 +186,44 @@ public class XMLUtilsTest {
         legList.add(leg1);
         DiagramSpec spec = new DiagramSpec(nodeList, edgeList, legList);
         try {
-            XMLUtils.save(new File("c:\\test2.xml"), spec);
+            spec.save(new File("c:\\test2.xml"));
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
         
         DiagramSpec spec2;
         try {
-            spec2 = XMLUtils.load(new File("c:\\test2.xml"));
+            spec2 = new FileDiagramSpec(new File("c:\\test2.xml"));
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
 
         assertEquals(spec.legSpecs, spec2.legSpecs);
         assertEquals(spec.options, spec2.options);
+        assertEquals(spec, spec2);
+    }
+    
+    @Test
+    public void quotationTest() {
+        System.out.println("quotationTest");
+        JNodeSpec node = new JNodeSpec(BorderType.ROUND_RECT, false,
+                "\"sample\"", new Point(0,0), Color.PINK, "sample \"sample\"");
+        DiagramSpec spec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION),
+                spec2;
+        spec.nodeSpecs.add(node);
+        try {
+            spec.save(new File("c:\\quote.xml"));
+        } catch (Throwable t) {
+            t.printStackTrace();
+            fail("No exceptions allowed");
+        }
+        try {
+            spec2 = new FileDiagramSpec(new File("c:\\quote.xml"));
+        } catch (Throwable t) {
+            t.printStackTrace();
+            fail("No exceptions allowed");
+            return;
+        }
         assertEquals(spec, spec2);
     }
 }

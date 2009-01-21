@@ -32,7 +32,16 @@
 package oss.jthinker.diagrams;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -44,8 +53,57 @@ import org.xml.sax.SAXException;
 public class FileDiagramSpec extends DiagramSpec {
     public final File file;
 
+    /**
+     * Loads a diagram from XML file.
+     * 
+     * @param file file to get data from.
+     * @throws SAXException on problems with file parsing.
+     * @throws IOException on problems with file access.
+     */
     public FileDiagramSpec(File file) throws SAXException, IOException {
-        super(XMLUtils.load(file));
+        super(loadInstance(file));
         this.file = file;
+    }
+    
+    /**
+     * Loads a diagram specification from XML file.
+     * 
+     * @param f XML file
+     * @return diagram specification
+     * @throws SAXException on parsing errors
+     * @throws IOException on I/O errors of loading a file
+     */
+    public static DiagramSpec loadInstance(File f) throws SAXException, IOException {
+        FileInputStream stream = new FileInputStream(f);
+        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+        char[] cData = new char[(int) f.length()];
+        reader.read(cData);
+
+        return parse(new String(cData));
+    }
+
+    /**
+     * Loads a diagram specification from string buffer.
+     * 
+     * @param rawContent string buffer
+     * @return diagram specification
+     * @throws SAXException on parsing errors
+     * @throws IOException on I/O errors of loading a file
+     */
+    public static DiagramSpec parse(String rawContent) throws SAXException, IOException {
+        String content = rawContent.trim();
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder parser = dbf.newDocumentBuilder();
+            Reader reader = new StringReader(content);
+            InputSource source = new InputSource(reader);
+            Document doc = parser.parse(source);
+            if (doc == null) {
+                throw new NullPointerException();
+            }
+            return new DiagramSpec(doc.getFirstChild());
+        } catch (ParserConfigurationException pex) {
+            throw new RuntimeException("Unable to load data");
+        }
     }
 }
