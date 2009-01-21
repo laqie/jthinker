@@ -31,12 +31,19 @@
 
 package oss.jthinker.diagrams;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import oss.jthinker.util.XMLStored;
+
 /**
  * Simple value holder for diagram's options.
  * 
  * @author iappel
  */
-public class DiagramOptionSpec {
+public class DiagramOptionSpec implements XMLStored {
     public boolean numbering;
 
     /**
@@ -46,7 +53,28 @@ public class DiagramOptionSpec {
     public DiagramOptionSpec() {
         numbering = true;
     }
-    
+
+    /**
+     * Creates a new instance of DiagramOptionSpec and loads all the data
+     * from the provided XML document node.
+     * 
+     * @param data XML node
+     */
+    public DiagramOptionSpec(Node data) {
+        NodeList nodeList = data.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            if (!nodeList.item(i).hasAttributes()) {
+                continue;
+            }
+            NamedNodeMap attrs = nodeList.item(i).getAttributes();
+            String name = attrs.getNamedItem("name").getNodeValue();
+            String value = attrs.getNamedItem("value").getNodeValue();
+            if (name.equals("numbering")) {
+                numbering = Boolean.parseBoolean(value);
+            }
+        }
+    }
+
     @Override
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
@@ -72,5 +100,16 @@ public class DiagramOptionSpec {
             return;
         }
         numbering = spec.numbering;
+    }
+
+    /** {@inheritDoc} */
+    public Element saveToXML(Document document) {
+        Element section = document.createElement("options");
+        Element option = document.createElement("option");
+        option.setAttribute("name", "numbering");
+        option.setAttribute("value", Boolean.toString(numbering));
+        section.appendChild(option);
+        
+        return section;
     }
 }

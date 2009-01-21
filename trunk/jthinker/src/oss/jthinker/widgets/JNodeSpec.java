@@ -33,13 +33,20 @@ package oss.jthinker.widgets;
 
 import java.awt.Color;
 import java.awt.Point;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import oss.jthinker.diagrams.XMLUtils;
+import oss.jthinker.util.XMLStored;
 
 /**
  * A {@link JNode} construction specification.
  * 
  * @author iappel
  */
-public class JNodeSpec extends JSlideSpec {
+public class JNodeSpec extends JSlideSpec implements XMLStored {
     private final boolean editable;
     private final String content, comment;
 
@@ -167,4 +174,66 @@ public class JNodeSpec extends JSlideSpec {
     public int hashCode() {
         return super.hashCode() + content.hashCode() + comment.hashCode();
     }
+
+    /** {@inheritDoc} */
+    public Element saveToXML(Document document) {
+        Element result = document.createElement("node");
+        result.setAttribute("type", getBorderType().toString());
+        result.setAttribute("editable", Boolean.toString(editable));
+        Element point = XMLUtils.toXML(getSlideCenter(), document);
+        result.appendChild(point);
+        
+        Element contentNode = document.createElement("content");
+        contentNode.setAttribute("text", content);
+        result.appendChild(contentNode);
+
+        Element commentNode = document.createElement("comment");
+        commentNode.setAttribute("text", comment);
+        result.appendChild(commentNode);
+
+        Element colorNode = XMLUtils.toXML(this.getBackground(), document);
+        result.appendChild(colorNode);
+        
+        return result;
+    }
+
+    /**
+     * Loads a specification from XML data.
+     * 
+     * @param data XML node to get data from.
+     * @return loaded node spec
+     */
+    public static JNodeSpec loadInstance(Node data) {
+        if (!data.getNodeName().equals("node")) {
+            throw new IllegalArgumentException(data.getNodeName());
+        }
+
+        NamedNodeMap map = data.getAttributes();
+        String typeStr = map.getNamedItem("type").getNodeValue();
+        BorderType type = BorderType.valueOf(typeStr);
+        String editStr = map.getNamedItem("editable").getNodeValue();
+        boolean edit = Boolean.valueOf(editStr);
+
+        NodeList children = data.getChildNodes();
+
+        String content = null;
+        Point center = null;
+        Color color = null;
+        String comment = null;
+
+        for (int i = 0; i < children.getLength(); i++) {
+            Node n = children.item(i);
+            if (n.getNodeName().equals("content")) {
+                content = n.getAttributes().getNamedItem("text").getNodeValue();
+            } else if (n.getNodeName().equals("color")) {
+                color = XMLUtils.toColor(n);
+            } else if (n.getNodeName().equals("comment")) {
+                comment = n.getAttributes().getNamedItem("text").getNodeValue();
+            } else if (n.getNodeName().equals("center")) {
+                center = XMLUtils.toPoint(n);
+            }
+        }
+
+        return new JNodeSpec(type, edit, content, center, color, comment);
+    }    
 }

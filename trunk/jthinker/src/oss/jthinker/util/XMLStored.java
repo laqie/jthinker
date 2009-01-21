@@ -29,69 +29,22 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
+package oss.jthinker.util;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import oss.jthinker.util.XMLStored;
 
 /**
- * Saveable presentation of a leg;
+ * Represents an entity that is mirrored inside XML data.
  * 
  * @author iappel
  */
-public class JLegSpec implements XMLStored {
-    public final int idxA, idxZ;
-
+public interface XMLStored {
     /**
-     * Loads specification from XML data.
+     * Produces a new {@link Element} that represents entity's data.
      * 
-     * @param data XML node that contains description of edge.
+     * @param document to use as an object factory.
+     * @return {@link Element} that represents entity's data.
      */
-    public JLegSpec(Node data) {
-        if (!data.getNodeName().equals("leg")) {
-            throw new IllegalArgumentException(data.getNodeName());
-        }
-        NamedNodeMap map = data.getAttributes();
-        idxA = Integer.parseInt(map.getNamedItem("start").getNodeValue());
-        idxZ = Integer.parseInt(map.getNamedItem("end").getNodeValue());
-    }
-    
-    /**
-     * Creates a new JLegSpec instance.
-     * 
-     * @param idxA index of leg's start node
-     * @param idxZ index of leg's end edge
-     */
-    public JLegSpec(int idxA, int idxZ) {
-        this.idxA = idxA;
-        this.idxZ = idxZ;
-    }
-
-    @Override
-    /** {@inheritDoc} */
-    public boolean equals(Object obj) {
-        if (obj instanceof JLegSpec) {
-            JLegSpec legSpec = (JLegSpec)obj;
-            return (legSpec.idxA == idxA) && (legSpec.idxZ == idxZ);
-        } else {
-            return super.equals(obj);
-        }
-    }
-
-    @Override
-    /** {@inheritDoc} */
-    public int hashCode() {
-        return idxA + 42 * idxZ;
-    }
-
-    /** {@inheritDoc} */
-    public Element saveToXML(Document document) {
-        Element result = document.createElement("leg");
-        result.setAttribute("start",    Integer.toString(idxA));
-        result.setAttribute("end",      Integer.toString(idxZ));
-        return result;
-    }
+    Element saveToXML(Document document);
 }

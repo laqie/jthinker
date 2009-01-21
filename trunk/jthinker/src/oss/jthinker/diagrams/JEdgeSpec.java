@@ -31,16 +31,38 @@
 
 package oss.jthinker.diagrams;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import oss.jthinker.util.XMLStored;
+
 /**
  * Saveable presentation of the edge on diagram.
  * 
  * @author iappel
  */
-public class JEdgeSpec {
+public class JEdgeSpec implements XMLStored {
     public final int idxA;
     public final int idxZ;
     public final boolean conflict;
-    
+
+    /**
+     * Loads specification from XML data.
+     * 
+     * @param data XML node that contains description of edge.
+     */
+    public JEdgeSpec(Node data) {
+        if (!data.getNodeName().equals("edge")) {
+            throw new IllegalArgumentException(data.getNodeName());
+        }
+        NamedNodeMap map = data.getAttributes();
+        idxA = Integer.parseInt(map.getNamedItem("start").getNodeValue());
+        idxZ = Integer.parseInt(map.getNamedItem("end").getNodeValue());
+        Node cf = map.getNamedItem("conflict");
+        conflict = (cf == null) ? false : "true".equals(cf.getNodeValue());
+    }
+
     /**
      * Creates a new JEdgeSpec instance.
      * 
@@ -70,4 +92,13 @@ public class JEdgeSpec {
     public int hashCode() {
         return idxA + 42 * idxZ;
     }    
+
+    /** {@inheritDoc} */
+    public Element saveToXML(Document document) {
+        Element result = document.createElement("edge");
+        result.setAttribute("start",    Integer.toString(idxA));
+        result.setAttribute("end",      Integer.toString(idxZ));
+        result.setAttribute("conflict", Boolean.toString(conflict));
+        return result;
+    }
 }
