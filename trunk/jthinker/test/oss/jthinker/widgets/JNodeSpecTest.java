@@ -73,9 +73,9 @@ public class JNodeSpecTest {
     public void equalityTest() {
         System.out.println("equalityTest");
         JNodeSpec spec = new JNodeSpec(BorderType.ELLIPSE, true, "sample",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         JNodeSpec spec2 = new JNodeSpec(BorderType.ROUND_RECT, true, "foobar",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         assertNotSame(spec, spec2);
     }
 
@@ -86,15 +86,15 @@ public class JNodeSpecTest {
     public void equalityTest2() {
         System.out.println("equalityTest2");
         JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         JNodeSpec spec2 = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
-                new Point(0,0), Color.PINK, "sample");
+                new Point(0,0), Color.PINK, "sample", null);
         assertFalse(spec.equals(spec2));
         spec2 = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
-                new Point(0,0), Color.WHITE, "foobar");
+                new Point(0,0), Color.WHITE, "foobar", null);
         assertFalse(spec.equals(spec2));
         spec2 = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         assertEquals(spec, spec2);
     }    
 }

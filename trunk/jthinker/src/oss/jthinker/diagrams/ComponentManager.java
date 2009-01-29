@@ -31,10 +31,12 @@
 
 package oss.jthinker.diagrams;
 
+import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.BorderType;
+import oss.jthinker.widgets.GroupHandler;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JEdgeHost;
 import oss.jthinker.widgets.JLeg;
@@ -50,6 +52,8 @@ import oss.jthinker.widgets.JNodeSpec;
  */
 public class ComponentManager extends ComponentHolder 
         implements JEdgeHost, JNodeHost {
+    private final GroupHandler groupHandler;
+    
     /**
      * Creates a new component manager for given diagram's view and type.
      * 
@@ -58,6 +62,7 @@ public class ComponentManager extends ComponentHolder
      */
     public ComponentManager(DiagramView view, DiagramType type) {
         super(view, type);
+        groupHandler = new GroupHandler(view);
     }
 
     /** {@inheritDoc} */
@@ -84,11 +89,19 @@ public class ComponentManager extends ComponentHolder
     /** {@inheritDoc} */
     public void deleteJNode(JNode node) {
         remove(node);
+        groupHandler.ungroup(node);
     }
 
     /** {@inheritDoc} */
-    public void dispatchJNodeMove() {
+    public void dispatchJNodeMove(JNode node) {
+        Point place = node.getLocation();
+        if (place.x < 0 || place.y < 0) {
+            place.x = Math.max(place.x, 0);
+            place.y = Math.max(place.y, 0);
+            node.setLocation(place);
+        }
         _view.dispatchMove();
+        groupHandler.updatePosition(node);
     }
     
     /** {@inheritDoc} */
@@ -160,5 +173,10 @@ public class ComponentManager extends ComponentHolder
             JLeg leg = new JLeg(nodes.get(a), edges.get(z), this);
             add(leg);
         }
+    }
+
+    /** {@inheritDoc} */
+    public GroupHandler getGroupHandler() {
+        return groupHandler;
     }
 }

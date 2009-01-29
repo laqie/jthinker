@@ -31,6 +31,7 @@
 package oss.jthinker.diagrams;
 
 import oss.jthinker.util.MutableTrigger;
+import oss.jthinker.widgets.JBackground;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
@@ -40,7 +41,7 @@ import oss.jthinker.widgets.JNode;
  * 
  * @author iappel
  */
-public interface DiagramView {
+public interface DiagramView extends JBackground {
     /**
      * Adds a new node to view.
      * 

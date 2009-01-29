@@ -58,6 +58,7 @@ public class MasterView extends DiagramDeck {
     private JMenuItem saveItem;
     private JMenuItem saveAsItem;
     private JMenuItem jpegExportItem;
+    private JMenuItem groupingItem;
     private JCheckBoxMenuItem numberingItem;
     
     private class NewAction extends AbstractAction {
@@ -97,6 +98,17 @@ public class MasterView extends DiagramDeck {
         public void actionPerformed(ActionEvent e) {
             DiagramPane pane = getCurrentDiagram();
             pane.getOptions().invertNumbering();
+        }
+    }
+    
+    private class GroupManagementAction extends AbstractAction {
+        private GroupManagementAction() {
+            super("Node groups management");
+        }
+        
+        public void actionPerformed(ActionEvent e) {
+            DiagramPane pane = getCurrentDiagram();
+            pane.getLinkController().getGroupHandler().displayManagerDialog(MasterView.this);
         }
     }
     
@@ -194,6 +206,10 @@ public class MasterView extends DiagramDeck {
         numberingItem = new JCheckBoxMenuItem(new NumberingOptionAction());
 
         diaoptMenu.add(numberingItem);
+        diaoptMenu.addSeparator();
+        
+        groupingItem = new JMenuItem(new GroupManagementAction());
+        diaoptMenu.add(groupingItem);
         
         return diaoptMenu;
     }
@@ -221,12 +237,14 @@ public class MasterView extends DiagramDeck {
             numberingItem.setEnabled(false);
             jpegExportItem.setEnabled(false);
             saveAsItem.setEnabled(false);
+            groupingItem.setEnabled(false);
         } else {
             saveItem.setEnabled(!pane.isSaved());
             numberingItem.setEnabled(true);
             numberingItem.setState(pane.getOptions().isNumberingEnabled());
             jpegExportItem.setEnabled(true);
             saveAsItem.setEnabled(true);
+            groupingItem.setEnabled(true);
         }
     }
 }

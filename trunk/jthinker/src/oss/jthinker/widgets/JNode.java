@@ -75,7 +75,7 @@ public class JNode extends JSlide {
 
             @Override
             public void componentMoved(ComponentEvent e) {
-                host.dispatchJNodeMove();
+                host.dispatchJNodeMove(JNode.this);
             }
         });
     }
@@ -107,6 +107,12 @@ public class JNode extends JSlide {
             }
         });
 
+        menu.add(new AbstractAction("Group") {
+            public void actionPerformed(ActionEvent e) {
+                host.getGroupHandler().selectGroup(JNode.this);
+            }
+        });
+        
         return menu;
     }
 
@@ -125,6 +131,9 @@ public class JNode extends JSlide {
         setLocation(spec.getSlideCenter());
         setComment(spec.getComment());
         content = spec.getContent();
+        if (spec.getGroup() != null) {
+            host.getGroupHandler().group(spec.getGroup(), this);
+        }
     }
 
     /**
@@ -182,8 +191,9 @@ public class JNode extends JSlide {
      * @return node's building specification.
      */    
     public JNodeSpec getNodeSpec() {
+        String nodeGroup = host.getGroupHandler().getNodeGroupName(this);
         return spec.clone(spec.getContent(), WindowUtils.computeCenterPoint(this),
-                getColor(), this.comment);
+                getColor(), this.comment, nodeGroup);
     }
     
     /**

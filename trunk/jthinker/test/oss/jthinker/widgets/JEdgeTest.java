@@ -97,7 +97,7 @@ public class JEdgeTest {
         assertEquals(p1, p2);
 
         p1 = edge.getEndZ();
-        p2 = GeometryUtils.computeCenterPoint(nodeB);
+        p2 = WindowUtils.computeCenterPoint(nodeB);
         assertNotSame(p1, p2);
         p2.translate(-nodeA.getWidth() / 2, 0);
         assertEquals(p1, p2);        
@@ -105,14 +105,14 @@ public class JEdgeTest {
         nodeA.setLocation(0, 100);
         try { Thread.sleep(500); } catch (Throwable t) {}
         p1 = edge.getEndA();
-        p2 = GeometryUtils.computeCenterPoint(nodeA);
+        p2 = WindowUtils.computeCenterPoint(nodeA);
         
         assertNotSame(p1, p2);
         p2.translate(nodeA.getWidth() / 2, 0);
         assertEquals(p1, p2);
         
         p1 = edge.getEndZ();
-        p2 = GeometryUtils.computeCenterPoint(nodeB);
+        p2 = WindowUtils.computeCenterPoint(nodeB);
         assertNotSame(p1, p2);
         p2.translate(-nodeA.getWidth() / 2, 0);
         assertEquals(p1, p2);

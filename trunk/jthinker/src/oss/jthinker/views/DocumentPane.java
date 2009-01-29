@@ -35,7 +35,6 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.JPanel;
 import oss.jthinker.util.AssociatedTrigger;
 import oss.jthinker.util.BoolStringTrigger;
 import oss.jthinker.util.CompositeStringTrigger;
@@ -44,6 +43,7 @@ import oss.jthinker.util.MutableTrigger;
 import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerListener;
 import oss.jthinker.widgets.ImageProducer;
+import oss.jthinker.widgets.JBackgroundPane;
 import oss.jthinker.widgets.MouseLocator;
 
 /**
@@ -52,7 +52,8 @@ import oss.jthinker.widgets.MouseLocator;
  * 
  * @author iappel
  */
-public abstract class DocumentPane extends JPanel implements TriggerListener<Point> {
+public abstract class DocumentPane extends JBackgroundPane
+                                   implements TriggerListener<Point> {
     private final MutableTrigger<File> filenameTrigger;
     private final MutableTrigger<Boolean> modifiedTrigger;
     private final Trigger<String> tabTitleTrigger;

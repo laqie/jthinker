@@ -33,6 +33,7 @@ package oss.jthinker.widgets;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Window;
 import java.util.Vector;
@@ -70,6 +71,16 @@ public class WindowUtils {
         }
     }
 
+    /**
+     * Finds, what window does this component is displayed in.
+     * 
+     * @param c component to seek
+     * @return window, which this component belongs to
+     */
+    public static Frame findFrame(Component c) {
+        return (Frame)findWindow(c);
+    }
+    
     /**
      * Calculates containment sequence, starting with given
      * component.

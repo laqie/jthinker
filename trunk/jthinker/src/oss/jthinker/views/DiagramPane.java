@@ -46,7 +46,6 @@ import oss.jthinker.diagrams.DiagramSpec;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.FileDiagramSpec;
-import oss.jthinker.diagrams.XMLUtils;
 import oss.jthinker.tocmodel.DescriptionStorage;
 import oss.jthinker.tocmodel.DiagramDescription;
 import oss.jthinker.tocmodel.NodeType;
@@ -309,7 +308,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         spec.options.numbering = options.isNumberingEnabled();
         
         try {
-            XMLUtils.save(file, spec);
+            spec.save(file);
         } catch (Throwable t) {
             logger.log(Level.SEVERE, "Exception", t);
             JOptionPane.showMessageDialog(this, "Unable to save",
