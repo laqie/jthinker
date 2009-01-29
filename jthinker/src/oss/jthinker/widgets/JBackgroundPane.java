@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
+ * Copyright (c) 2009, Ivan Appel <ivan.appel@gmail.com>
  * 
  * All rights reserved.
  * 
@@ -11,7 +11,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution. 
- *
+ * 
  * Neither the name of Ivan Appel nor the names of any other jThinker
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission. 
@@ -31,43 +31,53 @@
 
 package oss.jthinker.widgets;
 
+import java.awt.Graphics;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+
 /**
- * Minimalistic mock-emulator for JNodeHost interface.
+ * JPanel-based implementation of JBackground.
  * 
  * @author iappel
  */
-public class JNodeHost_Mock implements JNodeHost {
-    private final GroupHandler groupHandler = new GroupHandler(new
-            JBackgroundPane());
+public class JBackgroundPane extends JPanel implements JBackground {
+    private final Set<JComponent> backgroundComponents =
+            new HashSet<JComponent>();
+
+    /** {@inheritDoc} */
+    public void addBackground(JComponent entry) {
+        if (backgroundComponents.add(entry)) {
+            repaintBackground();
+        }
+    }
+
+    /** {@inheritDoc} */
+    public void removeBackground(JComponent entry) {
+        if (backgroundComponents.remove(entry)) {
+            repaintBackground();
+        }
+    }
+
+    /** {@inheritDoc} */
+    public void repaintBackground() {
+        repaint();
+    }
     
-    public void deleteJNode(JNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void editJNodeContent(JNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void endLinking(JNode end) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void startLinking(JNode start) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void enableNodeNumbering(boolean state) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public int issueIndex(JNode node) {
-        return 0;
-    }
-
-    public void dispatchJNodeMove(JNode node) {
-    }
-
-    public GroupHandler getGroupHandler() {
-        return groupHandler;
+    @Override
+    /** {@inheritDoc} */
+    public void paint(Graphics g) {
+        super.paintComponent(g);
+        
+        for (JComponent entry : backgroundComponents) {
+            if (entry.isVisible()) {
+                Graphics gg = g.create();
+                gg.translate(entry.getX(), entry.getY());
+                entry.paint(gg);
+            }
+        }
+        
+        super.paintChildren(g);
     }
 }

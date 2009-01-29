@@ -79,7 +79,7 @@ public class XMLUtilsTest {
     public void russianQuotesTest() {
         System.out.println("russianText");
         JNodeSpec nodeSpec = new JNodeSpec(BorderType.ELLIPSE, false,
-                "Пример \"текста\" на русском", new Point(0,0), Color.WHITE, "");
+                "Пример \"текста\" на русском", new Point(0,0), Color.WHITE, "", null);
         DiagramSpec diaSpec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION);
         diaSpec.nodeSpecs.add(nodeSpec);
         try {
@@ -139,7 +139,7 @@ public class XMLUtilsTest {
     public void colorCommentsTest() {
         System.out.println("russianText");
         JNodeSpec nodeSpec = new JNodeSpec(BorderType.ELLIPSE, false,
-                "sample", new Point(0,0), Color.PINK, "sample");
+                "sample", new Point(0,0), Color.PINK, "sample", null);
         DiagramSpec diaSpec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION);
         diaSpec.nodeSpecs.add(nodeSpec);
         try {
@@ -169,11 +169,11 @@ public class XMLUtilsTest {
     public void legOptionTest() {
         System.out.println("legTest");
         JNodeSpec node1 = new JNodeSpec(BorderType.ELLIPSE, false,
-                "sample", new Point(0,0), Color.PINK, "sample");
+                "sample", new Point(0,0), Color.PINK, "sample", null);
         JNodeSpec node2 = new JNodeSpec(BorderType.ELLIPSE, false,
-                "sample", new Point(0,0), Color.PINK, "sample");
+                "sample", new Point(0,0), Color.PINK, "sample", null);
         JNodeSpec node3 = new JNodeSpec(BorderType.ELLIPSE, false,
-                "sample", new Point(0,0), Color.PINK, "sample");
+                "sample", new Point(0,0), Color.PINK, "sample", null);
         List<JNodeSpec> nodeList = new ArrayList<JNodeSpec>(3);
         nodeList.add(node1);
         nodeList.add(node2);
@@ -207,7 +207,7 @@ public class XMLUtilsTest {
     public void quotationTest() {
         System.out.println("quotationTest");
         JNodeSpec node = new JNodeSpec(BorderType.ROUND_RECT, false,
-                "\"sample\"", new Point(0,0), Color.PINK, "sample \"sample\"");
+                "\"sample\"", new Point(0,0), Color.PINK, "sample \"sample\"", null);
         DiagramSpec spec = new DiagramSpec(DiagramType.CONFLICT_RESOLUTION),
                 spec2;
         spec.nodeSpecs.add(node);

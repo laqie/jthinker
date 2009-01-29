@@ -10,8 +10,10 @@ public interface JNodeHost {
     /**
      * Should be called when some of hosted {@link JNode}s were moved to
      * do some after-move actions.
+     * 
+     * @param node node that recently moved
      */    
-    void dispatchJNodeMove();
+    void dispatchJNodeMove(JNode node);
     
     /**
      * Starts selecting peer to link with given node.
@@ -52,4 +54,11 @@ public interface JNodeHost {
      * @return node's numeric index
      */
     int issueIndex(JNode node);
+    
+    /**
+     * Returns a node-group associations holder.
+     * 
+     * @return grouping associations holder.
+     */
+    GroupHandler getGroupHandler();
 }

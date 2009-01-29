@@ -73,8 +73,8 @@ public class JNodeTest {
     @Test
     public void backgroundColorTest() {
         JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
-                new Point(0,0), Color.GREEN, "sample");
-        JNode node = new JNode(null, spec);
+                new Point(0,0), Color.GREEN, "sample", null);
+        JNode node = new JNode(new JNodeHost_Mock(), spec);
         assertEquals(Color.GREEN, node.getColor());
         assertEquals(Color.GREEN, node.getBackground());
         assertEquals(Color.GREEN, node.getComponent(0).getBackground());
@@ -88,8 +88,8 @@ public class JNodeTest {
     @Test
     public void commentTest() {
         JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
-                new Point(0,0), Color.GREEN, "sample");
-        JNode node = new JNode(null, spec);
+                new Point(0,0), Color.GREEN, "sample", null);
+        JNode node = new JNode(new JNodeHost_Mock(), spec);
         assertEquals("sample", node.getComment());
         assertEquals("sample", node.getToolTipText());
         JNodeSpec specRet = node.getNodeSpec();
@@ -102,9 +102,9 @@ public class JNodeTest {
     @Test
     public void hasContentTest() {
         JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "sample",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         JNodeSpec spec2 = new JNodeSpec(BorderType.ROUND_RECT, true, "      ",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         
         JNodeHost_Mock stub = new JNodeHost_Mock();
         
@@ -121,7 +121,7 @@ public class JNodeTest {
     @Test
     public void setContentTest() {
         JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "      ",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         JNodeHost_Mock stub = new JNodeHost_Mock();
 
         JFrame frame = new JFrame();
@@ -143,7 +143,7 @@ public class JNodeTest {
     @Test
     public void resizeTest() {
         JNodeSpec spec = new JNodeSpec(BorderType.ROUND_RECT, true, "foo",
-                new Point(0,0), Color.WHITE, "sample");
+                new Point(0,0), Color.WHITE, "sample", null);
         JNodeHost_Mock stub = new JNodeHost_Mock();
 
         JFrame frame = new JFrame();
