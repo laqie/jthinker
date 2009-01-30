@@ -30,6 +30,7 @@
  */
 package oss.jthinker.views;
 
+import oss.jthinker.resource.VersionChecker;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -63,7 +64,7 @@ public class ThinkerMain extends JFrame {
     }
 
     private ThinkerMain() {
-        super("jThinker");
+        super("jThinker "+VersionChecker.CURRENT_VERSION);
 
         masterView = new MasterView();
         add(masterView);
@@ -122,5 +123,7 @@ public class ThinkerMain extends JFrame {
         frame.setBounds(100, 100, 500, 300);
         frame.validate();
         frame.setVisible(true);
+
+        VersionChecker.checkVersion();        
     }
 }
