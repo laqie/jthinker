@@ -271,12 +271,8 @@ public class ComponentHolder implements NodeBundle<JNode> {
         _edges.relax();
         List<JNodeSpec> nodes = saveNodeSpecs();
         List<JEdgeSpec> edges = saveEdgeSpecs();
-        if (_type == DiagramType.TRANSITION_TREE) {
-            List<JLegSpec> legs = saveLegSpecs();
-            return new DiagramSpec(nodes, edges, legs);
-        } else {
-            return new DiagramSpec(nodes, edges, _type);
-        }
+        List<JLegSpec> legs = saveLegSpecs();
+        return new DiagramSpec(nodes, edges, legs, _type);
     }
 
     /**

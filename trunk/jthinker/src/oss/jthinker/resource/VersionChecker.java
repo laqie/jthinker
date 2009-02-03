@@ -31,6 +31,7 @@
 
 package oss.jthinker.resource;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
@@ -89,6 +90,8 @@ public class VersionChecker {
     private static String getVersion() {
         try {
             return getVersion(FEED_URL);
+        } catch (UnknownHostException ex) {
+            return null;
         } catch (Throwable t) {
             t.printStackTrace();
             return null;
