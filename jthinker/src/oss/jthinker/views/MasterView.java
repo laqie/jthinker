@@ -39,6 +39,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.tocmodel.DiagramDescription;
 
 import oss.jthinker.tocmodel.DiagramType;
@@ -59,6 +60,8 @@ public class MasterView extends DiagramDeck {
     private JMenuItem saveAsItem;
     private JMenuItem jpegExportItem;
     private JMenuItem groupingItem;
+    private JCheckBoxMenuItem orderingOffItem;
+    private JCheckBoxMenuItem orderingOverlapItem;
     private JCheckBoxMenuItem numberingItem;
     
     private class NewAction extends AbstractAction {
@@ -100,6 +103,30 @@ public class MasterView extends DiagramDeck {
             pane.getOptions().invertNumbering();
         }
     }
+
+    private class OrderingOffAction extends AbstractAction {
+        private OrderingOffAction() {
+            super("Off");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            getCurrentDiagram().getOptions().setOrderingLevel(OrderingLevel.OFF);
+            orderingOffItem.setSelected(true);
+            orderingOverlapItem.setSelected(false);
+        }
+    }
+
+    private class OrderingOverlapAction extends AbstractAction {
+        private OrderingOverlapAction() {
+            super("Suppress overlapping");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            getCurrentDiagram().getOptions().setOrderingLevel(OrderingLevel.SUPPRESS_OVERLAP);
+            orderingOffItem.setSelected(false);
+            orderingOverlapItem.setSelected(true);
+        }
+    }
     
     private class GroupManagementAction extends AbstractAction {
         private GroupManagementAction() {
@@ -111,7 +138,7 @@ public class MasterView extends DiagramDeck {
             pane.getLinkController().getGroupHandler().displayManagerDialog(MasterView.this);
         }
     }
-    
+
     /**
      * Creates a new MasterView instance.
      */
@@ -206,6 +233,13 @@ public class MasterView extends DiagramDeck {
         numberingItem = new JCheckBoxMenuItem(new NumberingOptionAction());
 
         diaoptMenu.add(numberingItem);
+        JMenu ordering = new JMenu("Diagram layout");
+        orderingOffItem = new JCheckBoxMenuItem(new OrderingOffAction());
+        ordering.add(orderingOffItem);
+        orderingOverlapItem = new JCheckBoxMenuItem(new OrderingOverlapAction());
+        ordering.add(orderingOverlapItem);
+        diaoptMenu.add(ordering);
+        
         diaoptMenu.addSeparator();
         
         groupingItem = new JMenuItem(new GroupManagementAction());
@@ -238,6 +272,8 @@ public class MasterView extends DiagramDeck {
             jpegExportItem.setEnabled(false);
             saveAsItem.setEnabled(false);
             groupingItem.setEnabled(false);
+            orderingOffItem.setEnabled(false);
+            orderingOverlapItem.setEnabled(false);
         } else {
             saveItem.setEnabled(!pane.isSaved());
             numberingItem.setEnabled(true);
@@ -245,6 +281,12 @@ public class MasterView extends DiagramDeck {
             jpegExportItem.setEnabled(true);
             saveAsItem.setEnabled(true);
             groupingItem.setEnabled(true);
+            orderingOffItem.setEnabled(true);
+            orderingOverlapItem.setEnabled(true);
+            
+            OrderingLevel level = pane.getOptions().getOrderingLevel();
+            orderingOffItem.setState(level == OrderingLevel.OFF);
+            orderingOverlapItem.setState(level == OrderingLevel.SUPPRESS_OVERLAP);
         }
     }
 }

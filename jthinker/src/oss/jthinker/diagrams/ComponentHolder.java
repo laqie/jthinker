@@ -31,13 +31,17 @@
 
 package oss.jthinker.diagrams;
 
+import java.awt.Rectangle;
 import oss.jthinker.tocmodel.DiagramType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import oss.jthinker.graphs.NodeBundle;
+import oss.jthinker.widgets.SwingMapping;
 import oss.jthinker.util.GappedArray;
+import oss.jthinker.util.Mapping;
 import oss.jthinker.widgets.AbstractEdge;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JEdge;
@@ -49,7 +53,7 @@ import oss.jthinker.widgets.JNodeSpec;
  *
  * @author iappel
  */
-public class ComponentHolder {
+public class ComponentHolder implements NodeBundle<JNode> {
     private final GappedArray<JNode> _nodes = new GappedArray<JNode>();
     private final GappedArray<JEdge> _edges = new GappedArray<JEdge>();
     private final GappedArray<JLeg> _legs = new GappedArray<JLeg>();
@@ -337,5 +341,15 @@ public class ComponentHolder {
      */
     public boolean allowsConflict() {
         return _type.equals(DiagramType.CONFLICT_RESOLUTION);
+    }
+
+    /** {@inheritDoc} */
+    public int nodeCount() {
+        return getAllNodes().size();
+    }
+
+    /** {@inheritDoc} */
+    public Mapping<? super JNode, Rectangle, ?> getMapping() {
+        return new SwingMapping();
     }
 }

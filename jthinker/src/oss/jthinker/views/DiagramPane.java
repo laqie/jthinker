@@ -305,7 +305,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
 
         File file = getFilenameTrigger().getState();
         DiagramSpec spec = linker.getDiagramSpec();
-        spec.options.numbering = options.isNumberingEnabled();
+        spec.options.fill(options.getSpec());
         
         try {
             spec.save(file);

@@ -48,7 +48,7 @@ import oss.jthinker.util.XMLStored;
  */
 public class JNodeSpec extends JSlideSpec implements XMLStored {
     private final boolean editable;
-    private final String content, comment;
+    private final String content, comment, groupName;
 
     /**
      * Creates a new JNodeSpec instance.
@@ -60,7 +60,7 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      */
     public JNodeSpec(BorderType borderType, boolean editable, String content,
             Point center) {
-        this(borderType, editable, content, center, Color.WHITE, "");
+        this(borderType, editable, content, center, Color.WHITE, "", null);
     }
     
     
@@ -75,11 +75,12 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param comment tooltip comment
      */
     public JNodeSpec(BorderType borderType, boolean editable, String content,
-            Point center, Color color, String comment) {
+            Point center, Color color, String comment, String nodeGroup) {
         super(center, borderType, color);
         this.editable = editable;
         this.content = content == null ? "" : content;
         this.comment = comment == null ? "" : comment;
+        this.groupName = nodeGroup;
     }
 
     /**
@@ -91,6 +92,10 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
         return content;
     }
 
+    public String getGroup() {
+        return groupName;
+    }
+    
     public String getComment() {
         return comment;
     }
@@ -136,9 +141,9 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param otherComment comment for new node
      * @return newly cloned JNodeSpec instance
      */
-    public JNodeSpec clone(String otherContent, Point otherCenter, Color otherColor, String otherComment) {
+    public JNodeSpec clone(String otherContent, Point otherCenter, Color otherColor, String otherComment, String otherGroup) {
         BorderType borderType = super.getBorderType();
-        return new JNodeSpec(borderType, editable, otherContent, otherCenter, otherColor, otherComment);
+        return new JNodeSpec(borderType, editable, otherContent, otherCenter, otherColor, otherComment, otherGroup);
     }
 
     @Override
@@ -193,6 +198,12 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
 
         Element colorNode = XMLUtils.toXML(this.getBackground(), document);
         result.appendChild(colorNode);
+
+        if (groupName != null) {
+            Element groupNode = document.createElement("group-name");
+            groupNode.setAttribute("text", groupName);
+            result.appendChild(groupNode);
+        }
         
         return result;
     }
@@ -220,6 +231,7 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
         Point center = null;
         Color color = null;
         String comment = null;
+        String nodeGroup = null;
 
         for (int i = 0; i < children.getLength(); i++) {
             Node n = children.item(i);
@@ -231,9 +243,11 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
                 comment = n.getAttributes().getNamedItem("text").getNodeValue();
             } else if (n.getNodeName().equals("center")) {
                 center = XMLUtils.toPoint(n);
+            } else if (n.getNodeName().equals("group-name")) {
+                nodeGroup = n.getAttributes().getNamedItem("text").getNodeValue();
             }
         }
 
-        return new JNodeSpec(type, edit, content, center, color, comment);
+        return new JNodeSpec(type, edit, content, center, color, comment, nodeGroup);
     }    
 }

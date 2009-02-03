@@ -36,6 +36,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.util.XMLStored;
 
 /**
@@ -45,6 +46,7 @@ import oss.jthinker.util.XMLStored;
  */
 public class DiagramOptionSpec implements XMLStored {
     public boolean numbering;
+    public OrderingLevel orderingLevel;
 
     /**
      * Creates a new instance of DiagramOptionSpec with all values
@@ -52,6 +54,7 @@ public class DiagramOptionSpec implements XMLStored {
      */
     public DiagramOptionSpec() {
         numbering = true;
+        orderingLevel = OrderingLevel.SUPPRESS_OVERLAP;
     }
 
     /**
@@ -71,6 +74,8 @@ public class DiagramOptionSpec implements XMLStored {
             String value = attrs.getNamedItem("value").getNodeValue();
             if (name.equals("numbering")) {
                 numbering = Boolean.parseBoolean(value);
+            } else if (name.equals("ordering-level")) {
+                orderingLevel = OrderingLevel.valueOf(value);
             }
         }
     }
@@ -79,7 +84,10 @@ public class DiagramOptionSpec implements XMLStored {
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
         if (obj instanceof DiagramOptionSpec) {
-            return ((DiagramOptionSpec)obj).numbering == this.numbering;
+            DiagramOptionSpec spec = (DiagramOptionSpec)obj;
+            
+            return spec.numbering == numbering &&
+                   spec.orderingLevel.equals(orderingLevel);
         }
         return super.equals(obj);
     }
@@ -87,7 +95,7 @@ public class DiagramOptionSpec implements XMLStored {
     @Override
     /** {@inheritDoc} */
     public int hashCode() {
-        return numbering ? 42 : -11;
+        return (numbering ? 42 : -11) * (2 * orderingLevel.hashCode() + 1);
     }
     
     /**
@@ -100,6 +108,7 @@ public class DiagramOptionSpec implements XMLStored {
             return;
         }
         numbering = spec.numbering;
+        orderingLevel = spec.orderingLevel;
     }
 
     /** {@inheritDoc} */
@@ -109,7 +118,10 @@ public class DiagramOptionSpec implements XMLStored {
         option.setAttribute("name", "numbering");
         option.setAttribute("value", Boolean.toString(numbering));
         section.appendChild(option);
-        
+        option = document.createElement("option");
+        option.setAttribute("name", "ordering-level");
+        option.setAttribute("value", orderingLevel.toString());
+        section.appendChild(option);
         return section;
     }
 }

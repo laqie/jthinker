@@ -32,6 +32,7 @@
 package oss.jthinker.views;
 
 import oss.jthinker.diagrams.DiagramOptionSpec;
+import oss.jthinker.graphs.OrderingLevel;
 
 /**
  * Value holder that mirrors {@link DiagramOptionSpec} and maintains
@@ -41,6 +42,8 @@ import oss.jthinker.diagrams.DiagramOptionSpec;
  */
 public class DiagramOptions {
     private boolean numberNodes;
+    private OrderingLevel orderLevel;
+    
     private final DiagramPane pane;
 
     /**
@@ -51,6 +54,7 @@ public class DiagramOptions {
      */
     public DiagramOptions(DiagramPane diagram, DiagramOptionSpec spec) {
         numberNodes = spec.numbering;
+        orderLevel = spec.orderingLevel;
         pane = diagram;
     }
 
@@ -85,6 +89,26 @@ public class DiagramOptions {
     public DiagramOptionSpec getSpec() {
         DiagramOptionSpec result = new DiagramOptionSpec();
         result.numbering = numberNodes;
+        result.orderingLevel = orderLevel;
         return result;
     }
+
+    /**
+     * Sets preferred auto-layout policy for this diagram.
+     * 
+     * @param level layout policy.
+     */
+    public void setOrderingLevel(OrderingLevel level) {
+        orderLevel = level;
+        pane.getLinkController().getGraphEngine().setLevel(level);
+    }
+
+    /**
+     * Returns preferred auto-layout policy for this diagram.
+     * 
+     * @return layout policy.
+     */
+    public OrderingLevel getOrderingLevel() {
+        return orderLevel;
+    }    
 }
