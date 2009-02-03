@@ -86,7 +86,7 @@ public class MasterView extends DiagramDeck {
             Point p = popupMenu.getLastDisplayLocation();
             int i = indexAtLocation(p.x, p.y);
             DiagramPane pane = getDiagram(i);
-            if (!pane.askedSave()) {
+            if (pane == null || !pane.askedSave()) {
                 return;
             }
             removeTabAt(i);

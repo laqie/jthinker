@@ -157,7 +157,16 @@ public class JLine extends JComponent {
         setBounds(minx - 5, miny - 5, dx + 10, dy + 10);
     }
 
-    private void draw(Graphics g, int x, int y1, int y2) {
+    /**
+     * Internal function for drawing lines.
+     * Intended to draw a (5,y1) - (x-5,y2) line in coordinates of Graphics.
+     * 
+     * @param g Graphics to draw on
+     * @param x coordinate
+     * @param y1 coordinate
+     * @param y2 coordinate
+     */
+    protected void draw(Graphics g, int x, int y1, int y2) {
         if (_conflict) {
             double lineLen = Math.hypot(x - 10, y1 - y2);
             Point endA = new Point(5, y1);

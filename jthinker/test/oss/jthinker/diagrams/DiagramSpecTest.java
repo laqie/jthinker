@@ -71,9 +71,11 @@ public class DiagramSpecTest {
     public void nullInConstructor() {
         DiagramSpec spec = new DiagramSpec(new LinkedList<JNodeSpec>(),
                     new LinkedList<JEdgeSpec>(),
+                    null,
                     DiagramType.CURRENT_REALITY_TREE);
         assertNotNull(spec.legSpecs);
-        spec = new DiagramSpec(null, null, new LinkedList<JLegSpec>());
+        spec = new DiagramSpec(null, null, new LinkedList<JLegSpec>(),
+                DiagramType.TRANSFORM_PLAN);
         assertNotNull(spec.nodeSpecs);
         assertNotNull(spec.edgeSpecs);
     }
@@ -82,10 +84,12 @@ public class DiagramSpecTest {
     public void optionsTest() {
         DiagramSpec spec1 = new DiagramSpec(new LinkedList<JNodeSpec>(),
                     new LinkedList<JEdgeSpec>(),
+                    null,
                     DiagramType.CURRENT_REALITY_TREE);
         spec1.options.numbering = false;
         DiagramSpec spec2 = new DiagramSpec(new LinkedList<JNodeSpec>(),
                     new LinkedList<JEdgeSpec>(),
+                    null,
                     DiagramType.CURRENT_REALITY_TREE);
         spec2.options.numbering = false;
         assertEquals(spec1, spec2);

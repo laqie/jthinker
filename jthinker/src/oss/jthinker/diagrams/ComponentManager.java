@@ -37,7 +37,6 @@ import java.util.List;
 import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.tocmodel.DiagramType;
-import oss.jthinker.widgets.BorderType;
 import oss.jthinker.widgets.GroupHandler;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JEdgeHost;
@@ -138,12 +137,6 @@ public class ComponentManager extends ComponentHolder
     /** {@inheritDoc} */
     public void endLinking(JEdge end) {
         if (linkPeer == null) {
-            return;
-        }
-        if (linkPeer.getBorderType() != BorderType.HEXAGON) {
-            return;
-        }
-        if (_type != DiagramType.TRANSITION_TREE) {
             return;
         }
         _view.disableMouseEdge(linkPeer);

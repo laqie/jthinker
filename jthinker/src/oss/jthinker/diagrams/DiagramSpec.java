@@ -48,7 +48,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import oss.jthinker.util.XMLStored;
@@ -102,8 +101,16 @@ public class DiagramSpec implements XMLStored {
             }
         }
     }
-    
-    private DiagramSpec(List<JNodeSpec> nodeSpecs, List<JEdgeSpec> edgeSpecs,
+
+    /**
+     * Creates a new DiagramSpec instance.
+     * 
+     * @param nodeSpecs list of diagram's nodes
+     * @param edgeSpecs list of diagram's edges
+     * @param legSpecs list of diagram's legs
+     * @param type type of the diagram
+     */    
+    public DiagramSpec(List<JNodeSpec> nodeSpecs, List<JEdgeSpec> edgeSpecs,
             List<JLegSpec> legSpecs, DiagramType type) {
         this.edgeSpecs = edgeSpecs != null ? edgeSpecs :
             new LinkedList<JEdgeSpec>();
@@ -114,34 +121,6 @@ public class DiagramSpec implements XMLStored {
         this.type = type;
     }
 
-    /**
-     * Creates a new DiagramSpec instance. Since the only {@see DiagramType}
-     * that allows use of {@see JLeg}s is transition tree, field is omitted.
-     * 
-     * @param nodeSpecs list of diagram's nodes
-     * @param edgeSpecs list of diagram's edges
-     * @param legSpecs list of diagram's legs
-     */
-    public DiagramSpec(List<JNodeSpec> nodeSpecs, List<JEdgeSpec> edgeSpecs,
-            List<JLegSpec> legSpecs) {
-        this(nodeSpecs, edgeSpecs, legSpecs, DiagramType.TRANSITION_TREE);
-    }
-
-    /**
-     * Creates a new DiagramSpec instance. Since the only {@see DiagramType}
-     * that allows use of {@see JLeg}s is transition tree and there's a
-     * separate constructor for that, this constructor doesn't allow setting
-     * of legs.
-     * 
-     * @param nodeSpecs list of diagram's nodes
-     * @param edgeSpecs list of diagram's edges
-     * @param type type of the diagram
-     */
-    public DiagramSpec(List<JNodeSpec> nodeSpecs, List<JEdgeSpec> edgeSpecs,
-            DiagramType type) {
-        this(nodeSpecs, edgeSpecs, null, type);
-    }
-    
     /**
      * Copies a DiagramSpec from another instance.
      * 

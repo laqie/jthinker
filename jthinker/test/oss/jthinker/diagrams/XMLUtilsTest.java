@@ -184,7 +184,7 @@ public class XMLUtilsTest {
         edgeList.add(edge1);
         List<JLegSpec> legList = new ArrayList<JLegSpec>(1);
         legList.add(leg1);
-        DiagramSpec spec = new DiagramSpec(nodeList, edgeList, legList);
+        DiagramSpec spec = new DiagramSpec(nodeList, edgeList, legList, DiagramType.FUTURE_REALITY_TREE);
         try {
             spec.save(new File("c:\\test2.xml"));
         } catch (Throwable t) {
