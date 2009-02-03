@@ -34,6 +34,8 @@ package oss.jthinker.diagrams;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
+import oss.jthinker.graphs.GraphEngine;
+import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.BorderType;
 import oss.jthinker.widgets.GroupHandler;
@@ -53,6 +55,7 @@ import oss.jthinker.widgets.JNodeSpec;
 public class ComponentManager extends ComponentHolder 
         implements JEdgeHost, JNodeHost {
     private final GroupHandler groupHandler;
+    private final GraphEngine<JNode> engine;
     
     /**
      * Creates a new component manager for given diagram's view and type.
@@ -63,6 +66,7 @@ public class ComponentManager extends ComponentHolder
     public ComponentManager(DiagramView view, DiagramType type) {
         super(view, type);
         groupHandler = new GroupHandler(view);
+        engine = new GraphEngine<JNode>(this, OrderingLevel.SUPPRESS_OVERLAP);
     }
 
     /** {@inheritDoc} */
@@ -102,6 +106,7 @@ public class ComponentManager extends ComponentHolder
         }
         _view.dispatchMove();
         groupHandler.updatePosition(node);
+        engine.updatePosition(node);
     }
     
     /** {@inheritDoc} */
@@ -178,5 +183,14 @@ public class ComponentManager extends ComponentHolder
     /** {@inheritDoc} */
     public GroupHandler getGroupHandler() {
         return groupHandler;
+    }
+
+    /**
+     * Returns diagram layout engine.
+     * 
+     * @return diagram layout engine
+     */
+    public GraphEngine<JNode> getGraphEngine() {
+        return engine;
     }
 }
