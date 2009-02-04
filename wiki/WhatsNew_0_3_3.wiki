@@ -1,3 +1,4 @@
+#labels Featured
 *jThinker 0.3.3, Feb 04 2009*
 
 The major improvements since WhatsNew_0_3_1 are:
@@ -19,4 +20,3 @@ Several broken things were fixed:
   * Conflict resolution diagram allows the lightning-like lines
 
   * Assumptions are allowed for all kinds of diagrams
-
