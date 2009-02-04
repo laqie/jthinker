@@ -192,8 +192,8 @@ public class JNode extends JSlide {
      */    
     public JNodeSpec getNodeSpec() {
         String nodeGroup = host.getGroupHandler().getNodeGroupName(this);
-        return spec.clone(spec.getContent(), WindowUtils.computeCenterPoint(this),
-                getColor(), this.comment, nodeGroup);
+        return spec.clone(content, WindowUtils.computeCenterPoint(this),
+                getColor(), comment, nodeGroup);
     }
     
     /**
