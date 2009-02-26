@@ -43,6 +43,7 @@ import javax.swing.JPopupMenu;
 import oss.jthinker.diagrams.ComponentManager;
 import oss.jthinker.diagrams.DiagramOptionSpec;
 import oss.jthinker.diagrams.DiagramSpec;
+import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.FileDiagramSpec;
@@ -197,7 +198,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     public void enableMouseEdge(JNode c) {
         mouseEdge = new JWire(JNodeAdjuster.makeTrigger(c,
                 MouseLocator.getInstance()), false);
-        super.add(mouseEdge);
+        super.add(mouseEdge, 0);
         c.watch(mouseEdge);
         mouseEdge.setVisible(true);
     }
@@ -223,6 +224,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     public void add(JEdge edge) {
         edge.addMouseListener(new MouseWatcher(edge, this));
         super.add(edge);
+        repaint();
     }
     
     /** {@inheritDoc} */
@@ -243,7 +245,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
 
     /** {@inheritDoc} */
     public void add(JNode node) {
-        super.add(node);
+        super.add(node, 0);
         node.validate();
         node.setPreferredSize(node.getPreferredSize());
         validate();
@@ -326,5 +328,20 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      */
     public DiagramOptions getOptions() {
         return options;
+    }
+
+    /** {@inheritDoc} */
+    public DiagramType getDiagramType() {
+        return type;
+    }
+    
+    /** {@inheritDoc} */
+    public Dimension getAreaSize() {
+        return this.getSize();
+    }
+
+    /** {@inheritDoc} */
+    public GraphEngine<JNode> getGraphEngine() {
+        return getLinkController().getGraphEngine();
     }
 }

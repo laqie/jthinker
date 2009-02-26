@@ -31,6 +31,7 @@
 
 package oss.jthinker.graphs;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Collection;
 import oss.jthinker.util.Mapping;
@@ -62,4 +63,29 @@ public interface NodeBundle<nodeT> {
      * @return mapper of nodeT info to Rectangle
      */
     Mapping<? super nodeT, Rectangle, ?> getMapping();
+    
+    /**
+     * Size of the area in which graph resides.
+     * 
+     * @return size of the area
+     */
+    Dimension getAreaSize();
+    
+    /**
+     * Returns collection of nodes, from which given node can be reached
+     * directly.
+     * 
+     * @param target a node to check
+     * @return collection of nodes, from which given node can be reached.
+     */
+    Collection<nodeT> getIncomeNodes(nodeT target);
+
+    /**
+     * Returns collection of nodes, that can be reached directly from 
+     * given node.
+     * 
+     * @param source a node to check
+     * @return collection of nodes, from which given node can be reached.
+     */    
+    Collection<nodeT> getOutcomeNodes(nodeT source);
 }

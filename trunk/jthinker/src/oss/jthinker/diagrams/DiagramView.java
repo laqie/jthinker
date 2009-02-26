@@ -30,6 +30,9 @@
  */
 package oss.jthinker.diagrams;
 
+import java.awt.Dimension;
+import oss.jthinker.graphs.GraphEngine;
+import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.util.MutableTrigger;
 import oss.jthinker.widgets.JBackground;
 import oss.jthinker.widgets.JEdge;
@@ -122,4 +125,25 @@ public interface DiagramView extends JBackground {
      * @param node node to edit
      */
     void editNode(JNode node);
+
+    /**
+     * Returns view's graph calculations engine.
+     * 
+     * @return view's graph calculations engine.
+     */
+    GraphEngine<JNode> getGraphEngine();
+    
+    /**
+     * Returns type of the diagram that this node presents.
+     * 
+     * @return type of the diagram that this node presents.
+     */
+    DiagramType getDiagramType();
+    
+    /**
+     * Returns size of the presentation area.
+     * 
+     * @return size of the view.
+     */
+    Dimension getAreaSize();
 }
