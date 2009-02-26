@@ -61,4 +61,20 @@ public interface JNodeHost {
      * @return grouping associations holder.
      */
     GroupHandler getGroupHandler();
+  
+    /**
+     * Creates a new node and adds it to the manager and to the managed
+     * view.
+     * 
+     * @param nodeSpec specification of the node to create
+     * @return newly created node
+     */
+    JNode add(JNodeSpec nodeSpec);
+    
+    /**
+     * Removes several nodes from the manager and from the managed view.
+     * 
+     * @param nodes nodes to remove
+     */
+    void remove(JNode... nodes);
 }

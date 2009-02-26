@@ -186,4 +186,32 @@ public class ComponentManager extends ComponentHolder
     public GraphEngine<JNode> getGraphEngine() {
         return engine;
     }
+
+    /** {@inheritDoc} */
+    public JEdge add(JNode nodeA, JNode nodeZ) {
+        JEdge edge = new JEdge(nodeA, nodeZ, this);
+        add(edge);
+        return edge;
+    }
+
+    /** {@inheritDoc} */
+    public void remove(JEdge... edges) {
+        for (JEdge edge : edges) {
+            super.remove(edge);
+        }
+    }
+
+    /** {@inheritDoc} */
+    public JNode add(JNodeSpec nodeSpec) {
+        JNode node = new JNode(this, nodeSpec);
+        add(node);
+        return node;
+    }
+
+    /** {@inheritDoc} */
+    public void remove(JNode... nodes) {
+        for (JNode node : nodes) {
+            super.remove(node);
+        }
+    }
 }
