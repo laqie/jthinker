@@ -31,10 +31,13 @@
 
 package oss.jthinker.diagrams;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.util.Collection;
 import oss.jthinker.tocmodel.DiagramType;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
@@ -347,5 +350,32 @@ public class ComponentHolder implements NodeBundle<JNode> {
     /** {@inheritDoc} */
     public Mapping<? super JNode, Rectangle, ?> getMapping() {
         return new SwingMapping();
+    }
+
+    /** {@inheritDoc} */
+    public Dimension getAreaSize() {
+        return _view.getAreaSize();
+    }
+
+    /** {@inheritDoc} */    
+    public Collection<JNode> getIncomeNodes(JNode target) {
+        Collection<JNode> result = new LinkedList<JNode>();
+        for (JEdge edge : _edges) {
+            if (edge.getPeerZ() == target) {
+                result.add(edge.getPeerA());
+            }
+        }
+        return result;
+    }
+
+    /** {@inheritDoc} */    
+    public Collection<JNode> getOutcomeNodes(JNode source) {
+        Collection<JNode> result = new LinkedList<JNode>();
+        for (JEdge edge : _edges) {
+            if (edge.getPeerA() == source) {
+                result.add(edge.getPeerZ());
+            }
+        }
+        return result;
     }
 }
