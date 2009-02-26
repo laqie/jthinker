@@ -75,4 +75,20 @@ public interface JEdgeHost {
      * and false otherwise.
      */
     boolean allowsConflict();
+  
+    /**
+     * Creates an edge and adds it to this manager and to the managed view.
+     * 
+     * @param nodeA edge's start node
+     * @param nodeZ edge's end node
+     * @return newly create edge
+     */
+    JEdge add(JNode nodeA, JNode nodeZ);
+    
+    /**
+     * Removes several edges from the manager and from the managed view.
+     * 
+     * @param edges edges to remove
+     */
+    void remove(JEdge... edges);
 }
