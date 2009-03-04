@@ -35,6 +35,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import oss.jthinker.util.UPair;
 
 /**
  * A directed connection between two {@link JNode}s.
@@ -108,5 +109,14 @@ public class JEdge extends AbstractEdge<JNode> {
         }
         
         return menu;
+    }
+    
+    /**
+     * Returns peer nodes as {@see UPair}.
+     * 
+     * @return peer nodes as {@see UPair}.
+     */
+    public UPair<JNode> endpoints() {
+        return new UPair<JNode>(getPeerA(), getPeerZ());
     }
 }

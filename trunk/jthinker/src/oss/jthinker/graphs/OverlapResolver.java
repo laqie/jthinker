@@ -31,9 +31,12 @@
 
 package oss.jthinker.graphs;
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import oss.jthinker.util.Mapping;
 
@@ -43,9 +46,9 @@ import oss.jthinker.util.Mapping;
  * @author iappel
  * @param T node data type
  */
-public class OverlapResolver<T> {
+public class OverlapResolver<T> extends OverlapMonitor {
     private final Mapping<? super T, Rectangle, ?> mapper;
-    private final Set<T> fixed, moved, rest;
+    private final Set<T> rest;
 
     /**
      * Creates a new instance of OverlapResolver.
@@ -56,8 +59,6 @@ public class OverlapResolver<T> {
     public OverlapResolver(Collection<T> nodeData,
                            Mapping<? super T, Rectangle, ?> mapper) {
         this.mapper = mapper;
-        fixed = new HashSet<T>();
-        moved = new HashSet<T>();
         rest  = new HashSet<T>();
         rest.addAll(nodeData);
     }
@@ -68,83 +69,78 @@ public class OverlapResolver<T> {
      * @param data node to mark
      */
     public void fix(T data) {
-        fixed.add(data);
-        moved.add(data);
         rest.remove(data);
+        add(mapper.fetch(data));
     }
 
+    public void fixEverything() {
+        for (T item : rest) {
+            add(mapper.fetch(item));
+        }
+        rest.clear();
+    }
+    
     /**
      * Rearranges nodes to prevent overlaps
      */
     public synchronized void resolve() {
-        while (!moved.isEmpty()) {
-            T item = moved.iterator().next();
-            moved.remove(item);
-            for (T jtem : rest) {
-                if (overlaps(item, jtem)) {
-                    resolvePosition(jtem);
-                }
-            }
-            for (T jtem : fixed) {
-                rest.remove(jtem);
+        for (T item : rest) {
+            Rectangle rect = mapper.fetch(item);
+            if (overlapsSomething(rect)) {
+                resolvePosition(item);
+            } else {
+                add(rect);
             }
         }
-    }
-    
-    private boolean overlaps(T nodeA, T nodeB) {
-        Rectangle rectA = mapper.fetch(nodeA);
-        Rectangle rectB = mapper.fetch(nodeB);
-        
-        return rectA.intersects(rectB);
-    }
-    
-    private boolean validPosition(Rectangle rect) {
-        for (T i: fixed) {
-            if (mapper.fetch(i).intersects(rect)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private static final int SHIFT_STEP = 5;
-    
+
     private void resolvePosition(T item) {
-        Rectangle start = mapper.fetch(item);
-        
-        Rectangle result = start.getBounds();
+        final Rectangle start = mapper.fetch(item);
+        final Rectangle result = start.getBounds();
+        final int minimumX = - start.x / SHIFT_STEP;
+        final int minimumY = - start.y / SHIFT_STEP;
+        final int single[] = new int[1];
+        final int paired[] = new int[2];
+        int ys[];
         
         for (int sum = 1;;sum++) {
-            boolean flag = false;
-            for (int x = Math.max(-sum, -start.x / SHIFT_STEP); x < sum; x++) {
-                result.x = start.x + SHIFT_STEP * x;
-                if (Math.abs(sum) == Math.abs(x)) {
-                    result.y = start.y;
-                    if (validPosition(result)) {
-                        flag = true;
-                        break;
-                    }
+            for (int x = Math.max(-sum, minimumX); x <= sum; x++) {
+                result.x = start.x + x * SHIFT_STEP;
+                int ty = Math.abs(x) - sum;
+                if (ty == 0) {
+                    ys = single;
+                    ys[0] = 0;
+                } else if (ty < minimumY) {
+                    ys = single;
+                    ys[0] = -ty;
                 } else {
-                    int y = sum - Math.abs(x);
-                    result.y = start.y + SHIFT_STEP * y;
-                    if (validPosition(result)) {
-                        flag = true;
-                        break;
-                    }
-                    y = -Math.min(y, start.y/SHIFT_STEP);
+                    ys = paired;
+                    ys[0] = ty;
+                    ys[1] = -ty;
+                }
+                
+                for (int y : ys) {
                     result.y = start.y + SHIFT_STEP*y;
-                    if (validPosition(result)) {
-                        flag = true;
-                        break;
+                    if (!overlapsSomething(result)) {
+                        mapper.assign(item, result);
+                        add(result);
+                        return;
                     }
                 }
             }
-            if (flag) {
-                break;
-            }
         }
-        mapper.assign(item, result);
-        fixed.add(item);
-        moved.add(item);
+    }
+        
+    public Point newNodePoint(Dimension areaSize,
+                              Dimension size,
+                              Collection<T> nodes) {
+        Rectangle[] rects = new Rectangle[nodes.size()];
+        Iterator<T> iter = nodes.iterator();
+        for (int i=0;i<nodes.size();i++) {
+            rects[i] = mapper.fetch(iter.next());
+        }
+        return super.newNodePoint(areaSize, size, rects);
     }
 }

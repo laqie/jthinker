@@ -39,10 +39,8 @@ import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.GroupHandler;
 import oss.jthinker.widgets.JEdge;
-import oss.jthinker.widgets.JEdgeHost;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeHost;
 import oss.jthinker.widgets.JNodeSpec;
 
 /**
@@ -51,8 +49,7 @@ import oss.jthinker.widgets.JNodeSpec;
  * 
  * @author iappel
  */
-public class ComponentManager extends ComponentHolder 
-        implements JEdgeHost, JNodeHost {
+public class ComponentManager extends ComponentHolder implements LinkController {
     private final GroupHandler groupHandler;
     private final GraphEngine<JNode> engine;
     
