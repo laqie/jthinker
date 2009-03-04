@@ -146,4 +146,11 @@ public interface DiagramView extends JBackground {
      * @return size of the view.
      */
     Dimension getAreaSize();
+    
+    /**
+     * Returns diagram's controller.
+     * 
+     * @return diagram's controller.
+     */    
+    LinkController getLinkController();
 }

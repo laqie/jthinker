@@ -34,11 +34,10 @@ package oss.jthinker.views;
 import oss.jthinker.widgets.JXPopupMenu;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
+import oss.jthinker.diagrams.NodeSpecHolder;
 import oss.jthinker.tocmodel.NodeType;
-import oss.jthinker.widgets.BorderType;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JNodeHost;
 import oss.jthinker.widgets.JNodeSpec;
@@ -100,27 +99,6 @@ public class AddAction extends AbstractAction {
         linkPane.getLinkController().add(node);
     }
     
-    private static final HashMap<NodeType, JNodeSpec> typeToSpecMap =
-            new HashMap<NodeType, JNodeSpec>();
-    private static final HashMap<NodeType, BorderType> typeToBorderMap =
-            new HashMap<NodeType, BorderType>();
-    
-    static {
-        typeToBorderMap.put(NodeType.ELLIPSE, BorderType.ELLIPSE);
-        typeToBorderMap.put(STATEMENT, ROUND_RECT);
-        typeToBorderMap.put(TASK, SHARP_RECT);
-        typeToBorderMap.put(OBSTACLE, HEXAGON);
-        
-        for (NodeType nt : NodeType.values()) {
-            BorderType bt = typeToBorderMap.get(nt);
-            if (bt == null) {
-                throw new RuntimeException(nt.name());
-            }
-            JNodeSpec protoSpec = new JNodeSpec(bt, nt!=NodeType.ELLIPSE, "", null);
-            typeToSpecMap.put(nt, protoSpec);
-        }
-    }
-
     /**
      * Creates a node of given type that should be managed by given
      * node host
@@ -130,7 +108,7 @@ public class AddAction extends AbstractAction {
      * @return a new node of given parametres
      */
     public static JNode createNode(JNodeHost parent, NodeType nodeType, Point center) {
-        JNodeSpec protoSpec = typeToSpecMap.get(nodeType);
+        JNodeSpec protoSpec = NodeSpecHolder.getSpec(nodeType);
         String s = protoSpec.isEditable() ?
             JOptionPane.showInputDialog("What to add?") : "          ";
         if (s == null) {
@@ -139,5 +117,4 @@ public class AddAction extends AbstractAction {
         JNodeSpec result = protoSpec.clone(s, center);
         return new JNode(parent, result);
     }
-    
 }

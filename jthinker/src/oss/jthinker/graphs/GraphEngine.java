@@ -31,6 +31,12 @@
 
 package oss.jthinker.graphs;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Engine for graph optimizations.
  * 
@@ -62,9 +68,7 @@ public class GraphEngine<T> {
         if (level == OrderingLevel.OFF) {
             return;
         }
-        
-        OverlapResolver<T> resolver = 
-                new OverlapResolver<T>(data.getAllNodes(), data.getMapping());
+        OverlapResolver<T> resolver = initOverlapResolver();
         resolver.fix(node);
         resolver.resolve();
     }
@@ -85,5 +89,65 @@ public class GraphEngine<T> {
      */    
     public void setLevel(OrderingLevel level) {
         this.level = level;
+    }   
+
+    /**
+     * Picks a free point for a node of given size that doesn't
+     * overlap any other nodes. This method also allows to specify several
+     * nodes, new node will be below them.
+     * 
+     * @param nodeSize dimensions of the new node
+     * @param nodes new node should be below any of the nodes in this
+     * collection
+     * @return center point for the new node
+     */
+    public Point newNodePoint(Dimension nodeSize, Collection<T> nodes) {
+        OverlapResolver<T> resolver = initOverlapResolver();
+        return resolver.newNodePoint(data.getAreaSize(), nodeSize, nodes);
+    }
+
+    /**
+     * Picks a free point for a node of 100x100 dimensions that doesn't
+     * overlap any other nodes. This method also allows to specify several
+     * nodes, new node will be below them.
+     * 
+     * @param nodes new node should be below any of the nodes in this
+     * collection
+     * @return center point for the new node
+     */
+    public final Point newNodePoint(Collection<T> nodes) {
+        return newNodePoint(new Dimension(100, 100), nodes);
+    }
+
+    /**
+     * Picks a free point for a node of given size that doesn't
+     * overlap any other nodes.
+     * 
+     * @param nodeSize dimensions of the new node
+     * @return center point for the new node
+     */
+    public Point newNodePoint(Dimension nodeSize) {
+        List<T> nodes = Collections.emptyList();
+        return newNodePoint(nodeSize, nodes);
+    }
+
+    /**
+     * Picks a free point for a node of 100x100 dimensions that doesn't
+     * overlap any other nodes.
+     * 
+     * @return center point for the new node
+     */
+    public final Point newNodePoint() {
+        return newNodePoint(new Dimension(100, 100));
+    }
+    
+    /**
+     * Shorthand function for initialization of new {@see OverlapResolver}
+     * for calculations.
+     * 
+     * @return initialized {@see OverlapResolver}
+     */
+    protected final OverlapResolver<T> initOverlapResolver() {
+        return new OverlapResolver<T>(data.getAllNodes(), data.getMapping());
     }
 }

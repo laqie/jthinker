@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
+ * Copyright (c) 2009, Ivan Appel <ivan.appel@gmail.com>
  * 
  * All rights reserved.
  * 
@@ -29,40 +29,64 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.diagrams;
+
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 
 /**
- * Minimalistic mock-emulator for JEdgeHost interface.
+ * Factory of actions bound to interactor's methods.
  * 
  * @author iappel
  */
+public class InteractorActionFactory {
+    private final DiagramInteractor _interactor;
 
-public class JEdgeHost_Mock implements JEdgeHost {
-    public boolean allowsConflict() {
-        return true;
+    /**
+     * Creates a new instance of InteractorActionFactory.
+     * 
+     * @param interactor wrapped interactor
+     */
+    public InteractorActionFactory(DiagramInteractor interactor) {
+        _interactor = interactor;
     }
 
-    public void deleteJEdge(JEdge edge) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Creates a "Suggest reasons" action.
+     * 
+     * @return a "Suggest reasons" action
+     */
+    public AbstractAction makeReasonsAction() {
+        return new AbstractAction("Suggest reasons") {
+            public void actionPerformed(ActionEvent e) {
+                _interactor.suggestReasons();
+            }
+        };
     }
 
-    public void deleteJLeg(JLeg leg) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Creates a "Suggest ellipse" action.
+     * 
+     * @return a "Suggest ellipse" action
+     */    
+    public AbstractAction makeEllipseAction() {
+        return new AbstractAction("Suggest ellipse") {
+            public void actionPerformed(ActionEvent e) {
+                _interactor.suggestEllipse();
+            }
+        };
     }
 
-    public void endLinking(JEdge end) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void reverseJEdge(JEdge edge) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public JEdge add(JNode nodeA, JNode nodeZ) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void remove(JEdge... edges) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Creates an "Add undesired effect" action.
+     * 
+     * @return an "Add undesired effect" action
+     */    
+    public AbstractAction makeUDEAction() {
+        return new AbstractAction("Add undesired effect") {
+            public void actionPerformed(ActionEvent e) {
+                _interactor.addUndesiredEffect();
+            }
+        };
     }
 }

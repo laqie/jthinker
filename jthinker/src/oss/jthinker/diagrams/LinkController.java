@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
+ * Copyright (c) 2009, Ivan Appel <ivan.appel@gmail.com>
  * 
  * All rights reserved.
  * 
@@ -29,53 +29,24 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.diagrams;
+
+import oss.jthinker.graphs.GraphModel;
+import oss.jthinker.widgets.JEdge;
+import oss.jthinker.widgets.JEdgeHost;
+import oss.jthinker.widgets.JNode;
+import oss.jthinker.widgets.JNodeHost;
 
 /**
- * Minimalistic mock-emulator for JNodeHost interface.
+ * Integral interface that provides access to whole diagram.
+ * Integrates {@see JNodeHost}, {@see JEdgeHost} and {@see GraphModel}
+ * interfaces. Doesn't contain any specific classes on it's own, just
+ * combines several interfaces into a common one.
  * 
  * @author iappel
  */
-public class JNodeHost_Mock implements JNodeHost {
-    private final GroupHandler groupHandler = new GroupHandler(new
-            JBackgroundPane());
-    
-    public void deleteJNode(JNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+public interface LinkController extends JNodeHost, 
+                                        JEdgeHost,
+                                        GraphModel<JNode, JEdge> {
 
-    public void editJNodeContent(JNode node) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void endLinking(JNode end) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void startLinking(JNode start) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void enableNodeNumbering(boolean state) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public int issueIndex(JNode node) {
-        return 0;
-    }
-
-    public void dispatchJNodeMove(JNode node) {
-    }
-
-    public GroupHandler getGroupHandler() {
-        return groupHandler;
-    }
-
-    public JNode add(JNodeSpec nodeSpec) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void remove(JNode... nodes) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

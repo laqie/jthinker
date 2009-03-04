@@ -32,6 +32,7 @@
 package oss.jthinker.graphs;
 
 import java.util.Collection;
+import oss.jthinker.util.Pair;
 import oss.jthinker.util.UPair;
 
 /**
@@ -57,18 +58,11 @@ public interface GraphModel<nodeT, edgeT> extends NodeBundle<nodeT> {
     int edgeCount();
     
     /**
-     * Returns collection of all graph's nodes.
-     * 
-     * @return collection of all graph's nodes.
-     */
-    Collection<nodeT> getNodes();
-
-    /**
      * Returns collection of all graph's edges.
      * 
      * @return collection of all graph's edges.
      */    
-    Collection<edgeT> getEdges();
+    Collection<edgeT> getAllEdges();
 
     /**
      * Checks that node is included in this model.
@@ -102,4 +96,46 @@ public interface GraphModel<nodeT, edgeT> extends NodeBundle<nodeT> {
      * @return edge's endpoints as UPair
      */
     UPair<nodeT> endpoints(edgeT edge);
+    
+    /**
+     * Returns all sources. Source is a node that has no incoming edges.
+     * 
+     * @return c collection of all sources in the graph
+     */
+    Collection<nodeT> getAllSources();
+    
+    /**
+     * Returns random sources. When the total number of sources
+     * is not less than required count, picks the required number
+     * of sources and returns it as a collection. When the total
+     * number of sources is insufficient, returns null.
+     * 
+     * @param count number of sources to pick.
+     * @return either a collection of <b>count</b> sources or <b>null</b>
+     * if there are not enough source nodes in the graph.
+     */
+    Collection<nodeT> getRandomSources(int count);
+    
+    /**
+     * Returns random nodes. When the total number of nodes
+     * is not less than required count, picks the required number
+     * of nodes and returns it as a collection. When the total
+     * number of sources is insufficient, returns null.
+     * 
+     * @param count number of sources to pick.
+     * @return either a collection of <b>count</b> nodes or <b>null</b>
+     * if there are not enough nodes in the graph.
+     */    
+    Collection<nodeT> getRandomNodes(int count);
+    
+    /**
+     * Seeks a node that has the required count of incoming edges.
+     * Finds a random node that has not less than the required count
+     * of incoming edges and returns the node and a collection of randomly
+     * picked nodes. When there are no such node, returns null.
+     * 
+     * @param count number of incoming edges
+     * @return pair of node and a collection of randomly picked incoming peers
+     */
+    Pair<nodeT, ? extends Collection<nodeT>> getRandomIncomings(int count);    
 }

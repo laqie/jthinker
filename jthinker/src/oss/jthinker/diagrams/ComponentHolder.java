@@ -41,7 +41,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import oss.jthinker.graphs.NodeBundle;
+import oss.jthinker.graphs.AbstractGraphModel;
+import oss.jthinker.util.UPair;
 import oss.jthinker.widgets.SwingMapping;
 import oss.jthinker.util.GappedArray;
 import oss.jthinker.util.Mapping;
@@ -56,7 +57,7 @@ import oss.jthinker.widgets.JNodeSpec;
  *
  * @author iappel
  */
-public class ComponentHolder implements NodeBundle<JNode> {
+public class ComponentHolder extends AbstractGraphModel<JNode, JEdge> {
     private final GappedArray<JNode> _nodes = new GappedArray<JNode>();
     private final GappedArray<JEdge> _edges = new GappedArray<JEdge>();
     private final GappedArray<JLeg> _legs = new GappedArray<JLeg>();
@@ -377,5 +378,15 @@ public class ComponentHolder implements NodeBundle<JNode> {
             }
         }
         return result;
+    }
+
+    /** {@inheritDoc} */
+    public UPair<JNode> endpoints(JEdge edge) {
+        return edge.endpoints();
+    }
+
+    /** {@inheritDoc} */
+    public Collection<JEdge> getAllEdges() {
+        return _edges.getContent();
     }
 }
