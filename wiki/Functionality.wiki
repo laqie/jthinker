@@ -1,0 +1,17 @@
+#summary The brief summary of program's functionality:
+
+*Current*:
+  * very easy to use construction of logic trees that are described in [FurtherReading Dettmer's manual] 
+  * graphical features, such as
+    * node colouring,
+    * automatic numbering of nodes
+    * un-overlapping of nodes 
+  * export to JPEG/PNG files
+  * grouping of nodes
+
+*Planned*:
+  * automatic layout of nodes for production of more concise diagram
+  * guided construction of the logic trees
+  * [http://code.google.com/p/jthinker/issues/list anything you can suggest]
+
+<wiki:gadget url="http://www.ohloh.net/p/51686/widgets/project_users.xml?style=blue" height="100"  border="0" />
