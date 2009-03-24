@@ -32,7 +32,10 @@
 package oss.jthinker.diagrams;
 
 import java.awt.event.ActionEvent;
+import java.util.Map;
+import java.util.WeakHashMap;
 import javax.swing.AbstractAction;
+import javax.swing.JToolBar;
 
 /**
  * Factory of actions bound to interactor's methods.
@@ -88,5 +91,47 @@ public class InteractorActionFactory {
                 _interactor.addUndesiredEffect();
             }
         };
+    }
+    
+    private static JToolBar createToolBar(DiagramView diagram) {
+        DiagramInteractor interactor = new DiagramInteractor(diagram);
+        InteractorActionFactory actionFactory = interactor.getActionFactory();
+        switch(diagram.getDiagramType()) {
+            case CURRENT_REALITY_TREE:
+                JToolBar toolBar = new JToolBar();
+                toolBar.setOrientation(JToolBar.VERTICAL);
+                toolBar.add(actionFactory.makeUDEAction());
+                toolBar.addSeparator();;
+                toolBar.add(actionFactory.makeReasonsAction());
+                toolBar.addSeparator();;
+                toolBar.add(actionFactory.makeEllipseAction());
+                return toolBar;
+            default:
+        }
+        return null;
+    }
+
+    private static final Map<DiagramView, JToolBar> viewToolbarMap =
+        new WeakHashMap<DiagramView, JToolBar>();
+    
+    /**
+     * Returns a toolbar for common actions with the diagram view.
+     * 
+     * @param diagram diagram to attach toolbar to
+     * @return diagram's toolbar
+     */
+    public static JToolBar getDiagramToolBar(DiagramView diagram) {
+        if (diagram == null) {
+            return null;
+        }
+        JToolBar toolBar = viewToolbarMap.get(diagram);
+        if (toolBar == null) {
+            toolBar = createToolBar(diagram);
+            if (toolBar == null) {
+                return null;
+            }
+            viewToolbarMap.put(diagram, toolBar);
+        }
+        return toolBar;
     }
 }

@@ -30,11 +30,11 @@
  */
 package oss.jthinker.views;
 
+import java.awt.BorderLayout;
 import oss.jthinker.resource.VersionChecker;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import oss.jthinker.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -43,7 +43,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
+import oss.jthinker.diagrams.DiagramView;
+import oss.jthinker.diagrams.InteractorActionFactory;
 
 /**
  * jThinker's entrypoint class + main frame.
@@ -51,11 +54,12 @@ import javax.swing.UIManager;
  * @author iappel
  */
 public class ThinkerMain extends JFrame {
-
     private static final Logger logger = Logger.getAnonymousLogger();
     private final MasterView masterView;
     private final HelpView helpView;
 
+    private JToolBar toolbar;
+    
     private class WindowCloser extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent e) {
@@ -66,8 +70,9 @@ public class ThinkerMain extends JFrame {
     private ThinkerMain() {
         super("jThinker "+VersionChecker.CURRENT_VERSION);
 
-        masterView = new MasterView();
-        add(masterView);
+        setLayout(new BorderLayout());
+        masterView = new MasterView(this);
+        add(masterView, BorderLayout.CENTER);
         
         helpView = new HelpView();
         
@@ -120,10 +125,21 @@ public class ThinkerMain extends JFrame {
 
         ThinkerMain frame = new ThinkerMain();
 
-        frame.setBounds(100, 100, 500, 300);
+        frame.setBounds(100, 100, 700, 500);
         frame.validate();
         frame.setVisible(true);
 
         VersionChecker.checkVersion();        
+    }
+    
+    protected void updateToolBar(DiagramView diagramView) {
+        JToolBar newToolbar = InteractorActionFactory.getDiagramToolBar(diagramView);
+        if (toolbar != null) {
+            remove(toolbar);
+        }
+        toolbar = newToolbar;
+        if (newToolbar != null) {
+            add(toolbar, BorderLayout.WEST);
+        }
     }
 }

@@ -33,6 +33,8 @@ package oss.jthinker.resource;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -48,11 +50,14 @@ import org.xml.sax.InputSource;
  * @author iappel
  */
 public class VersionChecker {
-    public static String CURRENT_VERSION = "0.3.3";
-    private static String FEED_URL =
+    public static final String CURRENT_VERSION = "0.4.0";
+    private static final String FEED_URL =
             "http://code.google.com/feeds/p/jthinker/downloads/basic";
-    private static String WINDOWS_CMD =
+    private static final String WINDOWS_CMD =
             "rundll32 url.dll,FileProtocolHandler http://code.google.com/p/jthinker";
+    
+    private VersionChecker() {
+    }
     
     /**
      * Checks version of the product, shows a message when new
@@ -115,21 +120,20 @@ public class VersionChecker {
                 }
             }
         }
-        int mxVersion = 0;
-        String versionString = null;
-        
-        for (String s : contents) {
-            s = s.trim();
-            String[] t = s.split("[-.]");
-            int version = Integer.parseInt(t[2]) * 10000 +
-                          Integer.parseInt(t[3]) * 100   +
-                          Integer.parseInt(t[4]);
-            
-            if (version > mxVersion) {
-                mxVersion = version;
-                versionString = t[2] + "." + t[3] + "." + t[4];
+        return Collections.max(contents, new VersionComparator());
+    }
+    
+    private static class VersionComparator implements Comparator<String> {
+        public int compare(String o1, String o2) {
+            String[] ver1 = o1.split(".");
+            String[] ver2 = o2.split(".");
+            for (int i=0;i<2;i++) {
+                int result = ver1[i].compareTo(ver2[i]);
+                if (result != 0) {
+                    return result;
+                }
             }
+            return ver1[2].compareTo(ver2[2]);
         }
-        return versionString;
     }
 }

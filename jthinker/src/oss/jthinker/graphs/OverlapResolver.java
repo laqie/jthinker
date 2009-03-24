@@ -73,6 +73,9 @@ public class OverlapResolver<T> extends OverlapMonitor {
         add(mapper.fetch(data));
     }
 
+    /**
+     * Marks all nodes as fixed.
+     */
     public void fixEverything() {
         for (T item : rest) {
             add(mapper.fetch(item));
@@ -132,8 +135,16 @@ public class OverlapResolver<T> extends OverlapMonitor {
             }
         }
     }
-        
-    public Point newNodePoint(Dimension areaSize,
+
+    /**
+     * Calculates a place for a new node.
+     * 
+     * @param areaWidth width of the area 
+     * @param size
+     * @param nodes
+     * @return
+     */
+    public Point newNodePoint(int areaWidth,
                               Dimension size,
                               Collection<T> nodes) {
         Rectangle[] rects = new Rectangle[nodes.size()];
@@ -141,6 +152,6 @@ public class OverlapResolver<T> extends OverlapMonitor {
         for (int i=0;i<nodes.size();i++) {
             rects[i] = mapper.fetch(iter.next());
         }
-        return super.newNodePoint(areaSize, size, rects);
+        return super.newNodePoint(areaWidth, size, rects);
     }
 }
