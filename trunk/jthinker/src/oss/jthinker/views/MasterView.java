@@ -55,6 +55,7 @@ import static oss.jthinker.widgets.ThinkerFileChooser.*;
 public class MasterView extends DiagramDeck {
     private static final Logger logger = Logger.getAnonymousLogger();
     private final JXPopupMenu popupMenu;
+    private final ThinkerMain container;
 
     private JMenuItem saveItem;
     private JMenuItem saveAsItem;
@@ -141,11 +142,14 @@ public class MasterView extends DiagramDeck {
 
     /**
      * Creates a new MasterView instance.
+     * 
+     * @param mainframe application main frame.
      */
-    public MasterView() {
+    public MasterView(ThinkerMain mainframe) {
         popupMenu = new JXPopupMenu();
         popupMenu.add(new CloseAction());
         setComponentPopupMenu(popupMenu);
+        container = mainframe;
     }
 
     /**
@@ -263,30 +267,31 @@ public class MasterView extends DiagramDeck {
         }
     }
 
+    private void updateMenus(boolean flag) {
+        numberingItem.setEnabled(flag);
+        jpegExportItem.setEnabled(flag);
+        saveAsItem.setEnabled(flag);
+        groupingItem.setEnabled(flag);
+        orderingOffItem.setEnabled(flag);
+        orderingOverlapItem.setEnabled(flag);
+    }
+    
     @Override
     /** {@inheritDoc} */
     protected void contentChanged(DiagramPane pane) {
         if (pane == null) {
+            updateMenus(false);
             saveItem.setEnabled(false);
-            numberingItem.setEnabled(false);
-            jpegExportItem.setEnabled(false);
-            saveAsItem.setEnabled(false);
-            groupingItem.setEnabled(false);
-            orderingOffItem.setEnabled(false);
-            orderingOverlapItem.setEnabled(false);
+            container.updateToolBar(null);
         } else {
             saveItem.setEnabled(!pane.isSaved());
-            numberingItem.setEnabled(true);
             numberingItem.setState(pane.getOptions().isNumberingEnabled());
-            jpegExportItem.setEnabled(true);
-            saveAsItem.setEnabled(true);
-            groupingItem.setEnabled(true);
-            orderingOffItem.setEnabled(true);
-            orderingOverlapItem.setEnabled(true);
+            updateMenus(true);
             
             OrderingLevel level = pane.getOptions().getOrderingLevel();
             orderingOffItem.setState(level == OrderingLevel.OFF);
             orderingOverlapItem.setState(level == OrderingLevel.SUPPRESS_OVERLAP);
+            container.updateToolBar(pane);
         }
     }
 }

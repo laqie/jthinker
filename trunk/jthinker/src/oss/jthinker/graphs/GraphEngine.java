@@ -36,6 +36,7 @@ import java.awt.Point;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import oss.jthinker.widgets.GeometryUtils;
 
 /**
  * Engine for graph optimizations.
@@ -103,7 +104,8 @@ public class GraphEngine<T> {
      */
     public Point newNodePoint(Dimension nodeSize, Collection<T> nodes) {
         OverlapResolver<T> resolver = initOverlapResolver();
-        return resolver.newNodePoint(data.getAreaSize(), nodeSize, nodes);
+        resolver.fixEverything();
+        return resolver.newNodePoint(data.getAreaSize().width, nodeSize, nodes);
     }
 
     /**
@@ -116,7 +118,7 @@ public class GraphEngine<T> {
      * @return center point for the new node
      */
     public final Point newNodePoint(Collection<T> nodes) {
-        return newNodePoint(new Dimension(100, 100), nodes);
+        return newNodePoint(new Dimension(100, 40), nodes);
     }
 
     /**
@@ -149,5 +151,24 @@ public class GraphEngine<T> {
      */
     protected final OverlapResolver<T> initOverlapResolver() {
         return new OverlapResolver<T>(data.getAllNodes(), data.getMapping());
+    }
+    
+    /**
+     * Computes a center point of several nodes.
+     * 
+     * @param stuff nodes to find center
+     * @return center point of collection
+     */
+    public Point centerPoint(T... stuff) {
+        int x = 0;
+        int y = 0;
+        int c = 0;
+        for (T t : stuff) {
+            Point p = GeometryUtils.computeCenterPoint(data.getMapping().fetch(t));
+            x += p.x;
+            y += p.y;
+            c++;
+        }
+        return new Point(x/c, y/c);
     }
 }

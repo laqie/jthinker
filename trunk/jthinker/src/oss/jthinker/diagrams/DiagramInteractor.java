@@ -37,7 +37,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import oss.jthinker.graphs.GraphEngine;
-import oss.jthinker.tocmodel.NodeType;
 import static oss.jthinker.tocmodel.NodeType.*;
 import oss.jthinker.util.Pair;
 import oss.jthinker.widgets.JEdge;
@@ -110,9 +109,20 @@ public class DiagramInteractor {
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
         if (option == JOptionPane.YES_OPTION) {
             _view.editNode(node);
+            return;
         } else {
+            _manager.remove(edge1);
+        }
+        option = JOptionPane.showOptionDialog(null,
+                "Can you tell a reason?",
+                "Suggest a reason",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, null, null);
+        if (option == JOptionPane.YES_OPTION) {
+            _view.editNode(node);
+        } else {
+            _manager.remove(edge1);
             _manager.remove(node);
-            _manager.remove(edge1, edge2);
         }
     }
 
@@ -123,6 +133,10 @@ public class DiagramInteractor {
     public void suggestEllipse() {
         Pair<JNode, ? extends Collection<JNode>> entry =
                 _manager.getRandomIncomings(2);
+        
+        if (entry == null) {
+            return;
+        }
         
         JNode target = entry.first;
         
@@ -137,14 +151,17 @@ public class DiagramInteractor {
         edgeA.setVisible(false);
         edgeB.setVisible(false);
         
-        JNodeSpec spec = NodeSpecHolder.getSpec(NodeType.ELLIPSE);
+        Point p = _engine.centerPoint(target, sourceA, sourceB);
+        JNodeSpec spec = NodeSpecHolder.cloneEllipse(p);
         
         JNode ellipseNode = _manager.add(spec);
         JEdge edgeX = _manager.add(sourceA, ellipseNode);
         JEdge edgeY = _manager.add(sourceB, ellipseNode);
         JEdge edgeZ = _manager.add(ellipseNode, target);
         
-        int option = JOptionPane.showOptionDialog(null, "Message", "FOO",
+        int option = JOptionPane.showOptionDialog(null,
+                "Is it correct?",
+                "Suggest ellipse",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE, null, null, null);
         
@@ -153,6 +170,8 @@ public class DiagramInteractor {
         } else {
             _manager.remove(ellipseNode);
             _manager.remove(edgeX, edgeY, edgeZ);
+            edgeA.setVisible(true);
+            edgeB.setVisible(true);
         }
     }
     

@@ -68,26 +68,26 @@ public class OverlapMonitor extends LinkedList<Rectangle> {
     /**
      * Finds a place for a new node.
      * 
-     * @param areaSize size of the area to seek
+     * @param areaWidth width of the area
      * @param size size of the node to place
      * @param rects rectangles, which should be above the resulting node
      * @return center point for a new node
      */
-    public Point newNodePoint(Dimension areaSize,
+    public Point newNodePoint(int areaWidth,
                               Dimension size,
                               Rectangle... rects) {
-        int deltaX = (areaSize.width - size.width) / 10;
-        int deltaY = (areaSize.height - size.height) / 10;
+        int deltaX = areaWidth / 10;
+        int deltaY = size.height;
         
         Rectangle rect = new Rectangle();
         rect.width = size.width;
         rect.height = size.height;
         
-        for (int i=0;i<10;i++) {
+        for (int i=0;;i++) {
             rect.y = deltaY * i;
             boolean flag = false;
             for (Rectangle r : rects) {
-                if (rect.y - r.y < deltaX) {
+                if (rect.y - r.y < deltaY) {
                     flag = true;
                     break;
                 }
@@ -102,6 +102,5 @@ public class OverlapMonitor extends LinkedList<Rectangle> {
                 }
             }
         }
-        return null;
     }
 }

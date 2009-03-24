@@ -29,8 +29,11 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.views;
+package oss.jthinker.graphs;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,13 +42,13 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * Unit-tests for MasterView class.
- *  
+ * Unit-tests for XMLUtils class.
+ *
  * @author iappel
  */
-public class MasterViewTest {
+public class OverlapMonitorTest {
 
-    public MasterViewTest() {
+    public OverlapMonitorTest() {
     }
 
     @BeforeClass
@@ -65,11 +68,52 @@ public class MasterViewTest {
     }
 
     /**
-     * Test of invoking saveCurrent() on empty view.
+     * Test of newNodePoint method, of class OverlapMonitor.
      */
     @Test
-    public void emptyViewSave() {
-        MasterView master = new MasterView(null);
-        master.saveCurrent(false);
+    public void newNodePoint() {
+        System.out.println("newNodePoint");
+        OverlapMonitor instance = new OverlapMonitor();
+        
+        Dimension size = new Dimension(50,50);
+        
+        Point point = instance.newNodePoint(100, size);
+        assertEquals(new Point(25,25), point);
+
+        instance.add(new Rectangle(0,0,50,50));
+        point = instance.newNodePoint(100, size);
+        assertEquals(new Point(75,25), point);
+        
+        instance.add(new Rectangle(50,0,50,50));
+        point = instance.newNodePoint(100, size);
+        assertEquals(new Point(25, 75), point);
+    }
+
+    /**
+     * Test of overlapsSomething method, of class OverlapMonitor.
+     */
+    @Test
+    public void overlapsSomething() {
+        System.out.println("overlapsSomething");
+        OverlapMonitor instance = new OverlapMonitor();
+        
+        Rectangle rect = new Rectangle(0,0,50,50);
+        assertFalse(instance.overlapsSomething(rect));
+        instance.add(rect);
+        assertTrue(instance.overlapsSomething(rect));
+        
+        rect = new Rectangle(50,0,50,50);
+        assertFalse(instance.overlapsSomething(rect));
+        instance.add(rect);
+        assertTrue(instance.overlapsSomething(rect));
+        
+        rect = new Rectangle(25,0,50,50);
+        assertTrue(instance.overlapsSomething(rect));
+        
+        rect = new Rectangle(0,50,50,50);
+        assertFalse(instance.overlapsSomething(rect));
+        instance.add(rect);
+        assertTrue(instance.overlapsSomething(rect));
+
     }
 }

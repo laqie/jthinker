@@ -97,4 +97,15 @@ public class NodeSpecHolder {
     public static JNodeSpec clone(NodeType nodeType, String content, Point p) {
         return getSpec(nodeType).clone(content, p);
     }
+    
+    /**
+     * Creates a prototype-based node spec.
+     * 
+     * @param p center point
+     * @return new prototype-based node spec
+     */
+    public static JNodeSpec cloneEllipse(Point p) {
+        JNodeSpec proto = getSpec(NodeType.ELLIPSE);
+        return proto.clone("        ", p);
+    }
 }

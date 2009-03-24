@@ -66,7 +66,7 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
         setLayout(new BorderLayout());
         setTitle("Node editor");
         
-        JTable table = initTable(nodeModel);
+        JTable table = initTable();
         
         JScrollPane pane = new JScrollPane(table);
 
@@ -89,7 +89,10 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
         add(dpane, BorderLayout.SOUTH);
     }
 
-    /** {@inheritDpc} */
+    /** {@inheritDoc}
+     * 
+     * @return cell renderer component
+     */
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (value instanceof Component) {
             return (Component) value;
@@ -149,12 +152,13 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
         JNodeModel model = node.getEditorModel();
         Point location = WindowUtils.computeAbsoluteCenterPoint(node);
         JNodeEditor editor = new JNodeEditor(model);
+        editor.setAlwaysOnTop(true);
         editor.setLocation(location);
         editor.setSize(300, 200);
         editor.setVisible(true);
     }
     
-    private JTable initTable(JNodeModel model) {
+    private JTable initTable() {
         JTable table = new JTable(model);
         table.setDefaultRenderer(String.class, this);
         table.setDefaultRenderer(JComponent.class, this);
