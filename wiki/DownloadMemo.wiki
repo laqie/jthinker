@@ -11,7 +11,7 @@ Several distributions of jThinker are maintained on this web-site:
 
 *Purpose:* Running jThinker on non-Windows system.
 
-*Download link*: [http://jthinker.googlecode.com/files/jthinker-xplatform-0.3.3.zip jthinker-xplatform-0.3.3.zip]
+*Download link*: [http://jthinker.googlecode.com/files/jthinker-xplatform-0.4.0.zip jthinker-xplatform-0.4.0.zip]
 
 
 
@@ -24,7 +24,7 @@ Several distributions of jThinker are maintained on this web-site:
 
 *Purpose:* Running jThinker on Windows system.
 
-*Download link*: [http://jthinker.googlecode.com/files/jthinker-win-0.3.3.zip jthinker-win-0.3.3.zip]
+*Download link*: [http://jthinker.googlecode.com/files/jthinker-win-0.4.0.zip jthinker-win-0.4.0.zip]
 
 
 == Source release ==
@@ -32,6 +32,6 @@ Several distributions of jThinker are maintained on this web-site:
 
 *Purpose:* getting acknowledged with jThinker's internals, making custom builds. For serious work, it's better to [http://code.google.com/p/jthinker/source/checkout checkout code from the repository]
 
-*Download link*: [http://jthinker.googlecode.com/files/jthinker-src-0.3.3.tgz jthinker-src-0.3.3.tgz]
+*Download link*: [http://jthinker.googlecode.com/files/jthinker-src-0.3.3.tgz jthinker-src-0.4.0.tgz]
 
 <wiki:gadget url="http://ivan.appel.googlepages.com/adsense.xml" width="500" height="100" border="0" />
