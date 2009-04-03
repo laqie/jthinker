@@ -60,7 +60,8 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      */
     public JNodeSpec(BorderType borderType, boolean editable, String content,
             Point center) {
-        this(borderType, editable, content, center, Color.WHITE, "", null);
+        this(borderType, editable, content, center,
+                WindowUtils.getDefaultBackground(), "", null);
     }
     
     
@@ -73,6 +74,7 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param center desired center point for the slide
      * @param color background color for the node
      * @param comment tooltip comment
+     * @param nodeGroup group to which current node belongs
      */
     public JNodeSpec(BorderType borderType, boolean editable, String content,
             Point center, Color color, String comment, String nodeGroup) {
@@ -139,6 +141,7 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param otherCenter place for new node
      * @param otherColor color for new node
      * @param otherComment comment for new node
+     * @param otherNode node group for new node
      * @return newly cloned JNodeSpec instance
      */
     public JNodeSpec clone(String otherContent, Point otherCenter, Color otherColor, String otherComment, String otherGroup) {

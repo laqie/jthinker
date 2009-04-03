@@ -213,10 +213,7 @@ public class JNode extends JSlide {
     public void setContent(String content) {
         this.content = content;        
         JLabelBundle bundle = (JLabelBundle)this.getComponent(0);
-        int index = host.issueIndex(this) + 1;
-        boolean shouldNumber = numbering && hasContent();
-        String textToAdd = shouldNumber ? (index + ". ") : "";
-        bundle.setText(textToAdd + content);
+        bundle.setText(getDisplayContent());
         bundle.setSize(bundle.getPreferredSize());
         setSize(getPreferredSize());
         getParent().validate();
@@ -288,5 +285,18 @@ public class JNode extends JSlide {
     public void enableNumbering(boolean state) {
         numbering = state;
         setContent(this.content);
+    }
+
+    /**
+     * Returns the content the way it's displayed (with number)
+     * 
+     * @return
+     */
+    public String getDisplayContent() {
+        if (numbering && spec.isEditable() && content.trim().length() != 0) {
+            return (host.issueIndex(this) + 1) + ". " + content;
+        } else {
+            return content;
+        }
     }
 }

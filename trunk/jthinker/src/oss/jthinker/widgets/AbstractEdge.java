@@ -80,7 +80,7 @@ public abstract class AbstractEdge<T extends Component> extends JWire
 
     /** {@inheritDoc} */
     public void setSwitched(boolean switching) {
-        setForeground(switching ? Color.BLUE : Color.BLACK);
+        setForeground(switching ? Color.BLUE : WindowUtils.getDefaultForeground());
         switchState = switching;
     }
     

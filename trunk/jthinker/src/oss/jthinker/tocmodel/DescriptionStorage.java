@@ -70,13 +70,13 @@ public class DescriptionStorage {
         register(futureReality);
         
         DescriptionImpl transitionTree = new DescriptionImpl(
-                TRANSITION_TREE, "Transition Plan", futureReality);
+                TRANSITION_TREE, "Prerequsite Tree", futureReality);
         transitionTree.add(OBSTACLE);
         transitionTree.add(AFFECTABLE);
         register(transitionTree);
         
         DescriptionImpl transformPlan = new DescriptionImpl(
-                TRANSFORM_PLAN, "Transform Plan", currentReality);
+                TRANSFORM_PLAN, "Transform Tree", currentReality);
         register(transformPlan);
     }
     

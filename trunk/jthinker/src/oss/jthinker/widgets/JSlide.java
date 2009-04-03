@@ -42,6 +42,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 /**
@@ -65,7 +66,7 @@ public class JSlide extends JPanel implements Switch {
      * component.
      */    
     public JSlide(JComponent internal, BorderBuilder builder) {
-        this(internal, builder, Color.WHITE);
+        this(internal, builder, WindowUtils.getDefaultBackground());
     }
     
     /**
@@ -100,7 +101,7 @@ public class JSlide extends JPanel implements Switch {
         setLayout(null);
         
         activeBorder = builder.createBorder(Color.RED);
-        inactiveBorder = builder.createBorder(Color.BLACK);
+        inactiveBorder = builder.createBorder(WindowUtils.getDefaultForeground());
         setBorder(inactiveBorder);
         add(internal);
         setColor(background);

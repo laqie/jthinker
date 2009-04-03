@@ -109,10 +109,17 @@ public class AddAction extends AbstractAction {
      */
     public static JNode createNode(JNodeHost parent, NodeType nodeType, Point center) {
         JNodeSpec protoSpec = NodeSpecHolder.getSpec(nodeType);
-        String s = protoSpec.isEditable() ?
-            JOptionPane.showInputDialog("What to add?") : "          ";
-        if (s == null) {
-            return null;
+        String s;
+        if (protoSpec.isEditable()) {
+            s = JOptionPane.showInputDialog(null,
+                    "What to add?",
+                    nodeKindToString(nodeType),
+                    JOptionPane.QUESTION_MESSAGE);
+            if (s == null) {
+                return null;
+            }
+        } else {
+            s = "          ";
         }
         JNodeSpec result = protoSpec.clone(s, center);
         return new JNode(parent, result);

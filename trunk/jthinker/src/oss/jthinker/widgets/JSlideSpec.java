@@ -56,7 +56,7 @@ public abstract class JSlideSpec {
     protected JSlideSpec(Point center, BorderType border, Color color) {
         slideCenter = center;
         borderType = border;
-        background = color == null ? Color.WHITE : color;
+        background = color == null ? WindowUtils.getDefaultBackground() : color;
     }
     
     /**
