@@ -11,7 +11,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution. 
- * 
+ *
  * Neither the name of Ivan Appel nor the names of any other jThinker
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission. 
@@ -29,64 +29,42 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.graphs;
 
-import java.awt.Graphics;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.util.Collection;
+import oss.jthinker.util.Mapping;
 
 /**
- * JPanel-based implementation of JBackground.
+ * Minimalistic mock-emulator for NodeBundle interface.
  * 
  * @author iappel
+ * @param T type of contained nodes
  */
-public class JBackgroundPane extends JPanel implements JBackground {
-    private final Set<JComponent> backgroundComponents =
-            new HashSet<JComponent>();
+public class NodeBundle_Mock<T> implements NodeBundle<T> {
 
-    /** {@inheritDoc} */
-    public void addBackground(JComponent entry) {
-        if (backgroundComponents.add(entry)) {
-            repaintBackground();
-        }
+    public Collection<T> getAllNodes() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
-    public void removeBackground(JComponent entry) {
-        if (backgroundComponents.remove(entry)) {
-            repaintBackground();
-        }
+    public Dimension getAreaSize() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
-    public void repaintBackground() {
-        repaint();
-    }
-    
-    @Override
-    /** {@inheritDoc} */
-    public void paint(Graphics g) {
-        super.paintComponent(g);
-        paintBackground(g);
-        super.paintChildren(g);
+    public Collection<T> getIncomeNodes(T target) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
-    public void paintBackground(Graphics g) {
-        for (JComponent entry : backgroundComponents) {
-            if (entry.isVisible()) {
-                Graphics gg = g.create();
-                gg.translate(entry.getX(), entry.getY());
-                entry.paint(gg);
-            }
-        }
+    public Mapping<? super T, Rectangle, ?> getMapping() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    /** {@inheritDoc} */
-    public Iterator<JComponent> iterator() {
-        return backgroundComponents.iterator();
+    public Collection<T> getOutcomeNodes(T source) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int nodeCount() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

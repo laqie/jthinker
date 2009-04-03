@@ -200,6 +200,6 @@ public class JLineTest {
     public void colorTest() {
         System.out.println("colorTest");
         
-        assertEquals(Color.BLACK, line.getForeground());
+        assertEquals(WindowUtils.getDefaultForeground(), line.getForeground());
     }
 }

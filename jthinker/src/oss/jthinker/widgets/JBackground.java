@@ -31,6 +31,7 @@
 
 package oss.jthinker.widgets;
 
+import java.awt.Graphics;
 import javax.swing.JComponent;
 
 /**
@@ -39,7 +40,7 @@ import javax.swing.JComponent;
  * 
  * @author iappel
  */
-public interface JBackground {
+public interface JBackground extends Iterable<JComponent> {
     /**
      * Adds a component to background.
      * 
@@ -58,4 +59,11 @@ public interface JBackground {
      * Forces background's repaint.
      */    
     public void repaintBackground();
+    
+    /**
+     * Paints background components to provided Graphics.
+     * 
+     * @param g Graphics to paint background components
+     */
+    public void paintBackground(Graphics g);
 }

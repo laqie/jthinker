@@ -31,6 +31,8 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.graphs.NodeBundle_Mock;
+
 /**
  * Minimalistic mock-emulator for JNodeHost interface.
  * 
@@ -38,7 +40,7 @@ package oss.jthinker.widgets;
  */
 public class JNodeHost_Mock implements JNodeHost {
     private final GroupHandler groupHandler = new GroupHandler(new
-            JBackgroundPane());
+            JBackgroundPane(), new NodeBundle_Mock<JNode>());
     
     public void deleteJNode(JNode node) {
         throw new UnsupportedOperationException("Not supported yet.");

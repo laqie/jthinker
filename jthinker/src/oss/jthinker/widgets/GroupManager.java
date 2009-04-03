@@ -36,142 +36,46 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
+import oss.jthinker.graphs.NodeBundle;
 
 /**
  * Node groups management dialog window.
  * 
  * @author iappel
  */
-class GroupManager extends JDialog implements TableModel {
+class GroupManager extends JDialog {
     private final ArrayList<String> names;
     private final GroupHandler handler;
-    private final JTable table;
+    private final GroupContent _content;
 
-    private class PopupDisplayer extends MouseAdapter {
-        @Override
-        /** {@inheritDoc} */
-        public void mouseClicked(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON3) {
-                JPopupMenu menu = new JPopupMenu();
-                int row = table.rowAtPoint(e.getPoint());
-                final String name = names.get(row);
-                menu.add(new AbstractAction("Delete") {
-                    public void actionPerformed(ActionEvent e) {
-                        handler.removeGroup(name);
-                        GroupManager.this.fireTableDataChanged();
-                    }
-                });
-                menu.show(e.getComponent(), e.getX(), e.getY());
-            }
-        } 
-    }
-    
     /**
      * Initializes a new group management dialog window.
      * 
      * @param handler GroupHandler, data from which is to be presented
      * @param parent frame to use for setting modality and position
      */
-    public GroupManager(GroupHandler handler, Frame parent) {
+    public GroupManager(GroupHandler handler, NodeBundle<JNode> nodes, Frame parent) {
         super(parent, "Node groups", true);
         this.handler = handler;
         names = new ArrayList<String>(handler.getGroupList());
-        table = new JTable(this);
-        table.addMouseListener(new PopupDisplayer());
+        _content = new GroupContent(handler, nodes);
         setupVisual(parent.getBounds());
     }
 
-    /** {@inheritDoc} */
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        String name = names.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return name;
-            case 1:
-                return handler.getNodeGroup(name).contentSize();
-            default:
-                throw new IllegalArgumentException("" + columnIndex);
-        }
-    }
-
-    /** {@inheritDoc} */
-    public int getRowCount() {
-        return names.size();
-    }
-
-    /** {@inheritDoc} */
-    public int getColumnCount() {
-        return 2;
-    }
-
-    /** {@inheritDoc} */
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        handler.renameGroup(names.get(rowIndex), aValue.toString());
-        fireTableDataChanged();
-    }
-
-    /** {@inheritDoc} */
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 0;
-    }
-
-    /** {@inheritDoc} */
-    public void fireTableDataChanged() {
-        names.clear();
-        names.addAll(handler.getGroupList());
-        table.tableChanged(new TableModelEvent(this));
-    }
-
-    /** {@inheritDoc} */
-    public String getColumnName(int column) {
-        switch (column) {
-            case 0:
-                return "Group name";
-            case 1:
-                return "Nodes in group";
-            default:
-                throw new IllegalArgumentException("" + column);
-        }
-    }
-    
-    /** {@inheritDoc} */
-    public void addTableModelListener(TableModelListener l) {
-    }
-
-    /** {@inheritDoc} */
-    public Class<?> getColumnClass(int columnIndex) {
-        return String.class;
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /** {@inheritDoc} */
-    public void removeTableModelListener(TableModelListener l) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
     /**
      * Sets up the visual presentation of the window
      * 
      * @param rect position of parent frame
      */
     protected void setupVisual(Rectangle rect) {
-        JScrollPane scroller = new JScrollPane(table);
         setLayout(new BorderLayout());
-        add(scroller, BorderLayout.CENTER);
+        add(_content, BorderLayout.CENTER);
         
         JPanel buttons = new JPanel(new FlowLayout());
         buttons.add(new JButton(new AbstractAction("Add group") {
@@ -184,17 +88,17 @@ class GroupManager extends JDialog implements TableModel {
                     return;
                 }
                 handler.getNodeGroup(name);
-                fireTableDataChanged();
+                _content.syncGroupList();
             }
         }));
         
         buttons.add(new JButton(new AbstractAction("Remove empty groups") {
             public void actionPerformed(ActionEvent e) {
                 handler.clearEmptyGroups();
-                fireTableDataChanged();
+                _content.syncGroupList();
             }
         }));
-        
+
         add(buttons, BorderLayout.SOUTH);
         
         setBounds(rect.x + 150,

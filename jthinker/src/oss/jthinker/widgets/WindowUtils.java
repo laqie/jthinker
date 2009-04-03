@@ -31,12 +31,14 @@
 
 package oss.jthinker.widgets;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Window;
 import java.util.Vector;
+import javax.swing.UIManager;
 
 /**
  * Various component-related helper functions.
@@ -44,6 +46,9 @@ import java.util.Vector;
  * @author iappel
  */
 public class WindowUtils {
+    private WindowUtils() {
+    }
+    
     /**
      * Calculates location of component's center (in coordinates of
      * component's parent)
@@ -148,5 +153,23 @@ public class WindowUtils {
         Point l = c.getLocation();
         l.translate(p.x - c.getWidth() / 2, p.y - c.getHeight() / 2);
         c.setLocation(l);
-    }    
+    }
+
+    /**
+     * Returns the default color for foreground in user's color scheme.
+     * 
+     * @return the default color for foreground in user's color scheme.
+     */
+    public static Color getDefaultForeground() {
+        return UIManager.getColor("textText");
+    }
+    
+    /**
+     * Returns the default color for background in user's color scheme.
+     * 
+     * @return the default color for background in user's color scheme.
+     */    
+    public static Color getDefaultBackground() {
+        return UIManager.getColor("text");
+    }
 }

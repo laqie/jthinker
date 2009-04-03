@@ -212,6 +212,9 @@ public class MasterView extends DiagramDeck {
             public void actionPerformed(ActionEvent e) {
                 try {
                     File file = chooseSave(JPEG_FILES, PNG_FILES);
+                    if (file == null) {
+                        return;
+                    }
                     getCurrentDiagram().getImageMaker().fileExport(file);
                 } catch (Exception ex) {
                     ex.printStackTrace();

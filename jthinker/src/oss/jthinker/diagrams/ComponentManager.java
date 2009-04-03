@@ -61,7 +61,7 @@ public class ComponentManager extends ComponentHolder implements LinkController 
      */
     public ComponentManager(DiagramView view, DiagramType type) {
         super(view, type);
-        groupHandler = new GroupHandler(view);
+        groupHandler = new GroupHandler(view, this);
         engine = new GraphEngine<JNode>(this, OrderingLevel.SUPPRESS_OVERLAP);
     }
 

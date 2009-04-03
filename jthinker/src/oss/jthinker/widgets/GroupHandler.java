@@ -47,6 +47,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import oss.jthinker.graphs.NodeBundle;
 
 /**
  * Handler of node group operations.
@@ -56,6 +57,7 @@ import javax.swing.JPanel;
 public class GroupHandler {
     private final Map<JNode, JNodeGroup> grouping;
     private final Map<String, JNodeGroup> groupNames;
+    private final NodeBundle<JNode> nodeBundle;
     
     private final JBackground background;
     
@@ -63,9 +65,14 @@ public class GroupHandler {
      * Creates a new GroupHandler instance.
      * 
      * @param background pane to host the groups
+     * @param nodes available nodes
      */
-    public GroupHandler(JBackground background) {
+    public GroupHandler(JBackground background, NodeBundle<JNode> nodes) {
         this.background = background;
+        if (nodes == null) {
+            throw new NullPointerException();
+        }
+        nodeBundle = nodes;
         grouping = new HashMap<JNode, JNodeGroup>();
         groupNames = new HashMap<String, JNodeGroup>();
     }
@@ -293,7 +300,7 @@ public class GroupHandler {
      */
     public void displayManagerDialog(Component element) {
         Frame frame = WindowUtils.findFrame(element);
-        GroupManager manager = new GroupManager(this, frame);
+        GroupManager manager = new GroupManager(this, nodeBundle, frame);
         manager.setVisible(true);
     }
 }

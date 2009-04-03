@@ -32,6 +32,7 @@
 package oss.jthinker.widgets;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -39,6 +40,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
@@ -55,7 +57,7 @@ public class ImageProducer {
     private static final int GAP_LEFT = 5;
     private static final int GAP_RIGHT = 5;
     private static final int GAP_TITLE = 5;
-
+    
     private final Container _container;
     private final JLabel _title;
     private final Dimension _titleSize;
@@ -81,7 +83,7 @@ public class ImageProducer {
      */
     public static JLabel initTitleLabel() {
         JLabel label = new JLabel(TITLE);
-        label.setBorder(new LineBorder(Color.BLACK));
+        label.setBorder(new LineBorder(WindowUtils.getDefaultForeground()));
         label.setSize(label.getPreferredSize());
         return label;
     }
@@ -95,8 +97,20 @@ public class ImageProducer {
         int minx = _container.getWidth(), maxx = 0;
         int miny = _container.getHeight(), maxy = 0;
 
+        LinkedList<Component> content = new LinkedList<Component>();
+        
         for (int i = 0; i < _container.getComponentCount(); i++) {
-            Rectangle rect = _container.getComponent(i).getBounds();
+            content.add(_container.getComponent(i));
+        }
+        
+        if (_container instanceof JBackground) {
+            for (Component compo : (JBackground)_container) {
+                content.add(compo);
+            }
+        }
+        
+        for (Component compo : content) {
+            Rectangle rect = compo.getBounds();
             minx = Math.min(minx, rect.x);
             miny = Math.min(miny, rect.y);
             maxx = Math.max(maxx, rect.x + rect.width);
@@ -135,7 +149,7 @@ public class ImageProducer {
                 BufferedImage.TYPE_INT_RGB);
 
         Graphics g = image.getGraphics();
-        g.setColor(Color.WHITE);
+        g.setColor(WindowUtils.getDefaultBackground());
         g.fillRect(0, 0, imageSize.width, imageSize.height);
         
         return image;
@@ -152,8 +166,16 @@ public class ImageProducer {
         
         Graphics g = image.getGraphics();
         g.translate(GAP_LEFT - area.x, GAP_TOP - area.y);
-        _container.paintComponents(g);
+        
+        if (_container instanceof JBackground) {
+            ((JBackground)_container).paintBackground(g);
+        }
 
+        Color containerBackground = _container.getBackground();
+        _container.setBackground(WindowUtils.getDefaultBackground());
+        _container.paintComponents(g);
+        _container.setBackground(containerBackground);
+        
         g = image.getGraphics();
         g.translate(GAP_LEFT, area.height + GAP_TOP + GAP_TITLE);
         _title.paint(g);

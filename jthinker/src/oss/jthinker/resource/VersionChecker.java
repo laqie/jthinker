@@ -32,9 +32,10 @@
 package oss.jthinker.resource;
 
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -109,24 +110,26 @@ public class VersionChecker {
         InputSource source = new InputSource(url);
         Document doc = parser.parse(source);
         NodeList entries = doc.getElementsByTagName("entry");
-        ArrayList<String> contents = new ArrayList<String>();
+        Set<String> contents = new HashSet<String>();
         for (int i=0;i<entries.getLength();i++) {
             Node entry = entries.item(i);
             NodeList entryContent = entry.getChildNodes();
             for (int j=0;j<entryContent.getLength();j++) {
                 Node entryItem = entryContent.item(j);
                 if (entryItem.getNodeName().equals("title")) {
-                    contents.add(entryItem.getFirstChild().getNodeValue());
+                    String item = entryItem.getFirstChild().getNodeValue();
+                    contents.add(item.split("-")[2].substring(0, 5));
                 }
             }
         }
+        contents.add(CURRENT_VERSION);
         return Collections.max(contents, new VersionComparator());
     }
     
     private static class VersionComparator implements Comparator<String> {
         public int compare(String o1, String o2) {
-            String[] ver1 = o1.split(".");
-            String[] ver2 = o2.split(".");
+            String[] ver1 = o1.split("\\.");
+            String[] ver2 = o2.split("\\.");
             for (int i=0;i<2;i++) {
                 int result = ver1[i].compareTo(ver2[i]);
                 if (result != 0) {

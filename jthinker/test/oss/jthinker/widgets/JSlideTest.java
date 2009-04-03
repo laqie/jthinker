@@ -98,7 +98,7 @@ public class JSlideTest {
         Border border = instance.getBorder();
         assertNotNull(border);
         assertTrue(border instanceof LineBorder);
-        assertEquals(Color.BLACK, ((LineBorder)border).getLineColor());
+        assertEquals(WindowUtils.getDefaultForeground(), ((LineBorder)border).getLineColor());
     }
 
     /**
