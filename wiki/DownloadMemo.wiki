@@ -13,7 +13,7 @@ Several distributions of jThinker are maintained on this web-site:
 
 *Download link*: [http://jthinker.googlecode.com/files/jthinker-xplatform-0.4.0.zip jthinker-xplatform-0.4.0.zip]
 
-
+<wiki:gadget url="http://ivan.appel.googlepages.com/adsense-line.xml" width="500" height="100" border="0" />
 
 == Binary release for Microsoft Windows ==
 *Operating systems:* Windows'XP, Windows Vista, Windows 2000 (tested); any other Windows up to Win'98 (not tested, but theoretically should be working)
@@ -26,6 +26,7 @@ Several distributions of jThinker are maintained on this web-site:
 
 *Download link*: [http://jthinker.googlecode.com/files/jthinker-win-0.4.0.zip jthinker-win-0.4.0.zip]
 
+<wiki:gadget url="http://ivan.appel.googlepages.com/donate.xml" width="180" height = "140" border="0" />
 
 == Source release ==
 *Content:* source code of jThinker, unit-tests are not included
