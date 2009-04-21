@@ -34,5 +34,3 @@ Several distributions of jThinker are maintained on this web-site:
 *Purpose:* getting acknowledged with jThinker's internals, making custom builds. For serious work, it's better to [http://code.google.com/p/jthinker/source/checkout checkout code from the repository]
 
 *Download link*: [http://jthinker.googlecode.com/files/jthinker-src-0.3.3.tgz jthinker-src-0.4.0.tgz]
-
-</p>
