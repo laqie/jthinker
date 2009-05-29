@@ -37,6 +37,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.security.AccessControlException;
 import java.util.EventObject;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -152,7 +153,11 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
         JNodeModel model = node.getEditorModel();
         Point location = WindowUtils.computeAbsoluteCenterPoint(node);
         JNodeEditor editor = new JNodeEditor(model);
-        editor.setAlwaysOnTop(true);
+        try {
+            editor.setAlwaysOnTop(true);
+        } catch (AccessControlException acex) {
+            // Running in an applet environment...
+        }
         editor.setLocation(location);
         editor.setSize(300, 200);
         editor.setVisible(true);

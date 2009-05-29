@@ -55,8 +55,9 @@ import static oss.jthinker.widgets.ThinkerFileChooser.*;
 public class MasterView extends DiagramDeck {
     private static final Logger logger = Logger.getAnonymousLogger();
     private final JXPopupMenu popupMenu;
-    private final ThinkerMain container;
+    private final ApplicationMain container;
 
+    private JMenuItem openItem;
     private JMenuItem saveItem;
     private JMenuItem saveAsItem;
     private JMenuItem jpegExportItem;
@@ -145,11 +146,11 @@ public class MasterView extends DiagramDeck {
      * 
      * @param mainframe application main frame.
      */
-    public MasterView(ThinkerMain mainframe) {
+    public MasterView(ApplicationMain appMain) {
         popupMenu = new JXPopupMenu();
         popupMenu.add(new CloseAction());
         setComponentPopupMenu(popupMenu);
-        container = mainframe;
+        container = appMain;
     }
 
     /**
@@ -180,33 +181,26 @@ public class MasterView extends DiagramDeck {
         }
         fileMenu.add(newSubMenu);
 
-        fileMenu.addSeparator();
-
         AbstractAction action = new AbstractAction("Open") {
             public void actionPerformed(ActionEvent e) {
                 loadNew();
             }
         };
-
-        fileMenu.add(new JMenuItem(action));        
+        openItem = new JMenuItem(action);
         
         action = new AbstractAction("Save") {
             public void actionPerformed(ActionEvent e) {
                 saveCurrent(false);
             }
         };
-
         saveItem = new JMenuItem(action);
-        fileMenu.add(saveItem);
 
         action = new AbstractAction("Save as...") {
             public void actionPerformed(ActionEvent e) {
                 saveCurrent(true);
             }
         };
-        
         saveAsItem = new JMenuItem(action);
-        fileMenu.add(saveAsItem);
 
         action = new AbstractAction("Export to JPEG/PNG") {
             public void actionPerformed(ActionEvent e) {
@@ -221,11 +215,18 @@ public class MasterView extends DiagramDeck {
                 }
             }
         };
-
         jpegExportItem = new JMenuItem(action);
-        fileMenu.add(jpegExportItem);
-        
-        fileMenu.addSeparator();
+
+        if (container.localPersistence() || 
+            container.globalPersistence())
+        {
+            fileMenu.addSeparator();
+            fileMenu.add(new JMenuItem(action));
+            fileMenu.add(saveItem);
+            fileMenu.add(saveAsItem);
+            fileMenu.add(jpegExportItem); 
+            fileMenu.addSeparator();
+        }
         
         return fileMenu;
     }
