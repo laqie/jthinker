@@ -272,7 +272,17 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         if (isSaved()) {
             return true;
         }
-        
+       
+        if (!ApplicationMain.localPersistence() && 
+            !ApplicationMain.globalPersistence()) 
+        {
+            JOptionPane.showMessageDialog(this,
+                "It's not possible to save the diagram in demo mode, your changes will be lost...",
+                "Sorry...",
+                JOptionPane.INFORMATION_MESSAGE);
+            return true;
+        }
+ 
         int option = JOptionPane.showConfirmDialog(this, "Do you want to save "
                 + getTitleTrigger().getState());
         

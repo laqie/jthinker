@@ -41,74 +41,68 @@ import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JToolBar;
+//import javax.swing.JMenuBar;
+//import javax.swing.JMenuItem;
+//import javax.swing.JToolBar;
 import javax.swing.UIManager;
-import oss.jthinker.diagrams.DiagramView;
-import oss.jthinker.diagrams.InteractorActionFactory;
+//import oss.jthinker.diagrams.DiagramView;
+//import oss.jthinker.diagrams.InteractorActionFactory;
 
 /**
  * jThinker's entrypoint class + main frame.
  * 
  * @author iappel
  */
-public class ThinkerMain extends JFrame {
+public class SwingEntryPoint extends JFrame implements EntryPoint {
     private static final Logger logger = Logger.getAnonymousLogger();
-    private final MasterView masterView;
-    private final HelpView helpView;
+//    private final MasterView masterView;
+//    private final HelpView helpView;
 
-    private JToolBar toolbar;
+//  private JToolBar toolbar;
     
-    private class WindowCloser extends WindowAdapter {
-        @Override
-        public void windowClosing(WindowEvent e) {
-            applicationStop();
-        }
-    }
 
-    private ThinkerMain() {
+    private SwingEntryPoint() {
         super("jThinker "+VersionChecker.CURRENT_VERSION);
 
         setLayout(new BorderLayout());
-        masterView = new MasterView(this);
-        add(masterView, BorderLayout.CENTER);
+//        masterView = new MasterView(this);
+//        add(masterView, BorderLayout.CENTER);
         
-        helpView = new HelpView();
+//        helpView = new HelpView();
         
-        initApplicationMenuBar();
-        setBounds(100, 100, 500, 300);
-        addWindowListener(new WindowCloser());
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        masterView.contentChanged(null);
+//        initApplicationMenuBar();
+//        setBounds(100, 100, 500, 300);
+//      addWindowListener(new WindowCloser());
+//      setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//        masterView.contentChanged(null);
     }
 
-    private void initApplicationMenuBar() {
-        JMenu fileMenu = masterView.createApplicationFileMenu();
-        JMenu helpMenu = helpView.createApplicationHelpMenu();
-        JMenu diaoptMenu = masterView.createApplicationDiagramOptionsMenu();
+//    private void initApplicationMenuBar() {
+//        JMenu fileMenu = masterView.createApplicationFileMenu();
+//        JMenu helpMenu = helpView.createApplicationHelpMenu();
+//        JMenu diaoptMenu = masterView.createApplicationDiagramOptionsMenu();
         
-        AbstractAction action = new AbstractAction("Exit") {
-            public void actionPerformed(ActionEvent e) {
-                applicationStop();
-            }
-        };
+//        AbstractAction action = new AbstractAction("Exit") {
+//            public void actionPerformed(ActionEvent e) {
+//                applicationStop();
+//            }
+//        };
 
-        fileMenu.add(new JMenuItem(action));
+//       fileMenu.add(new JMenuItem(action));
         
-        JMenuBar result = new JMenuBar();
-        result.add(fileMenu);
-        result.add(diaoptMenu);
-        result.add(Box.createHorizontalGlue());
-        result.add(helpMenu);
-        setJMenuBar(result);
-    }
-    
-    private void applicationStop() {
-        if (masterView.closeAll()) {
-            System.exit(0);
-        }
-    }
+//        JMenuBar result = new JMenuBar();
+//        result.add(fileMenu);
+//        result.add(diaoptMenu);
+//        result.add(Box.createHorizontalGlue());
+//        result.add(helpMenu);
+//        setJMenuBar(result);
+//    }
+
+//    private void applicationStop() {
+//        if (masterView.closeAll()) {
+//            System.exit(0);
+//        }
+//    }
     
     /**
      * Entry point of the application.
@@ -123,7 +117,15 @@ public class ThinkerMain extends JFrame {
             logger.log(Level.WARNING, "Unable to initialize system L&F", t);
         }
 
-        ThinkerMain frame = new ThinkerMain();
+        SwingEntryPoint frame = new SwingEntryPoint();
+        final ApplicationMain appMain = new ApplicationMain(frame);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                appMain.applicationStop();
+            }
+        });
 
         frame.setBounds(100, 100, 700, 500);
         frame.validate();
@@ -131,7 +133,8 @@ public class ThinkerMain extends JFrame {
 
         VersionChecker.checkVersion();        
     }
-    
+
+/*    
     protected void updateToolBar(DiagramView diagramView) {
         JToolBar newToolbar = InteractorActionFactory.getDiagramToolBar(diagramView);
         if (toolbar != null) {
@@ -141,5 +144,14 @@ public class ThinkerMain extends JFrame {
         if (newToolbar != null) {
             add(toolbar, BorderLayout.WEST);
         }
+    }
+*/
+
+    public boolean localPersistence() {
+        return true;
+    }
+ 
+    public void applicationStop() {
+        System.exit(0);
     }
 }
