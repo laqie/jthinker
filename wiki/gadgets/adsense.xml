@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<Module>
+<ModulePrefs title="AdSense Ads"
+             title_url="http://adsense.google.com"
+             description="Google AdSense Advertisements"
+             author="Ivan Appel"
+             author_email="ivan.appel@gmail.com"
+             height="468"
+             width="60"
+             category="tools"
+             scaling="false" /> 
+
+<Content type="html"><![CDATA[
+<script type="text/javascript"><!--
+google_ad_client = "pub-6941089201034048";
+google_ad_slot = "6438318161";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+]]>
+</Content>
+</Module>

@@ -1,5 +1,5 @@
 #summary Amazon advertising
 
-<wiki:gadget url="http://ivan.appel.googlepages.com/adsense-graph.xml" width="200" height = "200" border="0" />
+<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/adsense-graph.xml" width="200" height = "200" border="0" />
 
-<wiki:gadget url="http://ivan.appel.googlepages.com/recommend.xml" width="160" height = "600" border="0" />
+<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/recommend.xml" width="160" height = "600" border="0" />

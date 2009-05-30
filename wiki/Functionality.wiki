@@ -14,4 +14,3 @@
   * guided construction of the logic trees
   * [http://code.google.com/p/jthinker/issues/list anything you can suggest]
 
-<wiki:gadget url="http://ivan.appel.googlepages.com/adsense.xml" width="500" height="75" border="0" />
