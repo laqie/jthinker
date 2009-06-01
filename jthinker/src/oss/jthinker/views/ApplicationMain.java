@@ -32,6 +32,9 @@ package oss.jthinker.views;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JComponent;
@@ -39,10 +42,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
 import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.InteractorActionFactory;
 
 public class ApplicationMain {
+    private final static Logger logger = Logger.getLogger(ApplicationMain.class.getName());
     private final MasterView _masterView;
     private final HelpView   _helpView;
     private final EntryPoint _impl;
@@ -51,6 +56,7 @@ public class ApplicationMain {
     private static ApplicationMain _singleton;
 
     public ApplicationMain(EntryPoint impl) {
+        configureLookAndFeel();
         _impl = impl;
         _singleton = this;
         _masterView = new MasterView(this);
@@ -77,13 +83,15 @@ public class ApplicationMain {
         JMenu helpMenu   = _helpView.createApplicationHelpMenu();
         JMenu diaoptMenu = _masterView.createApplicationDiagramOptionsMenu();
 
-        AbstractAction action = new AbstractAction("Exit") {
-            public void actionPerformed(ActionEvent e) {
-                applicationStop();
-            }
-        };
+        if (_impl.isTerminatable()) {
+            AbstractAction action = new AbstractAction("Exit") {
+                public void actionPerformed(ActionEvent e) {
+                    applicationStop();
+                }
+            };
 
-        fileMenu.add(new JMenuItem(action));
+            fileMenu.add(new JMenuItem(action));
+        }
 
         JMenuBar result = new JMenuBar();
         result.add(fileMenu);
@@ -94,8 +102,13 @@ public class ApplicationMain {
     }
 
     protected void applicationStop() {
+        if (!_impl.isTerminatable()) {
+            // applet environment...
+            throw new UnsupportedOperationException();            
+        }
+
         if (_masterView.closeAll()) {
-            _impl.applicationStop();
+            System.exit(0);
         }
     }
 
@@ -106,5 +119,18 @@ public class ApplicationMain {
     protected static boolean globalPersistence() {
         return false;
     }
+
+    protected static void configureLookAndFeel() {
+        try {
+            String system = UIManager.getSystemLookAndFeelClassName();
+            UIManager.setLookAndFeel(system);
+        } catch (Throwable t) {
+            logger.log(Level.WARNING, "Unable to initialize system L&F", t);
+        }
+    }
+
+    protected static void openBrowser(URL url) {
+        _singleton._impl.openBrowser(url);
+    }    
 }
 
