@@ -30,23 +30,39 @@
  */
 package oss.jthinker.views;
 
+import java.net.URL;
 import javax.swing.JApplet;
 
+/**
+ * Entry point for running jThinker as an applet.
+ *
+ * @author iappel
+ * @since 0.4.1
+ */
 public class AppletEntryPoint extends JApplet implements EntryPoint {
+    /** {@inheritDoc} */
     public JApplet getContainer() {
         return this;
     }
 
+    /** {@inheritDoc} */
     public void start() {
         ApplicationMain appMain = new ApplicationMain(this);
     }
 
+    /** {@inheritDoc} */
     public boolean localPersistence() {
         return false;
     }
  
-    public void applicationStop() {
-        stop();
+    /** {@inheritDoc} */
+    public boolean isTerminatable() {
+        return false;
     }
+ 
+    /** {@inheritDoc} */
+    public void openBrowser(URL url) {
+        getAppletContext().showDocument(url, "_blank");
+    } 
 }
 

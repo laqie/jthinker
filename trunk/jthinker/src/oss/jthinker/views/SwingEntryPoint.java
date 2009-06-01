@@ -31,22 +31,12 @@
 package oss.jthinker.views;
 
 import java.awt.BorderLayout;
-import oss.jthinker.resource.VersionChecker;
-import java.awt.event.ActionEvent;
+import java.awt.Desktop;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.AbstractAction;
-import javax.swing.Box;
+import java.net.URL;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-//import javax.swing.JMenuBar;
-//import javax.swing.JMenuItem;
-//import javax.swing.JToolBar;
-import javax.swing.UIManager;
-//import oss.jthinker.diagrams.DiagramView;
-//import oss.jthinker.diagrams.InteractorActionFactory;
+import oss.jthinker.resource.VersionChecker;
 
 /**
  * jThinker's entrypoint class + main frame.
@@ -54,69 +44,18 @@ import javax.swing.UIManager;
  * @author iappel
  */
 public class SwingEntryPoint extends JFrame implements EntryPoint {
-    private static final Logger logger = Logger.getAnonymousLogger();
-//    private final MasterView masterView;
-//    private final HelpView helpView;
-
-//  private JToolBar toolbar;
-    
-
     private SwingEntryPoint() {
         super("jThinker "+VersionChecker.CURRENT_VERSION);
 
         setLayout(new BorderLayout());
-//        masterView = new MasterView(this);
-//        add(masterView, BorderLayout.CENTER);
-        
-//        helpView = new HelpView();
-        
-//        initApplicationMenuBar();
-//        setBounds(100, 100, 500, 300);
-//      addWindowListener(new WindowCloser());
-//      setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-//        masterView.contentChanged(null);
     }
 
-//    private void initApplicationMenuBar() {
-//        JMenu fileMenu = masterView.createApplicationFileMenu();
-//        JMenu helpMenu = helpView.createApplicationHelpMenu();
-//        JMenu diaoptMenu = masterView.createApplicationDiagramOptionsMenu();
-        
-//        AbstractAction action = new AbstractAction("Exit") {
-//            public void actionPerformed(ActionEvent e) {
-//                applicationStop();
-//            }
-//        };
-
-//       fileMenu.add(new JMenuItem(action));
-        
-//        JMenuBar result = new JMenuBar();
-//        result.add(fileMenu);
-//        result.add(diaoptMenu);
-//        result.add(Box.createHorizontalGlue());
-//        result.add(helpMenu);
-//        setJMenuBar(result);
-//    }
-
-//    private void applicationStop() {
-//        if (masterView.closeAll()) {
-//            System.exit(0);
-//        }
-//    }
-    
     /**
      * Entry point of the application.
      * 
      * @param args run command line arguments
      */
     public static void main(String args[]) {
-        try {
-            String system = UIManager.getSystemLookAndFeelClassName();
-            UIManager.setLookAndFeel(system);
-        } catch (Throwable t) {
-            logger.log(Level.WARNING, "Unable to initialize system L&F", t);
-        }
-
         SwingEntryPoint frame = new SwingEntryPoint();
         final ApplicationMain appMain = new ApplicationMain(frame);
 
@@ -134,24 +73,22 @@ public class SwingEntryPoint extends JFrame implements EntryPoint {
         VersionChecker.checkVersion();        
     }
 
-/*    
-    protected void updateToolBar(DiagramView diagramView) {
-        JToolBar newToolbar = InteractorActionFactory.getDiagramToolBar(diagramView);
-        if (toolbar != null) {
-            remove(toolbar);
-        }
-        toolbar = newToolbar;
-        if (newToolbar != null) {
-            add(toolbar, BorderLayout.WEST);
-        }
-    }
-*/
-
+    /** {@inheritDoc} */
     public boolean localPersistence() {
         return true;
     }
  
-    public void applicationStop() {
-        System.exit(0);
+    /** {@inheritDoc} */
+    public boolean isTerminatable() {
+        return true;
+    }
+
+    /** {@inheritDoc} */
+    public void openBrowser(URL url) {
+        try {
+            Desktop.getDesktop().browse(url.toURI());
+        } catch (Throwable t) {
+            System.out.println("Unable to display " + url);
+        }
     }
 }

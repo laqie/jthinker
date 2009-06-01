@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="jThinker" default="invoke">
+  <property name="base.dir" location="/export/home/vanya/oss/jthinker" />
+  <property name="src.dir" location="${base.dir}/trunk/jthinker/src" />
+  <property name="tests.dir" location="${base.dir}/trunk/jthinker/test" />
+  <property name="classes.dir" location="${base.dir}/classes" />
+  <property name="jars.dir" location="${base.dir}/distro" />
+  <property name="res.suf" location="oss/jthinker/resource" />
+
+  <target name="init">
+    <mkdir dir="${classes.dir}" />
+    <mkdir dir="${jars.dir}" />
+  </target>
+    
+  <target name="compile" depends="init">
+    <javac srcdir="${src.dir}" destdir="${classes.dir}" />
+    <copy todir="${classes.dir}">
+      <fileset dir="${src.dir}">
+        <include name="**/*.html" />
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="invoke" depends="compile">
+    <java classname="oss.jthinker.views.ThinkerMain"
+          classpath="${classes.dir}" 
+          fork="true"
+          spawn="true"
+           />
+  </target>
+ 
+  <target name="distro" depends="compile">
+    <jar destfile="${jars.dir}/jthinker.jar"
+         basedir="${classes.dir}" 
+         manifest="${src.dir}/manifest" />
+    <copy todir="${jars.dir}" file="${src.dir}/applet.html" />
+  </target>
+
+  <target name="clean">
+    <delete dir="${classes.dir}" />
+    <delete dir="${jars.dir}" />
+  </target>
+
+</project>

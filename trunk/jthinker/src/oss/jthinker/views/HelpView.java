@@ -31,12 +31,10 @@
 package oss.jthinker.views;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
+import java.net.URL;
+import java.net.MalformedURLException;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import oss.jthinker.resource.ResourceLoader;
-import oss.jthinker.widgets.HtmlDisplay;
 
 /**
  * Collection of various Help menu-related functions.
@@ -47,27 +45,15 @@ public class HelpView {
 
     private static class ShowHelpAction extends AbstractAction {
 
-        private final String resourceName,  title;
-        private final int w,  h;
+        private final URL _url;
 
-        public ShowHelpAction(String name, String titleName, String resource,
-                int x, int y) {
+        public ShowHelpAction(String name, String url) throws MalformedURLException {
             super(name);
-            resourceName = resource;
-            w = x;
-            h = y;
-            title = titleName;
+            _url = new URL(url); 
         }
 
         public void actionPerformed(ActionEvent e) {
-            try {
-                String content = ResourceLoader.loadResourceAsString(resourceName);
-                HtmlDisplay display = new HtmlDisplay(content, title);
-                display.display(w, h);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Unable to load " + title,
-                        "Internal error", JOptionPane.ERROR_MESSAGE);
-            }
+            ApplicationMain.openBrowser(_url);
         }
     }
 
@@ -76,9 +62,14 @@ public class HelpView {
             super("Help");
         }
 
-        public void addItem(String name, String title, String resource,
-                int x, int y) {
-            add(new ShowHelpAction(name, title, resource, x, y));
+        public void addItem(String name, String url) {
+            ShowHelpAction action = null;
+            try { 
+                action = new ShowHelpAction(name, url);
+            } catch (MalformedURLException murex) {
+                return;
+            }
+            add(action);
         }
     }
 
@@ -89,10 +80,10 @@ public class HelpView {
      */
     public JMenu createApplicationHelpMenu() {
         HelpMenu menu = new HelpMenu();
-        menu.addItem("How to...", "jThinker how-tos", "howto.html", 600, 400);
+        menu.addItem("How to...", "http://code.google.com/p/jthinker/wiki/HowTo");
         menu.addSeparator();
-        menu.addItem("About", "About jThinker", "about.html", 500, 300);
-        menu.addItem("License", "jThinker License", "license.html", 600, 400);
+        menu.addItem("About", "http://code.google.com/p/jthinker/");
+        menu.addItem("License", "http://code.google.com/p/jthinker/wiki/License");
         return menu;
     }
 }
