@@ -1,8 +1,4 @@
+#summary On-site demo
 #labels Featured
-#summary On-site demo 
 
-<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/applet.xml" 
-             width="800" 
-             height = "600"
-             border="0" />
-
+<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/applet.xml" width="800"             height = "600" border="0" />
