@@ -12,7 +12,7 @@
 
 <Content type="html"><![CDATA[
 <img src="http://jthinker.googlecode.com/svn/wiki/screenshots/title-picture.png"
-     usemap="title-pic" border = "0"/>
+     usemap="#title-pic" border = "0"/>
 <map name="title-pic">
 <area shape="rect" coords="170,0,330,50" 
       href="http://code.google.com/p/jthinker/wiki/Functionality">
