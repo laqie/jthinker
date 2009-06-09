@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<Module>
+<ModulePrefs title="jThinker title page"
+             title_url="http://code.google.com/p/jthinker"
+             description="jThinker title page"
+             author="Ivan Appel"
+             author_email="ivan.appel@gmail.com"
+             height="500"
+             width="650"
+             category="tools"
+             scaling="false" /> 
+
+<Content type="html"><![CDATA[
+<table border="0">
+<tr>
+<td>
+<img src="http://jthinker.googlecode.com/svn/wiki/screenshots/title-picture.png"
+     usemap="#title-pic" border = "0"/>
+<map name="title-pic">
+<area shape="rect" coords="170,0,330,50" 
+      href="http://code.google.com/p/jthinker/wiki/Functionality"
+      target="_blank">
+<area shape="rect" coords="0,100,100,135"
+      href="http://code.google.com/p/jthinker/wiki/DownloadMemo?tm=2"
+      target="_blank">
+<area shape="rect" coords="270,110,430,145"
+      href="http://code.google.com/p/jthinker/wiki/Demo"
+      target="_blank">
+<area shape="rect" coords="310,215,430,250"
+      href="http://code.google.com/p/jthinker/wiki/HowTo"
+      target="_blank">
+<area shape="rect" coords="0,220,120,255"
+      href="mailto:ivan.appel@gmail.com"
+      target="_blank">
+<area shape="rect" coords="190,300,380,345"
+      href="http://aardvarkmailinglist.net/fml/s/sama/?action=add&c=21063WOP&l=12462"
+      target="_blank">
+</map>
+<td>
+<script type="text/javascript"><!--
+google_ad_client = "pub-6941089201034048";
+/* 200x200, \u0441\u043e\u0437\u0434\u0430\u043d\u043e 20.04.09 */
+google_ad_slot = "0102996032";
+google_ad_width = 200;
+google_ad_height = 200;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</table>
+]]>
+</Content>
+</Module>
