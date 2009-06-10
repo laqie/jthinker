@@ -12,8 +12,8 @@
 
 <Content type="html"><![CDATA[
 <iframe src="http://jthinker-server.appspot.com/polls/demo"
-        width="300"
-        height="300">
+        width="350"
+        height="150">
 ]]>
 </Content>
 </Module>
