@@ -42,7 +42,7 @@ import oss.jthinker.util.FilenameTrigger;
 import oss.jthinker.util.MutableTrigger;
 import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerListener;
-import oss.jthinker.widgets.ImageProducer;
+import oss.jthinker.widgets.HTMLProducer;
 import oss.jthinker.widgets.JBackgroundPane;
 import oss.jthinker.widgets.MouseLocator;
 
@@ -57,7 +57,7 @@ public abstract class DocumentPane extends JBackgroundPane
     private final MutableTrigger<File> filenameTrigger;
     private final MutableTrigger<Boolean> modifiedTrigger;
     private final Trigger<String> tabTitleTrigger;
-    private ImageProducer _imageMaker;
+    private HTMLProducer _imageMaker;
     
     /**
      * Creates a new DocumentPane instance with given string as title.
@@ -172,9 +172,9 @@ public abstract class DocumentPane extends JBackgroundPane
      * 
      * @return image producer of this component.
      */
-    public ImageProducer getImageMaker() {
+    public HTMLProducer getImageMaker() {
         if (_imageMaker == null) {
-            _imageMaker = new ImageProducer(this);
+            _imageMaker = new HTMLProducer(this);
         }
         return _imageMaker;
     }

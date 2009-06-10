@@ -61,6 +61,7 @@ public class MasterView extends DiagramDeck {
     private JMenuItem saveItem;
     private JMenuItem saveAsItem;
     private JMenuItem jpegExportItem;
+    private JMenuItem jpegHtmlExportItem;
     private JMenuItem groupingItem;
     private JCheckBoxMenuItem orderingOffItem;
     private JCheckBoxMenuItem orderingOverlapItem;
@@ -202,14 +203,14 @@ public class MasterView extends DiagramDeck {
         };
         saveAsItem = new JMenuItem(action);
 
-        action = new AbstractAction("Export to JPEG/PNG") {
+        action = new AbstractAction("Only image") {
             public void actionPerformed(ActionEvent e) {
                 try {
                     File file = chooseSave(JPEG_FILES, PNG_FILES);
                     if (file == null) {
                         return;
                     }
-                    getCurrentDiagram().getImageMaker().fileExport(file);
+                    getCurrentDiagram().getImageMaker().imageExport(file);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -217,14 +218,38 @@ public class MasterView extends DiagramDeck {
         };
         jpegExportItem = new JMenuItem(action);
 
+        action = new AbstractAction("Image + HTML") {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    File imageFile = chooseSave(JPEG_FILES, PNG_FILES);
+                    if (imageFile == null) {
+                        return;
+                    }
+                    File htmlFile = chooseSave(HTML_FILES);
+                    if (htmlFile == null) {
+                        return; 
+                    }     
+                    getCurrentDiagram().getImageMaker().imageHtmlExport(imageFile, htmlFile);
+                } catch (Exception ex) {
+                    ex.printStackTrace(); 
+                }
+            }
+        };
+        jpegHtmlExportItem = new JMenuItem(action);
+
         if (container.localPersistence() || 
             container.globalPersistence())
         {
             fileMenu.addSeparator();
-            fileMenu.add(new JMenuItem(action));
+            fileMenu.add(openItem);
             fileMenu.add(saveItem);
             fileMenu.add(saveAsItem);
-            fileMenu.add(jpegExportItem); 
+
+            JMenu exportMenu = new JMenu("Export to JPEG/PNG");
+            exportMenu.add(jpegExportItem); 
+            exportMenu.add(jpegHtmlExportItem); 
+            fileMenu.add(exportMenu);
+
             fileMenu.addSeparator();
         }
         
