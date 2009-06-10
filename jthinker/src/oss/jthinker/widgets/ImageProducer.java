@@ -36,6 +36,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -52,10 +53,10 @@ import javax.swing.border.LineBorder;
  */
 public class ImageProducer {
     private final static String TITLE = "http://code.google.com/p/jthinker";
-    private static final int GAP_TOP = 5;
-    private static final int GAP_BOTTOM = 5;
-    private static final int GAP_LEFT = 5;
-    private static final int GAP_RIGHT = 5;
+    protected static final int GAP_TOP = 5;
+    protected static final int GAP_BOTTOM = 5;
+    protected static final int GAP_LEFT = 5;
+    protected static final int GAP_RIGHT = 5;
     private static final int GAP_TITLE = 5;
     
     private final Container _container;
@@ -119,6 +120,21 @@ public class ImageProducer {
 
         return new Rectangle(minx, miny, maxx - minx, maxy - miny);
     }
+
+    /**
+     * Computes the origin point of the image. Origin point here
+     * is the top-left point of the image presented in
+     * base component's coordinate space.
+     *
+     * @return position of top-left point of the image
+     * presented in component's coordinates
+     */ 
+    public Point computeOrigin() {
+        Rectangle filledArea = computeFilledArea();
+        Point origin = filledArea.getLocation();
+        origin.translate(-GAP_LEFT, -GAP_TOP);
+        return origin;
+    } 
 
     /**
      * Computes the size of the image to be produced.
@@ -212,8 +228,22 @@ public class ImageProducer {
      * @param file file name to place generated file
      * @throws IOException if an error occurs during writing.
      * @throws IllegalArgumentException if file name has no valid suffix
+     * @deprecated use {@link #imageExport(File)} instead
      */
+    @Deprecated
     public void fileExport(File file) throws IOException, IllegalArgumentException {
+        imageExport(file);
+    }
+
+    /**
+     * Produces an image and saves it to given location. Format for
+     * the image file is deduced from filename's extension.
+     * 
+     * @param file file name to place generated file
+     * @throws IOException if an error occurs during writing.
+     * @throws IllegalArgumentException if file name has no valid suffix
+     */
+    public void imageExport(File file) throws IOException, IllegalArgumentException {
         String filename = file.getName();
         if (filename.endsWith(".png")) {
             pngExport(file);

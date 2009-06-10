@@ -86,6 +86,8 @@ public class ThinkerFileChooser {
             new SuffixFilter("JPEG files", ".jpeg", ".jpg");
     public static SuffixFilter PNG_FILES =
             new SuffixFilter("PNG files", ".png");
+    public static SuffixFilter HTML_FILES =
+            new SuffixFilter("HTML files", ".html");
 
     /**
      * Chooses a place to store a file with given suffixes.

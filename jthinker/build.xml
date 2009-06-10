@@ -5,6 +5,7 @@
   <property name="tests.dir" location="${base.dir}/trunk/jthinker/test" />
   <property name="classes.dir" location="${base.dir}/classes" />
   <property name="jars.dir" location="${base.dir}/distro" />
+  <property name="docs.dir" location="${base.dir}/javadoc" />
   <property name="res.suf" location="oss/jthinker/resource" />
 
   <target name="init">
@@ -21,11 +22,17 @@
     </copy>
   </target>
   
-  <target name="invoke" depends="compile">
-    <java classname="oss.jthinker.views.ThinkerMain"
+  <target name="fork" depends="compile">
+    <java classname="oss.jthinker.views.SwingEntryPoint"
           classpath="${classes.dir}" 
           fork="true"
           spawn="true"
+           />
+  </target>
+
+  <target name="invoke" depends="compile">
+    <java classname="oss.jthinker.views.SwingEntryPoint"
+          classpath="${classes.dir}" 
            />
   </target>
  
@@ -36,9 +43,21 @@
     <copy todir="${jars.dir}" file="${src.dir}/applet.html" />
   </target>
 
+  <target name="launch" depends="distro">
+    <java jar="${jars.dir}/jthinker.jar"
+          fork="true" />
+  </target>
+
   <target name="clean">
     <delete dir="${classes.dir}" />
     <delete dir="${jars.dir}" />
   </target>
 
+  <target name="javadocs">
+    <javadoc sourcepath="${src.dir}"
+             packagenames="oss.jthinker.*"
+             destdir="${docs.dir}" />
+  </target>
+
 </project>
+
