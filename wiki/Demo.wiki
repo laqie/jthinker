@@ -1,13 +1,7 @@
 #summary On-site demo
 #labels Featured
 
-<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/applet.xml" 
-             width="800"
-             height = "600"
-             border="0" />
+<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/applet.xml" width="800" height = "600" border="0" />
 
-<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/applet-poll.xml"
-             width="300"
-             height = "300"
-             border="1" />
+<wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/applet-poll.xml" width="300" height = "300" border="1" />
 
