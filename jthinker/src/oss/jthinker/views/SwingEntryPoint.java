@@ -36,6 +36,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 import oss.jthinker.resource.VersionChecker;
 
 /**
@@ -58,6 +59,8 @@ public class SwingEntryPoint extends JFrame implements EntryPoint {
     public static void main(String args[]) {
         SwingEntryPoint frame = new SwingEntryPoint();
         final ApplicationMain appMain = new ApplicationMain(frame);
+
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         frame.addWindowListener(new WindowAdapter() {
             @Override
