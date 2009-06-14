@@ -38,6 +38,7 @@ import oss.jthinker.widgets.JBackground;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
+import oss.jthinker.widgets.JNodeEditor;
 
 /**
  * Base interface for a view for diagram.
@@ -153,4 +154,10 @@ public interface DiagramView extends JBackground {
      * @return diagram's controller.
      */    
     LinkController getLinkController();
+ 
+    /**
+     * Returns a container for {@link JNodeEditor}-editor
+     * of this diagram's nodes.
+     */   
+    JNodeEditor.EditorContainer getEditorContainer();
 }

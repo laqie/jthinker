@@ -45,12 +45,14 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.InteractorActionFactory;
+import oss.jthinker.widgets.JNodeEditor;
 
 public class ApplicationMain {
     private final static Logger logger = Logger.getLogger(ApplicationMain.class.getName());
     private final MasterView _masterView;
     private final HelpView   _helpView;
     private final EntryPoint _impl;
+    private final JNodeEditor.EditorContainer _editorContainer;
     private JToolBar _toolbar;
 
     private static ApplicationMain _singleton;
@@ -61,6 +63,26 @@ public class ApplicationMain {
         _singleton = this;
         _masterView = new MasterView(this);
         _helpView = new HelpView();
+        _editorContainer = new JNodeEditor.EditorContainer() {
+            private JNodeEditor currentEditor = null;
+        
+            public void displayEditor(final JNodeEditor editor) {
+                if (currentEditor != null) {
+                    _impl.remove(currentEditor);
+                }
+                _impl.add(editor, BorderLayout.SOUTH);
+                _impl.validate();
+                currentEditor = editor;
+            }
+            
+            public void hideEditor() {
+                if (currentEditor != null) {
+                    _impl.remove(currentEditor);
+                    _impl.validate();
+                    currentEditor = null;
+                }
+            }
+        };        
 
         initApplicationMenuBar();
 
@@ -76,6 +98,7 @@ public class ApplicationMain {
         if (_toolbar != null) {
             _impl.add(_toolbar, BorderLayout.WEST);
         }
+        _editorContainer.hideEditor();
     }
 
     private void initApplicationMenuBar() {
@@ -131,6 +154,10 @@ public class ApplicationMain {
 
     protected static void openBrowser(URL url) {
         _singleton._impl.openBrowser(url);
-    }    
+    }
+    
+    protected static JNodeEditor.EditorContainer getNodeEditorContainer() {
+        return _singleton._editorContainer;
+    }
 }
 

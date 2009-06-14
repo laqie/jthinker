@@ -35,18 +35,17 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.security.AccessControlException;
 import java.util.EventObject;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -58,14 +57,33 @@ import javax.swing.table.TableColumnModel;
  * 
  * @author iappel
  */
-public class JNodeEditor extends JDialog implements TableCellRenderer, TableCellEditor {
+public class JNodeEditor extends JPanel 
+                         implements TableCellRenderer, TableCellEditor {
+
+    /**
+     * Container for JNodeEditor presentation.
+     */
+    public static interface EditorContainer {
+        /**
+         * Displays the editor.
+         *
+         * @param editor editor to display
+         */
+        void displayEditor(JNodeEditor editor);
+        
+        /**
+         * Hides the currently shown editor.
+         */
+        void hideEditor();
+    }
+
     private final JNodeModel model;
     
-    private JNodeEditor(JNodeModel nodeModel) {
+    private JNodeEditor(JNodeModel nodeModel, final EditorContainer container) {
         model = nodeModel;
         
         setLayout(new BorderLayout());
-        setTitle("Node editor");
+        setBorder(new TitledBorder("Node editor"));
         
         JTable table = initTable();
         
@@ -79,7 +97,11 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
         
         JButton done = new JButton(new AbstractAction("Done") {
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        container.hideEditor();
+                    }
+                });
             }
         });
         
@@ -98,14 +120,15 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
         if (value instanceof Component) {
             return (Component) value;
         } else {
-            return new JLabel(value.toString());
+            String strValue = (value == null) ? "" : value.toString();
+            return new JLabel(strValue);
         }
     }
 
     /** {@inheritDpc} */
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        if (value instanceof JComponent) {
-            return (JComponent)value;
+        if (value instanceof Component) {
+            return (Component) value;
         } else {
             return null;
         }
@@ -149,18 +172,16 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
      * 
      * @param node node to start editing.
      */
-    public static void startEditing(JNode node) {
-        JNodeModel model = node.getEditorModel();
-        Point location = WindowUtils.computeAbsoluteCenterPoint(node);
-        JNodeEditor editor = new JNodeEditor(model);
-        try {
-            editor.setAlwaysOnTop(true);
-        } catch (AccessControlException acex) {
-            // Running in an applet environment...
-        }
-        editor.setLocation(location);
-        editor.setSize(300, 200);
+    public static void startEditing(JNode node, final EditorContainer holder) {
+        final JNodeEditor editor =
+            new JNodeEditor(node.getEditorModel(), holder);
+        editor.setSize(300, 500);
         editor.setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                holder.displayEditor(editor);
+            }
+        });
     }
     
     private JTable initTable() {
@@ -168,6 +189,7 @@ public class JNodeEditor extends JDialog implements TableCellRenderer, TableCell
         table.setDefaultRenderer(String.class, this);
         table.setDefaultRenderer(JComponent.class, this);
         table.setDefaultEditor(JComponent.class, this);
+        table.setRowHeight(30);
 
         TableColumnModel colModel = table.getColumnModel();
         TableColumn attr = colModel.getColumn(0), val = colModel.getColumn(1);

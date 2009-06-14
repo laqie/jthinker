@@ -235,7 +235,7 @@ public class JNode extends JSlide {
      * @return true if node content got modified.
      */
     public boolean defaultEditOperation() {
-        JNodeEditor.startEditing(this);
+        host.startEditing(this);
         
         return true;
     }
