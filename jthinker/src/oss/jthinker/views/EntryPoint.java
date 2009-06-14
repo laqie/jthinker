@@ -85,5 +85,18 @@ public interface EntryPoint {
      */
     void remove(Component component);
 
+    /**
+     * Validates the layout of the container.
+     * This method is actually implemented in
+     * {@link javax.swing.JApplet} and {@link javax.swing.JFrame),
+     * see that classes for details.
+     */
+    void validate();
+
+    /**
+     * Opens the browser.
+     *
+     * @param url URL to open
+     */
     void openBrowser(URL url);
 }

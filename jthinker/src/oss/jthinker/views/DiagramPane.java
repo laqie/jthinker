@@ -56,6 +56,7 @@ import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JNodeAdjuster;
+import oss.jthinker.widgets.JNodeEditor;
 import oss.jthinker.widgets.JWire;
 import oss.jthinker.widgets.MouseLocator;
 import oss.jthinker.widgets.JXPopupMenu;
@@ -353,5 +354,10 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     /** {@inheritDoc} */
     public GraphEngine<JNode> getGraphEngine() {
         return getLinkController().getGraphEngine();
+    }
+ 
+    /** {@inheritDoc} */   
+    public JNodeEditor.EditorContainer getEditorContainer() {
+        return ApplicationMain.getNodeEditorContainer();
     }
 }

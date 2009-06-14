@@ -41,6 +41,7 @@ import oss.jthinker.widgets.GroupHandler;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
+import oss.jthinker.widgets.JNodeEditor;
 import oss.jthinker.widgets.JNodeSpec;
 
 /**
@@ -52,6 +53,7 @@ import oss.jthinker.widgets.JNodeSpec;
 public class ComponentManager extends ComponentHolder implements LinkController {
     private final GroupHandler groupHandler;
     private final GraphEngine<JNode> engine;
+    private final JNodeEditor.EditorContainer editorContainer;
     
     /**
      * Creates a new component manager for given diagram's view and type.
@@ -63,6 +65,7 @@ public class ComponentManager extends ComponentHolder implements LinkController 
         super(view, type);
         groupHandler = new GroupHandler(view, this);
         engine = new GraphEngine<JNode>(this, OrderingLevel.SUPPRESS_OVERLAP);
+        editorContainer = view.getEditorContainer();
     }
 
     /** {@inheritDoc} */
@@ -210,5 +213,10 @@ public class ComponentManager extends ComponentHolder implements LinkController 
         for (JNode node : nodes) {
             super.remove(node);
         }
+    }
+ 
+    /** {@inheritDoc} */   
+    public void startEditing(JNode node) {
+        JNodeEditor.startEditing(node, editorContainer);
     }
 }
