@@ -22,7 +22,7 @@
     </copy>
   </target>
   
-  <target name="fork" depends="compile">
+  <target name="invoke" depends="compile">
     <java classname="oss.jthinker.views.SwingEntryPoint"
           classpath="${classes.dir}" 
           fork="true"
@@ -30,12 +30,6 @@
            />
   </target>
 
-  <target name="invoke" depends="compile">
-    <java classname="oss.jthinker.views.SwingEntryPoint"
-          classpath="${classes.dir}" 
-           />
-  </target>
- 
   <target name="distro" depends="compile">
     <jar destfile="${jars.dir}/jthinker.jar"
          basedir="${classes.dir}" 

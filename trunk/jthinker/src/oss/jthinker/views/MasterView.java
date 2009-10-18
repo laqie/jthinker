@@ -41,7 +41,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.tocmodel.DiagramDescription;
-
 import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.JXPopupMenu;
 import static oss.jthinker.tocmodel.DescriptionStorage.getEntity;
@@ -237,10 +236,9 @@ public class MasterView extends DiagramDeck {
         };
         jpegHtmlExportItem = new JMenuItem(action);
 
-        if (container.localPersistence() || 
-            container.globalPersistence())
-        {
-            fileMenu.addSeparator();
+        fileMenu.addSeparator();
+
+        if (container.localPersistence()) {
             fileMenu.add(openItem);
             fileMenu.add(saveItem);
             fileMenu.add(saveAsItem);
@@ -252,7 +250,7 @@ public class MasterView extends DiagramDeck {
 
             fileMenu.addSeparator();
         }
-        
+
         return fileMenu;
     }
 

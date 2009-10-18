@@ -33,6 +33,7 @@ package oss.jthinker.views;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -47,7 +48,13 @@ import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.InteractorActionFactory;
 import oss.jthinker.widgets.JNodeEditor;
 
-public class ApplicationMain {
+/**
+ * Main class of the application . Manages the application's startup
+ * and creation of all top-level objects.
+ *
+ * @author iappel
+ */ 
+public class ApplicationMain { 
     private final static Logger logger = Logger.getLogger(ApplicationMain.class.getName());
     private final MasterView _masterView;
     private final HelpView   _helpView;
@@ -56,8 +63,9 @@ public class ApplicationMain {
     private JToolBar _toolbar;
 
     private static ApplicationMain _singleton;
+    private static final Object _initLock = new Object();
 
-    public ApplicationMain(EntryPoint impl) {
+    private ApplicationMain(EntryPoint impl) {
         configureLookAndFeel();
         _impl = impl;
         _singleton = this;
@@ -89,6 +97,21 @@ public class ApplicationMain {
         _impl.add(_masterView, BorderLayout.CENTER);
         _masterView.contentChanged(null);
     }
+
+    /**
+     * Initializes the singleton instance.
+     *
+     * @param entryPoint environment-dependent settings
+     * @throws IllegalStateException when singleton was already initialized
+     */
+    public static void init(EntryPoint entryPoint) {
+        synchronized (_initLock) {
+            if (_singleton != null) {
+                 throw new IllegalStateException("Already initialized");
+            }
+            _singleton = new ApplicationMain(entryPoint);
+        }
+    } 
 
     protected void updateToolBar(DiagramView diagramView) {
         if (_toolbar != null) {
@@ -124,13 +147,13 @@ public class ApplicationMain {
         _impl.setJMenuBar(result);
     }
 
-    protected void applicationStop() {
-        if (!_impl.isTerminatable()) {
+    protected static void applicationStop() {
+        if (!_singleton._impl.isTerminatable()) {
             // applet environment...
             throw new UnsupportedOperationException();            
         }
 
-        if (_masterView.closeAll()) {
+        if (_singleton._masterView.closeAll()) {
             System.exit(0);
         }
     }
@@ -143,6 +166,9 @@ public class ApplicationMain {
         return false;
     }
 
+    /**
+     * Sets Look&Feel to platform's default one.
+     */
     protected static void configureLookAndFeel() {
         try {
             String system = UIManager.getSystemLookAndFeelClassName();
@@ -155,7 +181,14 @@ public class ApplicationMain {
     protected static void openBrowser(URL url) {
         _singleton._impl.openBrowser(url);
     }
-    
+
+    protected static void openBrowser() {
+        try {
+            openBrowser(new URL("http://code.google.com/p/jthinker"));
+        } catch (MalformedURLException muex) {
+        }
+    }
+
     protected static JNodeEditor.EditorContainer getNodeEditorContainer() {
         return _singleton._editorContainer;
     }
