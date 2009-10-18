@@ -47,7 +47,7 @@ public class AppletEntryPoint extends JApplet implements EntryPoint {
 
     /** {@inheritDoc} */
     public void start() {
-        ApplicationMain appMain = new ApplicationMain(this);
+        ApplicationMain.init(this);
     }
 
     /** {@inheritDoc} */
