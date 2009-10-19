@@ -39,6 +39,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -197,6 +198,13 @@ public class ImageProducer {
         _title.paint(g);
 
         return image;
+    }
+
+    public byte[] getRawData(String format) throws IOException {
+        BufferedImage image = produceImage();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ImageIO.write(image, format, stream);
+        return stream.toByteArray();
     }
 
     /**

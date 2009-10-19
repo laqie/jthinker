@@ -47,6 +47,22 @@ public interface EntryPoint {
     boolean localPersistence();
 
     /**
+     * Is it possible to save to a remote server?
+     *
+     * @return true if it's allowed to publish current diagram to a 
+     *              remote server
+     *         false otherwise
+     */
+    boolean globalPersistenceWrite();
+
+    /**
+     * Returns the URL of the remote server.
+     *
+     * @return server name or null if no remote server is configured
+     */
+    String getServerURL();
+
+    /**
      * Can this application be terminated?
      *
      * @return true if {@link System#exit(int)} will terminate

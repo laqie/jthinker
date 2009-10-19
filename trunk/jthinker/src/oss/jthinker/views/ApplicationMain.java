@@ -46,6 +46,8 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.InteractorActionFactory;
+import oss.jthinker.interop.CommunicationCallback;
+import oss.jthinker.interop.InteropException;
 import oss.jthinker.widgets.JNodeEditor;
 
 /**
@@ -54,7 +56,7 @@ import oss.jthinker.widgets.JNodeEditor;
  *
  * @author iappel
  */ 
-public class ApplicationMain { 
+public class ApplicationMain implements CommunicationCallback {
     private final static Logger logger = Logger.getLogger(ApplicationMain.class.getName());
     private final MasterView _masterView;
     private final HelpView   _helpView;
@@ -162,8 +164,12 @@ public class ApplicationMain {
         return _singleton._impl.localPersistence();
     }
 
-    protected static boolean globalPersistence() {
-        return false;
+    protected static boolean globalPersistenceWrite() {
+        return _singleton._impl.globalPersistenceWrite();
+    }
+
+    protected static String getServerURL() {
+        return _singleton._impl.getServerURL();
     }
 
     /**
@@ -179,7 +185,7 @@ public class ApplicationMain {
     }
 
     protected static void openBrowser(URL url) {
-        _singleton._impl.openBrowser(url);
+        _singleton.openInBrowser(url);
     }
 
     protected static void openBrowser() {
@@ -191,6 +197,14 @@ public class ApplicationMain {
 
     protected static JNodeEditor.EditorContainer getNodeEditorContainer() {
         return _singleton._editorContainer;
+    }
+
+    public void openInBrowser(URL url) {
+        _impl.openBrowser(url);
+    }
+
+    public void reportFailure(InteropException ex) {
+        ex.printStackTrace();
     }
 }
 

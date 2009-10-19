@@ -98,6 +98,18 @@ public class SwingEntryPoint extends JFrame implements EntryPoint {
     }
 
     /** {@inheritDoc} */
+    public boolean globalPersistenceWrite() {
+        // TODO: Implement this for stand-alone client too
+        return false;
+    }
+
+    /** {@inheritDoc} */
+    public String getServerURL() {
+        // TODO: Implement this for stand-alone client too
+        return null;
+    }
+
+    /** {@inheritDoc} */
     public void openBrowser(URL url) {
         try {
             Desktop.getDesktop().browse(url.toURI());

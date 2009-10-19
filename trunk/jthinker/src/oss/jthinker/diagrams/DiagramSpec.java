@@ -33,7 +33,9 @@ package oss.jthinker.diagrams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.LinkedList;
 import org.w3c.dom.Element;
 import oss.jthinker.tocmodel.DiagramType;
@@ -41,6 +43,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -177,7 +180,27 @@ public class DiagramSpec implements XMLStored {
         result.appendChild(options.saveToXML(document));
         return result;
     }
-    
+   
+    /**
+     * Generates a new XML document that contains the diagram
+     *
+     * @return XML document with diagram's data
+     */ 
+    public Document generateXML() throws ParserConfigurationException {
+        DocumentBuilder builder =
+            DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element data = saveToXML(doc);
+        doc.appendChild(data);
+        return doc;
+    }
+
+    public String renderXML() {
+        StringWriter writer = new StringWriter();
+        saveToStream(writer);
+        return writer.toString();
+    }
+
     /**
      * Saves a diagram specification into an XML file.
      * 
@@ -188,14 +211,24 @@ public class DiagramSpec implements XMLStored {
      * {@see FileOutputStream}
      */
     public void save(File f) throws FileNotFoundException {
-        DocumentBuilder builder;
+        try {
+            PrintWriter printer = new PrintWriter(f, "UTF-8");
+            saveToStream(printer);
+	} catch (Exception ex) {
+	    JOptionPane.showMessageDialog(null, ex,
+		    "Unable to save file due to internal problems",
+		    JOptionPane.ERROR_MESSAGE);
+	    return;
+	}
+    }   
+
+    private void saveToStream(Writer printer) {
+        Document doc;
         Transformer writer;
-        PrintStream printer;
 
         try {
-            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             writer = TransformerFactory.newInstance().newTransformer();
-            printer = new PrintStream(f, "UTF-8");
+            doc = generateXML();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex,
                     "Unable to save file due to internal problems",
@@ -203,10 +236,6 @@ public class DiagramSpec implements XMLStored {
             return;
         }
 
-        Document doc = builder.newDocument();
-        Element data = saveToXML(doc);
-        doc.appendChild(data);
-        
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(printer);
 
