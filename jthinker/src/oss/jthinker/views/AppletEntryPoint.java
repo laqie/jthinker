@@ -59,6 +59,16 @@ public class AppletEntryPoint extends JApplet implements EntryPoint {
     public boolean isTerminatable() {
         return false;
     }
+
+    /** {@inheritDoc} */
+    public boolean globalPersistenceWrite() {
+        return getServerURL() != null;
+    }
+
+    /** {@inheritDoc} */
+    public String getServerURL() {
+        return getParameter("server");
+    }
  
     /** {@inheritDoc} */
     public void openBrowser(URL url) {

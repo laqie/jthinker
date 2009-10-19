@@ -40,8 +40,11 @@ import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import oss.jthinker.graphs.OrderingLevel;
+import oss.jthinker.interop.DiagramPublisher;
+import oss.jthinker.interop.InteropUtils;
 import oss.jthinker.tocmodel.DiagramDescription;
 import oss.jthinker.tocmodel.DiagramType;
+import oss.jthinker.widgets.HTMLProducer;
 import oss.jthinker.widgets.JXPopupMenu;
 import static oss.jthinker.tocmodel.DescriptionStorage.getEntity;
 import static oss.jthinker.widgets.ThinkerFileChooser.*;
@@ -62,6 +65,7 @@ public class MasterView extends DiagramDeck {
     private JMenuItem jpegExportItem;
     private JMenuItem jpegHtmlExportItem;
     private JMenuItem groupingItem;
+    private JMenuItem publishItem;
     private JCheckBoxMenuItem orderingOffItem;
     private JCheckBoxMenuItem orderingOverlapItem;
     private JCheckBoxMenuItem numberingItem;
@@ -167,6 +171,25 @@ public class MasterView extends DiagramDeck {
         contentChanged(pane);
     }
 
+    public void publishCurrent() {
+        DiagramPane pane = getCurrentDiagram();
+        if (pane == null) return;
+        DiagramPublisher publisher = new DiagramPublisher();
+        publisher.setXMLData(pane.getXMLData());
+        HTMLProducer producer = pane.getImageMaker();
+        try {
+            publisher.setImageData(producer.getRawData("PNG"));
+        } catch (Exception ex) {
+            // TODO: Proceed this exception
+        }
+        publisher.setHTMLData(producer.renderHTMLWrapper());
+        publisher.setCallback(container);
+        if (container.getServerURL() != null) {
+            InteropUtils.setAccessURL(container.getServerURL());
+        }
+        publisher.publish(); 
+    }
+
     /**
      * Creates application's "File" menu.
      * 
@@ -236,6 +259,13 @@ public class MasterView extends DiagramDeck {
         };
         jpegHtmlExportItem = new JMenuItem(action);
 
+        action = new AbstractAction("Publish") {
+            public void actionPerformed(ActionEvent e) {
+                publishCurrent();
+            }
+        };
+        publishItem = new JMenuItem(action);
+
         fileMenu.addSeparator();
 
         if (container.localPersistence()) {
@@ -251,6 +281,11 @@ public class MasterView extends DiagramDeck {
             fileMenu.addSeparator();
         }
 
+        if (container.globalPersistenceWrite()) {
+            fileMenu.add(publishItem);
+            fileMenu.addSeparator();
+        } 
+        
         return fileMenu;
     }
 

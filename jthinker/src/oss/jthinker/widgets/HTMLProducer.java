@@ -81,23 +81,27 @@ public class HTMLProducer extends ImageProducer {
     public void imageHtmlExport(File imageFile, File htmlFile) throws IOException {
         imageExport(imageFile);
 
+        FileWriter writer = new FileWriter(htmlFile);
+        writer.write(renderHTML(imageFile.getName()));
+        writer.close();
+    } 
+
+    public String renderHTML(String imageFileName) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html><head><title>jThinker diagram</title></head>\n");
         sb.append("<body bgcolor=\"#8080FF\">\n");
         sb.append("<div style=\"margin-top:120px\" align=\"center\">\n");
         sb.append("<img src=\"");
-        sb.append(imageFile.getName());
+        sb.append(imageFileName);
         sb.append("\" usemap=\"#jthinker-export\" border=\"1\" />\n");
         sb.append("</div>");
-        sb.append(renderImageMap());
+        sb.append(renderHTMLWrapper());
         sb.append("<div>Made using <a href=\"http://code.google.com/p/jthinker\">jThinker</a></div>");
         sb.append("</body>\n</html>");
-        FileWriter writer = new FileWriter(htmlFile);
-        writer.write(sb.toString());
-        writer.close();
-    } 
+        return sb.toString();
+    }
 
-    protected String renderImageMap() {
+    public String renderHTMLWrapper() {
         StringBuilder sb = new StringBuilder();
         Point origin = computeOrigin(); 
         sb.append("<map name=\"jthinker-export\">\n");

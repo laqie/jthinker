@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
@@ -15,7 +17,29 @@ import java.util.List;
  * @author iappel
  */
 public class InteropUtils {
-    private static String _hostName;
+    private static String _rootURL;
+
+    private static URL getAccessURL(String page)
+    throws InteropException {
+        if (_rootURL == null) {
+            _rootURL = "http://jthinker-server.appspot.com";
+        }
+
+        if (_rootURL.endsWith("/")) {
+            if (page.startsWith("/")) {
+                page = page.substring(1);
+            }
+        } else {
+            if (!page.startsWith("/")) {
+                page = "/" + page;
+            }
+        }
+        try {
+            return new URL(_rootURL + page);
+        } catch (MalformedURLException ex) {
+            throw new InteropException(page, ex);
+        }
+    }
 
     /**
      * Requests data from the remote server.
@@ -30,16 +54,15 @@ public class InteropUtils {
      */
     public static List<String> request(String urlName)
     throws InteropException {
-        String fullUrl = getHostName() + urlName;
+        URL accessUrl = getAccessURL(urlName);
 
         InputStream istream;
         try {
-            URL url = new URL(fullUrl);
-            istream = url.openStream();
+            istream = accessUrl.openStream();
         } catch (MalformedURLException muex) {
-            throw new InteropException(fullUrl, muex);
+            throw new InteropException(accessUrl, muex);
         } catch (IOException ioex) {
-            throw new InteropException(fullUrl, ioex);
+            throw new InteropException(accessUrl, ioex);
         }
 
         BufferedReader reader = new BufferedReader(
@@ -56,16 +79,51 @@ public class InteropUtils {
                 }
             }
         } catch (IOException ioex) {
-            throw new InteropException(fullUrl, ioex);
+            throw new InteropException(accessUrl, ioex);
         }
     }
 
-    protected static String getHostName() {
-        if (_hostName == null) {
-            _hostName = "http://jthinker-server.appspot.com";
-        }
-        return _hostName;
+    /**
+     * Sets the active remove server's access URL.
+     *
+     * @param accessURL access URL
+     */
+    public synchronized static void setAccessURL(String accessURL) {
+        _rootURL = accessURL;
     } 
+
+    /**
+     * Does an HTTP POST request.
+     * Server's response is ignored.
+     *
+     * @param urlName URL to POST
+     * @param data binary data to POST
+     * @param contentType MIME type of posted content
+     * @param cookieData cookie data
+     */
+    public static void doHttpPost(String urlName, byte[] data, 
+                                  String contentType, String cookieData)
+    throws InteropException {
+        URL url = getAccessURL(urlName);
+        try {
+            HttpURLConnection connection = 
+                (HttpURLConnection)url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-type", contentType);
+            connection.setRequestProperty("Content-length", "" + data.length);
+            connection.setRequestProperty("Cookie", cookieData);
+            OutputStream stream = connection.getOutputStream();
+            stream.write(data);
+            stream.flush();
+            stream.close();
+            connection.connect();
+            InputStream inputStream = connection.getInputStream();
+            inputStream.close();
+        } catch (IOException ex) {
+            throw new InteropException("Error POSTing to " + urlName, ex);
+        }
+    }
 }
 
-         
+

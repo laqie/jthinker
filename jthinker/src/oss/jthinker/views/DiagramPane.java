@@ -60,6 +60,7 @@ import oss.jthinker.widgets.JNodeEditor;
 import oss.jthinker.widgets.JWire;
 import oss.jthinker.widgets.MouseLocator;
 import oss.jthinker.widgets.JXPopupMenu;
+import org.w3c.dom.Document;
 
 import static oss.jthinker.widgets.ThinkerFileChooser.*;
 
@@ -275,7 +276,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         }
        
         if (!ApplicationMain.localPersistence() && 
-            !ApplicationMain.globalPersistence()) 
+            !ApplicationMain.globalPersistenceWrite()) 
         {
             JOptionPane.showMessageDialog(this,
                 "It's not possible to save the diagram in demo mode, your changes will be lost...",
@@ -359,5 +360,14 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     /** {@inheritDoc} */   
     public JNodeEditor.EditorContainer getEditorContainer() {
         return ApplicationMain.getNodeEditorContainer();
+    }
+
+    public String getXMLData() {
+        try {
+            return getLinkController().getDiagramSpec().renderXML();
+        } catch (Exception e) {
+            // TODO: Error should be reported properly
+            return null;
+        }
     }
 }
