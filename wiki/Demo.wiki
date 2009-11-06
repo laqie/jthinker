@@ -1,6 +1,13 @@
 #summary On-site demo
 #labels Featured
 
+
 <wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/adsense.xml" width="468" height = "60" border="0" />
 
+You should also check out [http://foxoft.appspot.com/analyst another TOC-based software by me].
+
+*If you see nothing below this paragraph, it means that your web-browser doesn't support Java Applets...*
+
 <wiki:gadget url="http://jthinker.googlecode.com/svn/wiki/gadgets/applet.xml" width="800" height = "600" border="0" />
+
+
