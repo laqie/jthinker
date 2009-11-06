@@ -19,7 +19,7 @@ import java.util.List;
 public class InteropUtils {
     private static String _rootURL;
 
-    private static URL getAccessURL(String page)
+    public static URL getAccessURL(String page)
     throws InteropException {
         if (_rootURL == null) {
             _rootURL = "http://jthinker-server.appspot.com";
@@ -110,9 +110,9 @@ public class InteropUtils {
                 (HttpURLConnection)url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
+            connection.setRequestProperty("Cookie", cookieData);
             connection.setRequestProperty("Content-type", contentType);
             connection.setRequestProperty("Content-length", "" + data.length);
-            connection.setRequestProperty("Cookie", cookieData);
             OutputStream stream = connection.getOutputStream();
             stream.write(data);
             stream.flush();

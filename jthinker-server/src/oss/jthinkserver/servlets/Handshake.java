@@ -28,15 +28,43 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package oss.jthinkserver.servlets;
 
-package oss.jthinkserver.storage;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse; 
+import com.google.appengine.api.mail.MailService;
+import com.google.appengine.api.mail.MailServiceFactory;
+
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import oss.jthinkserver.storage.Storage;
+import oss.jthinkserver.storage.UploadSession;
 
 /**
- * Type of logging record
+ * Handshake servlet for obtaining the security session
+ * information.
+ *
  */
-public enum LogEntryType {
-    /**
-     * Access to /internal/version servlet.
-     */
-    versionCheck
+public class Handshake extends HttpServlet {
+    private final static Logger logger = Logger.getLogger(Handshake.class.getName());
+
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) 
+    throws IOException {
+        resp.setContentType("text/plain");
+        UploadSession session = Storage.createUploadSession(); 
+        PrintWriter writer = resp.getWriter();
+        writer.write("Session = " + session.getSecretId() + "\n");
+        writer.write("Result-page = " + session.getDisplayPage() + "\n");
+        Storage.commit();
+    }
 }
+

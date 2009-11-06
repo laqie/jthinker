@@ -26,8 +26,9 @@
     <java classname="oss.jthinker.views.SwingEntryPoint"
           classpath="${classes.dir}" 
           fork="true"
-          spawn="true"
-           />
+          spawn="false">
+      <arg value="server=http://localhost:8080" />
+    </java>
   </target>
 
   <target name="distro" depends="compile">

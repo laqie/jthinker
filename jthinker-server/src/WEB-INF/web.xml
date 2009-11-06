@@ -15,4 +15,34 @@
     <servlet-name>int-version</servlet-name>
     <url-pattern>/internal/version</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>int-handshake</servlet-name>
+    <servlet-class>oss.jthinkserver.servlets.Handshake</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>int-handshake</servlet-name>
+    <url-pattern>/internal/handshake</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>int-upload</servlet-name>
+    <servlet-class>oss.jthinkserver.servlets.Upload</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>int-upload</servlet-name>
+    <url-pattern>/internal/upload</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ext-newchart</servlet-name>
+    <servlet-class>oss.jthinkserver.servlets.NewChart</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>ext-newchart</servlet-name>
+    <url-pattern>/newchart</url-pattern>
+  </servlet-mapping>
 </web-app>

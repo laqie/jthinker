@@ -109,26 +109,27 @@ public class DiagramPublisher {
         }
 
         private void handshake() throws InteropException {
-            List<String> response = InteropUtils.request("/handshake");
+            List<String> response = InteropUtils.request("/internal/handshake");
             _sessionId = null;
             _browserURL = null;
             for (String line : response) {
                 if (line.startsWith("Session")) {
                     _sessionId = line.split("=")[1].trim();
                 } else if (line.startsWith("Result-page")) {
-                    try {
-                        _browserURL = new URL(line.split("=")[1].trim());
-                    } catch (MalformedURLException ex) {
-                        throw new InteropException("Error during handshake", ex);
-                    }
+                    _browserURL = InteropUtils.getAccessURL(line.split("=", 2)[1].trim());
                 }
             }
-            throw new InteropException("Wrong response from service" + response);
+            if (_sessionId == null || _browserURL == null) {
+                throw new InteropException("Wrong response from service" + response);
+            }
         }
 
         private void transmit(byte[] data, String contentType)
         throws InteropException {
-            InteropUtils.doHttpPost("/upload", data, contentType, "session = " + _sessionId);
+            InteropUtils.doHttpPost("/internal/upload", 
+                                    data, 
+                                    contentType, 
+                                    "$Version=\"1\"; Session=\"" + _sessionId + "\"");
         }            
     }
 }

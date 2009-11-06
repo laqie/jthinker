@@ -46,8 +46,12 @@ import oss.jthinker.interop.VersionChecker;
  * @author iappel
  */
 public class SwingEntryPoint extends JFrame implements EntryPoint {
-    private SwingEntryPoint() {
+    private final String _remoteServer;
+
+    private SwingEntryPoint(String serverName) {
         super("jThinker "+VersionChecker.CURRENT_VERSION);
+        
+        _remoteServer = serverName;
 
         setLayout(new BorderLayout());
     }
@@ -58,7 +62,13 @@ public class SwingEntryPoint extends JFrame implements EntryPoint {
      * @param args run command line arguments
      */
     public static void main(String args[]) {
-        SwingEntryPoint frame = new SwingEntryPoint();
+        String serverName = "http://jthinker-server.appspot.com";
+        for (String arg : args) {
+            if (arg.startsWith("server=")) {
+                serverName = arg.substring(7);
+            }
+        }
+        SwingEntryPoint frame = new SwingEntryPoint(serverName);
         ApplicationMain.init(frame);
 
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -99,14 +109,12 @@ public class SwingEntryPoint extends JFrame implements EntryPoint {
 
     /** {@inheritDoc} */
     public boolean globalPersistenceWrite() {
-        // TODO: Implement this for stand-alone client too
-        return false;
+        return _remoteServer != null;
     }
 
     /** {@inheritDoc} */
     public String getServerURL() {
-        // TODO: Implement this for stand-alone client too
-        return null;
+        return _remoteServer;
     }
 
     /** {@inheritDoc} */
