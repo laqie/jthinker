@@ -28,15 +28,38 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package oss.jthinkserver.storage;
 
+import java.util.Date;
+
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+
 /**
- * Type of logging record
+ * Diagram data for temporary data storage between
+ * upload and persistent save.
+ *
+ * @author iappel
  */
-public enum LogEntryType {
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
+public class UploadSession extends DiagramContainer {
+    @Persistent
+    private Date _creationTime; 
+
     /**
-     * Access to /internal/version servlet.
+     * Creates a new log record with given type and no extra info.
+     *
+     * @param type log record type
      */
-    versionCheck
-}
+    public UploadSession() { 
+        _creationTime = new Date();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public final String getDisplayPage() {
+        return "/newchart?session=" + getSecretId(); 
+    }
+} 
+

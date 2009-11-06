@@ -69,6 +69,11 @@
             <include name="*.jar"/>
         </fileset>
     </copy>
+    <copy todir="${war.dir}">
+       <fileset dir="src/oss/jthinkserver/jsps">
+         <include name="*.jsp"/>
+       </fileset>
+    </copy> 
     <javac srcdir="src" destdir="${war.dir}/WEB-INF/classes">
       <classpath>
         <fileset dir="${appengine.sdk}/lib/user">
