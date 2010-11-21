@@ -173,8 +173,7 @@ public class JNodeEditor extends JPanel
      * @param node node to start editing.
      */
     public static void startEditing(JNode node, final EditorContainer holder) {
-        final JNodeEditor editor =
-            new JNodeEditor(node.getEditorModel(), holder);
+        final JNodeEditor editor = new JNodeEditor(new JNodeModel(node), holder);
         editor.setSize(300, 500);
         editor.setVisible(true);
         SwingUtilities.invokeLater(new Runnable() {

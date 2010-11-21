@@ -32,16 +32,20 @@
 package oss.jthinker.widgets;
 
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.JPopupMenu;
+import java.awt.Point;
+import oss.jthinker.swingutils.ComponentLocationTrigger;
+import oss.jthinker.util.IgnoreMixer;
+import oss.jthinker.util.MixedQuadripoleTrigger;
+import oss.jthinker.util.Mixer;
+import oss.jthinker.util.MixerInvertor;
+import oss.jthinker.util.QuadripoleTrigger;
 
 /**
  * Connection between a {@see JNode} and {@see JEdge}.
  * 
  * @author iappel
  */
-public class JLeg extends AbstractEdge<JEdge> {
+public class JLeg extends JLink<JEdge> {
     /**
      * Creates a new instance of JLeg that connects given node and edge.
      * 
@@ -49,20 +53,8 @@ public class JLeg extends AbstractEdge<JEdge> {
      * @param edge edge to serve as leg's end
      * @param host manager of deletions of the leg.
      */
-    public JLeg(JNode node, JEdge edge, JEdgeHost host) {
-        super(node, edge, host, false);
-    }
-
-    /** {@inheritDoc} */
-    protected JPopupMenu createPopupMenu(final JEdgeHost host) {
-        JPopupMenu menu = new JPopupMenu();
-        final JLeg instance = this;
-        menu.add(new AbstractAction("Delete") {
-            public void actionPerformed(ActionEvent e) {
-                host.deleteJLeg(instance);
-            }
-        });
-        return menu;
+    protected JLeg(JNode node, JEdge edge) {
+        super(node, edge, false);
     }
 
     @Override

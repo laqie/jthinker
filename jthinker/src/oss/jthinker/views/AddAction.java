@@ -31,6 +31,7 @@
 
 package oss.jthinker.views;
 
+import oss.jthinker.widgets.WidgetFactory;
 import oss.jthinker.widgets.JXPopupMenu;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -39,10 +40,8 @@ import javax.swing.JOptionPane;
 import oss.jthinker.diagrams.NodeSpecHolder;
 import oss.jthinker.tocmodel.NodeType;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeHost;
 import oss.jthinker.widgets.JNodeSpec;
 import static oss.jthinker.tocmodel.NodeType.*;
-import static oss.jthinker.widgets.BorderType.*;
 
 /**
  * Action for adding node to {@link DiagramPane}.
@@ -91,7 +90,7 @@ public class AddAction extends AbstractAction {
 
     /** {@inheritDoc} */
     public void actionPerformed(ActionEvent e) {
-        JNode node = createNode(linkPane.getLinkController(),
+        JNode node = createNode(linkPane.getWidgetFactory(),
                 nodeKind, popupMenu.getLastDisplayLocation());
         if (node == null) {
             return;
@@ -107,7 +106,7 @@ public class AddAction extends AbstractAction {
      * @param center center point for new node
      * @return a new node of given parametres
      */
-    public static JNode createNode(JNodeHost parent, NodeType nodeType, Point center) {
+    public static JNode createNode(WidgetFactory factory, NodeType nodeType, Point center) {
         JNodeSpec protoSpec = NodeSpecHolder.getSpec(nodeType);
         String s;
         if (protoSpec.isEditable()) {
@@ -122,6 +121,6 @@ public class AddAction extends AbstractAction {
             s = "          ";
         }
         JNodeSpec result = protoSpec.clone(s, center);
-        return new JNode(parent, result);
+        return factory.produceNode(result);
     }
 }

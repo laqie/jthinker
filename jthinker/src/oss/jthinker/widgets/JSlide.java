@@ -31,6 +31,7 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.swingutils.WindowUtils;
 import oss.jthinker.util.Switch;
 import java.awt.Color;
 import java.awt.Component;
@@ -42,7 +43,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 import javax.swing.border.Border;
 
 /**
@@ -141,7 +141,7 @@ public class JSlide extends JPanel implements Switch {
     }
     
     private void adjustCenterPoint(Point p) {
-        GeometryUtils.adjustCenterPoint(slideInstance, p);        
+        WindowUtils.adjustCenterPoint(slideInstance, p);
     }
     
     @Override

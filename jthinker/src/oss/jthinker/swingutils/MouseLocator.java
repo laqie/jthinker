@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.swingutils;
 
 import oss.jthinker.util.Trigger;
 import java.awt.Component;
@@ -45,8 +45,7 @@ import java.awt.event.MouseMotionListener;
  * 
  * @author iappel
  */
-public class MouseLocator extends Trigger<Point>
-    implements MouseMotionListener {
+public class MouseLocator extends Trigger<Point> implements MouseMotionListener {
     private static MouseLocator instance;
     
     private MouseLocator() {

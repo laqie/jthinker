@@ -31,11 +31,18 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Point;
-import javax.swing.JPopupMenu;
-import oss.jthinker.util.Switch;
+import oss.jthinker.swingutils.ComponentLocationTrigger;
+import oss.jthinker.swingutils.MouseLocator;
+import oss.jthinker.util.IgnoreMixer;
+import oss.jthinker.util.MixedQuadripoleTrigger;
+import oss.jthinker.util.Mixer;
+import oss.jthinker.util.QuadripoleTrigger;
+import oss.jthinker.util.QuadripoleTriggerListener;
+import oss.jthinker.util.Trigger;
 
 /**
  * A connection between a {@see JNode} and something else, used as a
@@ -44,20 +51,21 @@ import oss.jthinker.util.Switch;
  * @author iappel
  * @param T type of the object on connection's end.
  */
-public abstract class AbstractEdge<T extends Component> extends JWire
-    implements Switch {
-    
+public class JLink<T extends Component> extends JLine implements QuadripoleTriggerListener<Point> {
     private final JNode peerA;
     private final T peerZ;
     private boolean switchState;
-    private final JPopupMenu popupMenu;
-    
-    protected AbstractEdge(JNode peerA, T peerZ, JEdgeHost host, boolean arrow) {
-        super(JNodeAdjuster.makeTrigger(peerA, peerZ), arrow);
-        peerA.watch(this);
+
+    protected JLink(JNode peerA, boolean arrow) {
+        super(arrow);
+        this.peerA = peerA;
+        peerZ = null;
+    }
+
+    protected JLink(JNode peerA, T peerZ, boolean arrow) {
+        super(arrow);
         this.peerA = peerA;
         this.peerZ = peerZ;
-        popupMenu = createPopupMenu(host);
     }
 
     /**
@@ -100,19 +108,32 @@ public abstract class AbstractEdge<T extends Component> extends JWire
         return switchState;
     }
 
-    /**
-     * Initializes edge's popup menu.
-     * 
-     * @param host object manager, to which actions should be transmitted
-     * @return a new popup menu for the edge.
-     */
-    protected abstract JPopupMenu createPopupMenu(JEdgeHost host);
+    public void leftStateChanged(Point event) {
+        setEndA(event);
+    }
 
-    /**
-     * Returns component's popup menu.
-     * @return component's popup menu.
-     */
-    public JPopupMenu getPopupMenu() {
-        return popupMenu;
+    public void rightStateChanged(Point event) {
+        setEndZ(event);
+    }
+
+    protected void setupEvents() {
+        Trigger<Point> ta = new ComponentLocationTrigger(peerA);
+        Trigger<Point> tb;
+        if (peerZ == null) {
+            tb = MouseLocator.getInstance();
+        } else {
+            tb = new ComponentLocationTrigger(peerZ);
+        }
+
+        Mixer<Point> mixa = new JNodeAdjuster(peerA);
+        Mixer<Point> mixb;
+        if (peerZ instanceof JNode) {
+            mixb = new JNodeAdjuster((JNode)peerZ);
+        } else {
+            mixb = new IgnoreMixer<Point>();
+        }
+
+        QuadripoleTrigger quad = new MixedQuadripoleTrigger<Point>(ta, tb, mixa, mixb);
+        quad.addStateConsumer(this);
     }
 }

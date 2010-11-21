@@ -139,7 +139,7 @@ public abstract class AbstractGraphModel<nodeT, edgeT> implements GraphModel<nod
     /** {@inheritDoc} */    
     public edgeT connection(nodeT node1, nodeT node2) {
         for (edgeT edge : getAllEdges()) {
-            UPair<nodeT> peers = endpoints(edge);
+            Pair<nodeT, nodeT> peers = endpoints(edge);
             if (peers.first == node1 && peers.second == node2) {
                 return edge;
             }

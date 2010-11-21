@@ -31,6 +31,8 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.swingutils.WindowUtils;
+import oss.jthinker.swingutils.GeometryUtils;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Polygon;
@@ -70,6 +72,10 @@ public class JLine extends JComponent {
         drawArrow = arrow;
         setForeground(WindowUtils.getDefaultForeground());
         updateBounds();
+    }
+
+    public JLine(boolean arrow) {
+        this(new Point(0,0), new Point(0,0), arrow);
     }
 
     /**

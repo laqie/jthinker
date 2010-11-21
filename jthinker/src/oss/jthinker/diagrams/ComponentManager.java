@@ -43,6 +43,7 @@ import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JNodeEditor;
 import oss.jthinker.widgets.JNodeSpec;
+import oss.jthinker.widgets.WidgetFactory;
 
 /**
  * {@link JEdgeHost} and {@link JNodeHost} implementation on top of the
@@ -50,10 +51,11 @@ import oss.jthinker.widgets.JNodeSpec;
  * 
  * @author iappel
  */
-public class ComponentManager extends ComponentHolder implements LinkController {
+public class ComponentManager extends ComponentHolder {
     private final GroupHandler groupHandler;
     private final GraphEngine<JNode> engine;
     private final JNodeEditor.EditorContainer editorContainer;
+    private final WidgetFactory widgetFactory;
     
     /**
      * Creates a new component manager for given diagram's view and type.
@@ -66,37 +68,38 @@ public class ComponentManager extends ComponentHolder implements LinkController 
         groupHandler = new GroupHandler(view, this);
         engine = new GraphEngine<JNode>(this, OrderingLevel.SUPPRESS_OVERLAP);
         editorContainer = view.getEditorContainer();
+        widgetFactory = new WidgetFactory(this);
     }
 
     /** {@inheritDoc} */
-    public void deleteJEdge(JEdge edge) {
+    public void delete(JEdge edge) {
         remove(edge);
     }
 
     /** {@inheritDoc} */
-    public void deleteJLeg(JLeg leg) {
+    public void delete(JLeg leg) {
         remove(leg);
     }
     
     /** {@inheritDoc} */
-    public void reverseJEdge(JEdge edge) {
+    public void reverse(JEdge edge) {
         if (!contains(edge)) {
             throw new IllegalArgumentException(edge.toString());
         }
         JNode nodeA = edge.getPeerA();
         JNode nodeZ = edge.getPeerZ();
         remove(edge);
-        add(new JEdge(nodeZ, nodeA, this));
+        add(widgetFactory.produceEdge(nodeZ, nodeA));
     }
 
     /** {@inheritDoc} */
-    public void deleteJNode(JNode node) {
+    public void delete(JNode node) {
         remove(node);
         groupHandler.ungroup(node);
     }
 
     /** {@inheritDoc} */
-    public void dispatchJNodeMove(JNode node) {
+    public void onNodeMoved(JNode node) {
         Point place = node.getLocation();
         if (place.x < 0 || place.y < 0) {
             place.x = Math.max(place.x, 0);
@@ -109,24 +112,24 @@ public class ComponentManager extends ComponentHolder implements LinkController 
     }
     
     /** {@inheritDoc} */
-    public void editJNodeContent(JNode node) {
+    public void editContent(JNode node) {
         _view.editNode(node);
     }
 
     private JNode linkPeer = null;
     /** {@inheritDoc} */
-    public void endLinking(JNode end) {
+    public void onLinkingDone(JNode end) {
         if (linkPeer == null) {
             return;
         }
         _view.disableMouseEdge(linkPeer);
-        JEdge edge = new JEdge(linkPeer, end, this);
+        JEdge edge = widgetFactory.produceEdge(linkPeer, end);
         add(edge);
         linkPeer = null;
     }
     
     /** {@inheritDoc} */
-    public void startLinking(JNode start) {
+    public void onLinkingStarted(JNode start) {
         if (linkPeer != null) {
             throw new IllegalStateException("Linking already started");
         }
@@ -135,12 +138,12 @@ public class ComponentManager extends ComponentHolder implements LinkController 
     }
 
     /** {@inheritDoc} */
-    public void endLinking(JEdge end) {
+    public void onLinkingDone(JEdge end) {
         if (linkPeer == null) {
             return;
         }
         _view.disableMouseEdge(linkPeer);
-        JLeg leg = new JLeg(linkPeer, end, this);
+        JLeg leg = widgetFactory.produceLeg(linkPeer, end);
         add(leg);
         linkPeer = null;
     }
@@ -155,20 +158,20 @@ public class ComponentManager extends ComponentHolder implements LinkController 
         List<JEdge> edges = new LinkedList<JEdge>();
         
         for (JNodeSpec nodeSpec : spec.nodeSpecs) {
-            JNode node = new JNode(this, nodeSpec);
+            JNode node = widgetFactory.produceNode(nodeSpec);
             add(node);
             nodes.add(node);
         }
         for (JEdgeSpec edgeSpec : spec.edgeSpecs) {
             int a = edgeSpec.idxA, z = edgeSpec.idxZ;
-            JEdge edge = new JEdge(nodes.get(a), nodes.get(z), this);
+            JEdge edge = widgetFactory.produceEdge(nodes.get(a), nodes.get(z));
             edge.setConflict(edgeSpec.conflict);
             edges.add(edge);
             add(edge);
         }
         for (JLegSpec legSpec : spec.legSpecs) {
             int a = legSpec.idxA, z = legSpec.idxZ;
-            JLeg leg = new JLeg(nodes.get(a), edges.get(z), this);
+            JLeg leg = widgetFactory.produceLeg(nodes.get(a), edges.get(z));
             add(leg);
         }
     }
@@ -189,7 +192,7 @@ public class ComponentManager extends ComponentHolder implements LinkController 
 
     /** {@inheritDoc} */
     public JEdge add(JNode nodeA, JNode nodeZ) {
-        JEdge edge = new JEdge(nodeA, nodeZ, this);
+        JEdge edge = widgetFactory.produceEdge(nodeA, nodeZ);
         add(edge);
         return edge;
     }
@@ -203,7 +206,7 @@ public class ComponentManager extends ComponentHolder implements LinkController 
 
     /** {@inheritDoc} */
     public JNode add(JNodeSpec nodeSpec) {
-        JNode node = new JNode(this, nodeSpec);
+        JNode node = widgetFactory.produceNode(nodeSpec);
         add(node);
         return node;
     }
@@ -218,5 +221,9 @@ public class ComponentManager extends ComponentHolder implements LinkController 
     /** {@inheritDoc} */   
     public void startEditing(JNode node) {
         JNodeEditor.startEditing(node, editorContainer);
+    }
+
+    public WidgetFactory getWidgetFactory() {
+        return widgetFactory;
     }
 }

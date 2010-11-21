@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.swingutils;
 
 import oss.jthinker.util.Trigger;
 import java.awt.Component;
@@ -47,7 +47,7 @@ import java.awt.event.ComponentEvent;
  * 
  * @author iappel
  */
-public class ComponentTrigger extends Trigger<Point> {
+public final class ComponentLocationTrigger extends Trigger<Point> {
     private final Component component;
 
     /**
@@ -71,7 +71,7 @@ public class ComponentTrigger extends Trigger<Point> {
      * 
      * @param base component to attach trigger to
      */
-    public ComponentTrigger(Component base) {
+    public ComponentLocationTrigger(Component base) {
         if (base == null) {
             throw new IllegalArgumentException("Null component not allowed");
         }
@@ -85,15 +85,15 @@ public class ComponentTrigger extends Trigger<Point> {
      * accordingly.
      */
     public void updateLocation() {
-        Point newValue = GeometryUtils.computeCenterPoint(component);
+        Point newValue = WindowUtils.computeCenterPoint(component);
         setState(newValue);
     }
 
     @Override
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        if (obj instanceof ComponentTrigger) {
-            ComponentTrigger ct = (ComponentTrigger)obj;
+        if (obj instanceof ComponentLocationTrigger) {
+            ComponentLocationTrigger ct = (ComponentLocationTrigger)obj;
             return component.equals(ct.component);
         } else {
             return false;

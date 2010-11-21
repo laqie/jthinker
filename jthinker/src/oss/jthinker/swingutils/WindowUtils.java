@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.swingutils;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -37,7 +37,8 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Window;
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 import javax.swing.UIManager;
 
 /**
@@ -93,8 +94,8 @@ public class WindowUtils {
      * @param c component to start containment sequence.
      * @return containment sequence.
      */
-    public static Vector<Container> computeContainment(Component c) {
-        Vector<Container> result = new Vector<Container>();
+    public static List<Container> computeContainment(Component c) {
+        List<Container> result = new LinkedList<Container>();
         Container container = c.getParent();
         
         do {
