@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.swingutils;
 
 import java.io.File;
 import javax.swing.JFileChooser;

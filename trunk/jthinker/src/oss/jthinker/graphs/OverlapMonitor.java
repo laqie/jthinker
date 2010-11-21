@@ -35,7 +35,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.LinkedList;
-import oss.jthinker.widgets.GeometryUtils;
+import oss.jthinker.swingutils.GeometryUtils;
 
 /**
  * Overlaps monitoring container.

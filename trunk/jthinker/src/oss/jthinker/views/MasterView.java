@@ -47,7 +47,7 @@ import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.HTMLProducer;
 import oss.jthinker.widgets.JXPopupMenu;
 import static oss.jthinker.tocmodel.DescriptionStorage.getEntity;
-import static oss.jthinker.widgets.ThinkerFileChooser.*;
+import static oss.jthinker.swingutils.ThinkerFileChooser.*;
 
 /**
  * (@link DiagramDeck} that's extended with diagram save/load features.

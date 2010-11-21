@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
- * 
+ * Copyright (c) 2010, Ivan Appel <ivan.appel@gmail.com>
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. 
+ * this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 
+ * and/or other materials provided with the distribution.
  *
  * Neither the name of Ivan Appel nor the names of any other jThinker
  * contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission. 
- * 
+ * software without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -31,64 +31,59 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.graphs.AbstractGraphModel;
+
 /**
- * Manager of common {@see JEdge} and {@see JLeg} containment operations.
- * 
- * @author iappel
+ *
+ * @author vanya
  */
-public interface JEdgeHost {
+public abstract class AbstractDiagramOwner
+extends AbstractGraphModel<JNode, JEdge>
+implements JNodeCallback, JEdgeCallback {
     /**
-     * Replaces an edge with the reversed copy of one.
-     * 
-     * @param edge edge to reverse.
+     * Enables or disables numbering of nodes.
+     *
+     * @param state should numbering be enabled or disabled
      */
-    void reverseJEdge(JEdge edge);
-    
+    abstract public void enableNodeNumbering(boolean state);
+
+
     /**
-     * Removes an edge from the container and stops and subsequent
-     * management of one.
-     * 
-     * @param edge edge to remove.
-     */    
-    void deleteJEdge(JEdge edge);
-    
+     * Creates a new node and adds it to the manager and to the managed
+     * view.
+     *
+     * @param nodeSpec specification of the node to create
+     * @return newly created node
+     */
+    abstract public JNode add(JNodeSpec nodeSpec);
+
     /**
-     * Removes a leg from the container and stops and subsequent
-     * management of one.
-     * 
-     * @param leg leg to remove
-     */    
-    void deleteJLeg(JLeg leg);    
+     * Removes several nodes from the manager and from the managed view.
+     *
+     * @param nodes nodes to remove
+     */
+    abstract public void remove(JNode... nodes);
 
     /**
      * Selects a peer for linking with the node, that was chosen
      * via {@link startLinking(JNode)} method.
      * @param end node that should be the end of the new edge
      */
-    void endLinking(JEdge end);
+    abstract public void onLinkingDone(JEdge end);
 
     /**
-     * Returns true is diagram allows conflict-shaped arrows
-     * and false otherwise.
-     * 
-     * @return true is diagram allows conflict-shaped arrows
-     * and false otherwise.
-     */
-    boolean allowsConflict();
-  
-    /**
      * Creates an edge and adds it to this manager and to the managed view.
-     * 
+     *
      * @param nodeA edge's start node
      * @param nodeZ edge's end node
      * @return newly create edge
      */
-    JEdge add(JNode nodeA, JNode nodeZ);
-    
+    abstract public JEdge add(JNode nodeA, JNode nodeZ);
+
     /**
      * Removes several edges from the manager and from the managed view.
-     * 
+     *
      * @param edges edges to remove
      */
-    void remove(JEdge... edges);
+    abstract public void remove(JEdge... edges);
 }

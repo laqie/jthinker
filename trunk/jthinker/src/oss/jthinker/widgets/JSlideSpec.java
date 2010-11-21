@@ -31,6 +31,7 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Color;
 import java.awt.Point;
 import javax.swing.JComponent;

@@ -38,7 +38,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
-import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -178,6 +177,10 @@ public class ApplicationMain implements CommunicationCallback {
     protected static void configureLookAndFeel() {
         try {
             String system = UIManager.getSystemLookAndFeelClassName();
+            if ("Mac OS X".equals(System.getProperty("os.name"))) {
+		System.setProperty("apple.laf.useScreenMenuBar", "true");
+                System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Test");
+	    }
             UIManager.setLookAndFeel(system);
         } catch (Throwable t) {
             logger.log(Level.WARNING, "Unable to initialize system L&F", t);

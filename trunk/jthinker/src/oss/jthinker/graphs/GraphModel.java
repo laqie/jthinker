@@ -95,7 +95,7 @@ public interface GraphModel<nodeT, edgeT> extends NodeBundle<nodeT> {
      * @param edge edge, endpoints of which are needed
      * @return edge's endpoints as UPair
      */
-    UPair<nodeT> endpoints(edgeT edge);
+    Pair<nodeT, nodeT> endpoints(edgeT edge);
     
     /**
      * Returns all sources. Source is a node that has no incoming edges.

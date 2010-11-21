@@ -44,7 +44,7 @@ import javax.swing.table.AbstractTableModel;
  * 
  * @author iappel
  */
-public class JNodeModel extends AbstractTableModel  {
+public class JNodeModel extends AbstractTableModel {
     private final JNode _edited;
     private final JTextField _nameField;
     private final JColorComboBox _backColor;

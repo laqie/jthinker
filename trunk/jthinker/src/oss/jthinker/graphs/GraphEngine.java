@@ -36,7 +36,7 @@ import java.awt.Point;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import oss.jthinker.widgets.GeometryUtils;
+import oss.jthinker.swingutils.GeometryUtils;
 
 /**
  * Engine for graph optimizations.

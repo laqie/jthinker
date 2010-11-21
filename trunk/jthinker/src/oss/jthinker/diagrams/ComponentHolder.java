@@ -41,12 +41,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-import oss.jthinker.graphs.AbstractGraphModel;
-import oss.jthinker.util.UPair;
-import oss.jthinker.widgets.SwingMapping;
+import oss.jthinker.swingutils.SwingMapping;
 import oss.jthinker.util.GappedArray;
 import oss.jthinker.util.Mapping;
-import oss.jthinker.widgets.AbstractEdge;
+import oss.jthinker.util.Pair;
+import oss.jthinker.widgets.JLink;
+import oss.jthinker.widgets.AbstractDiagramOwner;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
@@ -57,7 +57,7 @@ import oss.jthinker.widgets.JNodeSpec;
  *
  * @author iappel
  */
-public class ComponentHolder extends AbstractGraphModel<JNode, JEdge> {
+public abstract class ComponentHolder extends AbstractDiagramOwner {
     private final GappedArray<JNode> _nodes = new GappedArray<JNode>();
     private final GappedArray<JEdge> _edges = new GappedArray<JEdge>();
     private final GappedArray<JLeg> _legs = new GappedArray<JLeg>();
@@ -303,8 +303,8 @@ public class ComponentHolder extends AbstractGraphModel<JNode, JEdge> {
      * 
      * @return list of all holder's wires
      */
-    public Vector<AbstractEdge> getAllWires() {
-        Vector<AbstractEdge> ret = new Vector<AbstractEdge>();
+    public Vector<JLink> getAllWires() {
+        Vector<JLink> ret = new Vector<JLink>();
         ret.addAll(_edges.getContent());
         ret.addAll(_legs.getContent());
         return ret;
@@ -325,6 +325,7 @@ public class ComponentHolder extends AbstractGraphModel<JNode, JEdge> {
      * 
      * @param bool should numbering be enabled or disabled
      */
+    @Override
     public void enableNodeNumbering(boolean bool) {
         numberingEnabled = bool;
         for (JNode node : this.getAllNodes()) {
@@ -381,8 +382,8 @@ public class ComponentHolder extends AbstractGraphModel<JNode, JEdge> {
     }
 
     /** {@inheritDoc} */
-    public UPair<JNode> endpoints(JEdge edge) {
-        return edge.endpoints();
+    public Pair<JNode, JNode> endpoints(JEdge edge) {
+        return new Pair(edge.getPeerA(), edge.getPeerZ());
     }
 
     /** {@inheritDoc} */

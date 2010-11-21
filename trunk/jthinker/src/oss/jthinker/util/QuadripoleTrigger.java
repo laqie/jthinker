@@ -31,6 +31,8 @@
 
 package oss.jthinker.util;
 
+import java.util.LinkedList;
+
 /**
  * Two-in two-out trigger circuit. Computes and updates state of outputs
  * from inputs.
@@ -43,6 +45,10 @@ public abstract class QuadripoleTrigger<T> implements TriggerListener<T> {
     private final Trigger<T> inputLeft, inputRight;
     // Outputs
     private final Trigger<T> outputLeft, outputRight;
+    //
+    private final LinkedList<QuadripoleTriggerListener<? super T>> consumers =
+        new LinkedList<QuadripoleTriggerListener<? super T>>();
+
 
     /**
      * Creates a new quadripole trigger with two given triggers
@@ -132,5 +138,11 @@ public abstract class QuadripoleTrigger<T> implements TriggerListener<T> {
      */    
     public Trigger<T> getRightInput() {
         return inputRight;
+    }
+
+    public void addStateConsumer(QuadripoleTriggerListener<T> listener) {
+        QuadripoleTriggerConnector<T> connector = new
+                QuadripoleTriggerConnector(this, listener);
+        connector.attach();
     }
 }

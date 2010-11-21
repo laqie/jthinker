@@ -31,6 +31,7 @@
 
 package oss.jthinker.views;
 
+import oss.jthinker.widgets.WidgetFactory;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -51,18 +52,15 @@ import oss.jthinker.tocmodel.DescriptionStorage;
 import oss.jthinker.tocmodel.DiagramDescription;
 import oss.jthinker.tocmodel.NodeType;
 import oss.jthinker.util.TriggerEvent;
-import oss.jthinker.widgets.AbstractEdge;
+import oss.jthinker.widgets.JLink;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeAdjuster;
 import oss.jthinker.widgets.JNodeEditor;
-import oss.jthinker.widgets.JWire;
-import oss.jthinker.widgets.MouseLocator;
+import oss.jthinker.swingutils.MouseLocator;
 import oss.jthinker.widgets.JXPopupMenu;
-import org.w3c.dom.Document;
 
-import static oss.jthinker.widgets.ThinkerFileChooser.*;
+import static oss.jthinker.swingutils.ThinkerFileChooser.*;
 
 /**
  * {@link DocumentPane}-based implementation of {@link DiagramView}.
@@ -73,7 +71,7 @@ import static oss.jthinker.widgets.ThinkerFileChooser.*;
 public class DiagramPane extends DocumentPane implements DiagramView {
     private static Logger logger = Logger.getAnonymousLogger();
     
-    private JWire mouseEdge = null;
+    private JLink mouseEdge = null;
     private final JXPopupMenu menu;
     private final ComponentManager linker;
     private final DiagramType type;
@@ -154,7 +152,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     public void stateChanged(TriggerEvent<? extends Point> event) {
         Point p = event.getState();
         boolean flag = true;
-        for (AbstractEdge edge : linker.getAllWires()) {
+        for (JLink edge : linker.getAllWires()) {
             edge.setSwitched(false);
             if ((edge.distanceToPoint(p) < 5) && flag) {
                 edge.setSwitched(true);
@@ -171,8 +169,8 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * @param e event to proceed
      */
     public void propagateClick(MouseEvent e) {
-        AbstractEdge activeEdge = null;
-        for (AbstractEdge edge : linker.getAllWires()) {
+        JLink activeEdge = null;
+        for (JLink edge : linker.getAllWires()) {
             if (edge.isSwitched()) {
                 activeEdge = edge;
                 break;
@@ -183,12 +181,12 @@ public class DiagramPane extends DocumentPane implements DiagramView {
                 return;
             }
             if (activeEdge instanceof JEdge) {
-                linker.endLinking((JEdge)activeEdge);
+                linker.onLinkingDone((JEdge)activeEdge);
             }
         } else if (e.getButton() == MouseEvent.BUTTON3) {
             JPopupMenu menuToShow = menu;
             if (activeEdge != null) {
-                menuToShow = activeEdge.getPopupMenu();
+                menuToShow = linker.getWidgetFactory().producePopupMenu(activeEdge);
             }
             Point p = e.getComponent().getLocation();
             p.translate(e.getX(), e.getY());
@@ -198,10 +196,8 @@ public class DiagramPane extends DocumentPane implements DiagramView {
 
     /** {@inheritDoc} */
     public void enableMouseEdge(JNode c) {
-        mouseEdge = new JWire(JNodeAdjuster.makeTrigger(c,
-                MouseLocator.getInstance()), false);
+        mouseEdge = linker.getWidgetFactory().produceWire(c);
         super.add(mouseEdge, 0);
-        c.watch(mouseEdge);
         mouseEdge.setVisible(true);
     }
     
@@ -220,6 +216,10 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      */
     public ComponentManager getLinkController() {
         return linker;
+    }
+
+    public WidgetFactory getWidgetFactory() {
+        return linker.getWidgetFactory();
     }
 
     /** {@inheritDoc} */

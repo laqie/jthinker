@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, Ivan Appel <ivan.appel@gmail.com>
+ * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
  * 
  * All rights reserved.
  * 
@@ -29,24 +29,43 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
-
-import oss.jthinker.graphs.GraphModel;
-import oss.jthinker.widgets.JEdge;
-import oss.jthinker.widgets.JEdgeHost;
-import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeHost;
+package oss.jthinker.widgets;
 
 /**
- * Integral interface that provides access to whole diagram.
- * Integrates {@see JNodeHost}, {@see JEdgeHost} and {@see GraphModel}
- * interfaces. Doesn't contain any specific classes on it's own, just
- * combines several interfaces into a common one.
+ * Manager of common {@see JEdge} and {@see JLeg} containment operations.
  * 
  * @author iappel
  */
-public interface LinkController extends JNodeHost, 
-                                        JEdgeHost,
-                                        GraphModel<JNode, JEdge> {
+public interface JEdgeCallback {
+    /**
+     * Replaces an edge with the reversed copy of one.
+     * 
+     * @param edge edge to reverse.
+     */
+    void reverse(JEdge edge);
+    
+    /**
+     * Removes an edge from the container and stops and subsequent
+     * management of one.
+     * 
+     * @param edge edge to remove.
+     */    
+    void delete(JEdge edge);
+    
+    /**
+     * Removes a leg from the container and stops and subsequent
+     * management of one.
+     * 
+     * @param leg leg to remove
+     */    
+    void delete(JLeg leg);
 
+    /**
+     * Returns true is diagram allows conflict-shaped arrows
+     * and false otherwise.
+     * 
+     * @return true is diagram allows conflict-shaped arrows
+     * and false otherwise.
+     */
+    boolean allowsConflict();
 }

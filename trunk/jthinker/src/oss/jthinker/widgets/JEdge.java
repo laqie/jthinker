@@ -31,21 +31,19 @@
 
 package oss.jthinker.widgets;
 
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import oss.jthinker.util.UPair;
+import java.awt.Point;
+import oss.jthinker.swingutils.ComponentLocationTrigger;
+import oss.jthinker.util.MixedQuadripoleTrigger;
+import oss.jthinker.util.Mixer;
+import oss.jthinker.util.MixerInvertor;
+import oss.jthinker.util.QuadripoleTrigger;
 
 /**
  * A directed connection between two {@link JNode}s.
  * 
  * @author iappel
  */
-public class JEdge extends AbstractEdge<JNode> {
-    private final boolean _conflictsAllowed;
-    private JMenuItem _conflictOn, _conflictOff;
-    
+public class JEdge extends JLink<JNode> {
     /**
      * Creates a new instance of JEdge that connects two given {@link JNode}s
      * and is managed by given {@link JEdgeHost}.
@@ -54,69 +52,7 @@ public class JEdge extends AbstractEdge<JNode> {
      * @param nodeB end of edge.
      * @param host manager of deletions and reversals of the edge.
      */
-    public JEdge(JNode nodeA, JNode nodeB, JEdgeHost host) {
-        super(nodeA, nodeB, host, true);
-        nodeB.watch(this);
-        _conflictsAllowed = host.allowsConflict();
-    }
-
-    /** {@inheritDoc} */
-    protected JPopupMenu createPopupMenu(final JEdgeHost host) {
-        JPopupMenu menu = new JPopupMenu();
-        final JEdge instance = this;
-        menu.add(new AbstractAction("Reverse") {
-            public void actionPerformed(ActionEvent e) {
-                host.reverseJEdge(instance);
-            }
-        });
-        
-        menu.add(new AbstractAction("Delete") {
-            public void actionPerformed(ActionEvent e) {
-                host.deleteJEdge(instance);
-            }
-        });
-
-        if (host.allowsConflict()) {
-            _conflictOn = new JMenuItem(new AbstractAction("Conflict") {
-                public void actionPerformed(ActionEvent e) {
-                    setConflict(true);
-                }
-            });
-            
-            _conflictOff = new JMenuItem(new AbstractAction("Not a conflict") {
-                public void actionPerformed(ActionEvent e) {
-                    setConflict(false);
-                }
-            });
-            
-            menu.addSeparator();
-            menu.add(_conflictOn);
-            menu.add(_conflictOff);
-        }
-        
-        return menu;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public JPopupMenu getPopupMenu() {
-        JPopupMenu menu = super.getPopupMenu();
-
-        boolean cb = super.isConflict();
-        if (_conflictsAllowed) {
-            _conflictOff.setVisible(cb);
-            _conflictOn.setVisible(!cb);
-        }
-        
-        return menu;
-    }
-    
-    /**
-     * Returns peer nodes as {@see UPair}.
-     * 
-     * @return peer nodes as {@see UPair}.
-     */
-    public UPair<JNode> endpoints() {
-        return new UPair<JNode>(getPeerA(), getPeerZ());
+    protected JEdge(JNode nodeA, JNode nodeB) {
+        super(nodeA, nodeB, true);
     }
 }

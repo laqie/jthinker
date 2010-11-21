@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
- * 
+ * Copyright (c) 2010, Ivan Appel <ivan.appel@gmail.com>
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. 
+ * this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 
+ * and/or other materials provided with the distribution.
  *
  * Neither the name of Ivan Appel nor the names of any other jThinker
  * contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission. 
- * 
+ * software without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -32,40 +32,36 @@
 package oss.jthinker.util;
 
 /**
- * {@link QuadripoleTrigger} that uses two mixers for making values
- * on each output.
- * 
+ *
  * @author iappel
- * @param T state of the trigger
  */
-public class MixedQuadripoleTrigger<T> extends QuadripoleTrigger<T> {
-    private final Mixer<T> leftMixer, rightMixer;
+public class QuadripoleTriggerConnector<T> implements TriggerListener<T> {
+    private final QuadripoleTrigger<T> source;
+    private final QuadripoleTriggerListener<T> target;
+    private final Trigger<T> left, right;
 
-    /**
-     * Creates a new MixedQuadripoleTrigger instance for two mixers
-     * and two triggers.
-     * 
-     * @param left left input trigger
-     * @param right right input trigger
-     * @param leftMixer mixer for calculating left output value
-     * @param rightMixer mixer for calculating right output value
-     */
-    public MixedQuadripoleTrigger(Trigger<T> left, Trigger<T> right, Mixer<T> leftMixer, Mixer<T> rightMixer) {
-        super(left, right);
-        this.leftMixer = leftMixer;
-        this.rightMixer = new MixerInvertor<T>(rightMixer);
-        updateOutputs();
-    }
-    
-    @Override
-    /** {@inheritDoc} */
-    protected T computeLeftState(T left, T right) {
-        return leftMixer.mix(left, right);
+    public QuadripoleTriggerConnector(QuadripoleTrigger<T> source, QuadripoleTriggerListener<T> target) {
+        this.source = source;
+        this.target = target;
+        left = source.getLeftOutput();
+        right = source.getRightOutput();
     }
 
-    @Override
-    /** {@inheritDoc} */
-    protected T computeRightState(T left, T right) {
-        return rightMixer.mix(left, right);
+    public void attach() {
+        left.addStateConsumer(this);
+        right.addStateConsumer(this);
+
+        target.leftStateChanged(left.getState());
+        target.rightStateChanged(right.getState());
+    }
+
+    public void stateChanged(TriggerEvent<? extends T> event) {
+        if (event.getSource() == left) {
+            target.leftStateChanged(event.getState());
+        } else if (event.getSource() == right) {
+            target.rightStateChanged(event.getState());
+        } else {
+            throw new IllegalArgumentException("Unknown source");
+        }
     }
 }

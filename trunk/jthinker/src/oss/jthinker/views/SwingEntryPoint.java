@@ -48,6 +48,14 @@ import oss.jthinker.interop.VersionChecker;
 public class SwingEntryPoint extends JFrame implements EntryPoint {
     private final String _remoteServer;
 
+    static {
+        if ("Mac OS X".equals(System.getProperty("os.name"))) {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Test");
+        }
+    }
+
+
     private SwingEntryPoint(String serverName) {
         super("jThinker "+VersionChecker.CURRENT_VERSION);
         

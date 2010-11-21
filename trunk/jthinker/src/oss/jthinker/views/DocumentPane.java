@@ -44,7 +44,7 @@ import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerListener;
 import oss.jthinker.widgets.HTMLProducer;
 import oss.jthinker.widgets.JBackgroundPane;
-import oss.jthinker.widgets.MouseLocator;
+import oss.jthinker.swingutils.MouseLocator;
 
 /**
  * Helper container to assist {@link DiagramPane}. Contains tab

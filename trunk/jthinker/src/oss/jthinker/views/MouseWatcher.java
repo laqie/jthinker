@@ -33,7 +33,7 @@ package oss.jthinker.views;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import oss.jthinker.widgets.AbstractEdge;
+import oss.jthinker.widgets.JLink;
 
 /**
  * Helper class for monitoring AbstractEdges.
@@ -41,10 +41,10 @@ import oss.jthinker.widgets.AbstractEdge;
  * @author iappel
  */
 public class MouseWatcher extends MouseAdapter {
-    private final AbstractEdge _edge;
+    private final JLink _edge;
     private final DocumentPane _pane;
 
-    public MouseWatcher(AbstractEdge edge, DocumentPane pane) {
+    public MouseWatcher(JLink edge, DocumentPane pane) {
         _edge = edge;
         _pane = pane;
     }

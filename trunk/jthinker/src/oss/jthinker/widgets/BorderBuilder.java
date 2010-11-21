@@ -30,6 +30,7 @@
  */
 package oss.jthinker.widgets;
 
+import oss.jthinker.swingutils.GeometryUtils;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
+ * Copyright (c) 2009, Ivan Appel <ivan.appel@gmail.com>
  * 
  * All rights reserved.
  * 
@@ -29,43 +29,37 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.util;
+package oss.jthinker.swingutils;
+
+import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.JComponent;
+import oss.jthinker.util.Mapping;
 
 /**
- * {@link QuadripoleTrigger} that uses two mixers for making values
- * on each output.
+ * Simple mapping for Swing's coordinates.
  * 
  * @author iappel
- * @param T state of the trigger
  */
-public class MixedQuadripoleTrigger<T> extends QuadripoleTrigger<T> {
-    private final Mixer<T> leftMixer, rightMixer;
-
-    /**
-     * Creates a new MixedQuadripoleTrigger instance for two mixers
-     * and two triggers.
-     * 
-     * @param left left input trigger
-     * @param right right input trigger
-     * @param leftMixer mixer for calculating left output value
-     * @param rightMixer mixer for calculating right output value
-     */
-    public MixedQuadripoleTrigger(Trigger<T> left, Trigger<T> right, Mixer<T> leftMixer, Mixer<T> rightMixer) {
-        super(left, right);
-        this.leftMixer = leftMixer;
-        this.rightMixer = new MixerInvertor<T>(rightMixer);
-        updateOutputs();
-    }
-    
-    @Override
+public class SwingMapping implements Mapping<JComponent, Rectangle, Point> {
     /** {@inheritDoc} */
-    protected T computeLeftState(T left, T right) {
-        return leftMixer.mix(left, right);
+    public void assign(JComponent var, Rectangle value) {
+        var.setBounds(value);
     }
 
-    @Override
     /** {@inheritDoc} */
-    protected T computeRightState(T left, T right) {
-        return rightMixer.mix(left, right);
+    public Rectangle fetch(JComponent var) {
+        return var.getBounds();
+    }
+
+    /** {@inheritDoc} */
+    public Point convert(Rectangle value) {
+        return new Point(value.x + value.width / 2,
+                         value.y + value.height / 2);
+    }
+
+    /** {@inheritDoc} */
+    public void inject(JComponent var, Point value) {
+        WindowUtils.setCenterPoint(var, value);
     }
 }

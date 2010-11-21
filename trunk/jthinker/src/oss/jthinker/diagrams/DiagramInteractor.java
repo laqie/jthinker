@@ -39,6 +39,7 @@ import javax.swing.JOptionPane;
 import oss.jthinker.graphs.GraphEngine;
 import static oss.jthinker.tocmodel.NodeType.*;
 import oss.jthinker.util.Pair;
+import oss.jthinker.widgets.AbstractDiagramOwner;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JNodeSpec;
@@ -52,7 +53,7 @@ import oss.jthinker.widgets.JNodeSpec;
 public class DiagramInteractor {
     private final DiagramView _view;
     private final GraphEngine<JNode> _engine;
-    private final LinkController _manager;
+    private final AbstractDiagramOwner _manager;
     
     private InteractorActionFactory _factory;
     

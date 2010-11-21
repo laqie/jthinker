@@ -31,8 +31,8 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
@@ -40,9 +40,8 @@ import java.awt.event.MouseEvent;
 import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import javax.swing.JPopupMenu;
+import javax.swing.JOptionPane;
 
 /**
  * {@see JSlide} instance that contains a {@see JLabelBundle} text and
@@ -52,7 +51,7 @@ import javax.swing.JPopupMenu;
  */
 public class JNode extends JSlide {
     private final HashSet<JComponent> peers = new HashSet<JComponent>();
-    private final JNodeHost host;
+    private final JNodeCallback host;
     private final JNodeSpec spec;
     private WeakReference<JNodeModel> editorModelRef;
 
@@ -66,7 +65,7 @@ public class JNode extends JSlide {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    host.endLinking(instance);
+                    host.onLinkingDone(instance);
                 }
             }
         });
@@ -75,45 +74,9 @@ public class JNode extends JSlide {
 
             @Override
             public void componentMoved(ComponentEvent e) {
-                host.dispatchJNodeMove(JNode.this);
+                host.onNodeMoved(JNode.this);
             }
         });
-    }
-
-    private JPopupMenu createPopupMenu(boolean editable) {
-        JPopupMenu menu = new JPopupMenu();
-        final JNode instance = this;
-
-        menu.add(new AbstractAction("Link") {
-
-            public void actionPerformed(ActionEvent e) {
-                host.startLinking(instance);
-            }
-        });
-
-        if (editable) {
-            menu.add(new AbstractAction("Edit") {
-
-                public void actionPerformed(ActionEvent e) {
-                    host.editJNodeContent(instance);
-                }
-            });
-        }
-
-        menu.add(new AbstractAction("Delete") {
-
-            public void actionPerformed(ActionEvent e) {
-                host.deleteJNode(instance);
-            }
-        });
-
-        menu.add(new AbstractAction("Group") {
-            public void actionPerformed(ActionEvent e) {
-                host.getGroupHandler().selectGroup(JNode.this);
-            }
-        });
-        
-        return menu;
     }
 
     /**
@@ -122,18 +85,14 @@ public class JNode extends JSlide {
      * @param nodeHost object manager that should host this node
      * @param spec description of node's interior and content
      */
-    public JNode(JNodeHost nodeHost, JNodeSpec spec) {
+    protected JNode(JNodeCallback nodeHost, JNodeSpec spec) {
         super(spec);
-        setComponentPopupMenu(createPopupMenu(spec.isEditable()));
         host = nodeHost;
         initListeners();
         this.spec = spec;
         setLocation(spec.getSlideCenter());
         setComment(spec.getComment());
         content = spec.getContent();
-        if (spec.getGroup() != null) {
-            host.getGroupHandler().group(spec.getGroup(), this);
-        }
     }
 
     /**
@@ -241,29 +200,11 @@ public class JNode extends JSlide {
     }
 
     /**
-     * Returns table model for node editor.
-     * 
-     * @return table model for node editor.
-     */
-    public JNodeModel getEditorModel() {
-        JNodeModel model = null;
-        if (editorModelRef != null) {
-            model = editorModelRef.get();
-        }
-        if (model == null) {
-            model = new JNodeModel(this);
-            editorModelRef = new WeakReference<JNodeModel>(model);
-        }
-        model.update();
-        return model;
-    }
-
-    /**
      * Sets comment for the node.
      * 
      * @param comment text to be used as a tooltip comment.
      */
-    public void setComment(String comment) {
+    public final void setComment(String comment) {
         setToolTipText(comment);
         this.comment = comment;
     }
