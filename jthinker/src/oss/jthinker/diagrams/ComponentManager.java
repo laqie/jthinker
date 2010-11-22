@@ -36,7 +36,6 @@ import java.util.LinkedList;
 import java.util.List;
 import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.graphs.OrderingLevel;
-import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.widgets.GroupHandler;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;

@@ -38,7 +38,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.LinkedList;
 import org.w3c.dom.Element;
-import oss.jthinker.tocmodel.DiagramType;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;

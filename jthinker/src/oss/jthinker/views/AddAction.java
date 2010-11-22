@@ -37,10 +37,10 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import oss.jthinker.diagrams.NodeSpecHolder;
-import oss.jthinker.tocmodel.NodeType;
+import oss.jthinker.diagrams.NodeType;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JNodeSpec;
-import static oss.jthinker.tocmodel.NodeType.*;
+import static oss.jthinker.diagrams.NodeType.*;
 
 /**
  * Action for adding node to {@link DiagramPane}.

@@ -34,10 +34,9 @@ package oss.jthinker.diagrams;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
-import oss.jthinker.tocmodel.NodeType;
 import oss.jthinker.widgets.BorderType;
 import oss.jthinker.widgets.JNodeSpec;
-import static oss.jthinker.tocmodel.NodeType.*;
+import static oss.jthinker.diagrams.NodeType.*;
 import static oss.jthinker.widgets.BorderType.*;
 
 /**

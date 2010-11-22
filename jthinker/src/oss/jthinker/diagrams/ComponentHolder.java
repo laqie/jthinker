@@ -34,7 +34,6 @@ package oss.jthinker.diagrams;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Collection;
-import oss.jthinker.tocmodel.DiagramType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -341,7 +340,7 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
      * and false otherwise.
      */
     public boolean allowsConflict() {
-        return _type.equals(DiagramType.CONFLICT_RESOLUTION);
+        return _type.isConflictAllowed();
     }
 
     /** {@inheritDoc} */

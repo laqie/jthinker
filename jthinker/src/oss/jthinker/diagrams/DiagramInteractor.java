@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import oss.jthinker.graphs.GraphEngine;
-import static oss.jthinker.tocmodel.NodeType.*;
+import static oss.jthinker.diagrams.NodeType.*;
 import oss.jthinker.util.Pair;
 import oss.jthinker.widgets.AbstractDiagramOwner;
 import oss.jthinker.widgets.JEdge;
