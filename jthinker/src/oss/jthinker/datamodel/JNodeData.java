@@ -29,8 +29,10 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.datamodel;
 
+import oss.jthinker.datamodel.JSlideData;
+import oss.jthinker.datamodel.BorderType;
 import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Color;
 import java.awt.Point;
@@ -41,13 +43,14 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import oss.jthinker.diagrams.XMLUtils;
 import oss.jthinker.util.XMLStored;
+import oss.jthinker.widgets.JLabelBundle;
 
 /**
  * A {@link JNode} construction specification.
  * 
  * @author iappel
  */
-public class JNodeSpec extends JSlideSpec implements XMLStored {
+public class JNodeData extends JSlideData implements XMLStored {
     private final boolean editable;
     private final String content, comment, groupName;
 
@@ -59,7 +62,7 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param content string content of the node
      * @param center desired center point for the slide
      */
-    public JNodeSpec(BorderType borderType, boolean editable, String content,
+    public JNodeData(BorderType borderType, boolean editable, String content,
             Point center) {
         this(borderType, editable, content, center,
                 WindowUtils.getDefaultBackground(), "", null);
@@ -77,7 +80,7 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param comment tooltip comment
      * @param nodeGroup group to which current node belongs
      */
-    public JNodeSpec(BorderType borderType, boolean editable, String content,
+    public JNodeData(BorderType borderType, boolean editable, String content,
             Point center, Color color, String comment, String nodeGroup) {
         super(center, borderType, color);
         this.editable = editable;
@@ -129,9 +132,9 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param otherCenter place for new node
      * @return newly cloned JNodeSpec instance
      */
-    public JNodeSpec clone(String otherContent, Point otherCenter) {
+    public JNodeData clone(String otherContent, Point otherCenter) {
         BorderType borderType = super.getBorderType();
-        return new JNodeSpec(borderType, editable, otherContent, otherCenter);
+        return new JNodeData(borderType, editable, otherContent, otherCenter);
     }
     
     /**
@@ -145,9 +148,9 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param otherNode node group for new node
      * @return newly cloned JNodeSpec instance
      */
-    public JNodeSpec clone(String otherContent, Point otherCenter, Color otherColor, String otherComment, String otherGroup) {
+    public JNodeData clone(String otherContent, Point otherCenter, Color otherColor, String otherComment, String otherGroup) {
         BorderType borderType = super.getBorderType();
-        return new JNodeSpec(borderType, editable, otherContent, otherCenter, otherColor, otherComment, otherGroup);
+        return new JNodeData(borderType, editable, otherContent, otherCenter, otherColor, otherComment, otherGroup);
     }
 
     @Override
@@ -167,8 +170,8 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
     @Override
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        if (obj instanceof JNodeSpec) {
-            JNodeSpec nspec = (JNodeSpec)obj;
+        if (obj instanceof JNodeData) {
+            JNodeData nspec = (JNodeData)obj;
             return nspec.editable == editable &&
                     nspec.content.equals(content) &&
                     nspec.comment.equals(comment) &&
@@ -218,7 +221,7 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
      * @param data XML node to get data from.
      * @return loaded node spec
      */
-    public static JNodeSpec loadInstance(Node data) {
+    public static JNodeData loadInstance(Node data) {
         if (!data.getNodeName().equals("node")) {
             throw new IllegalArgumentException(data.getNodeName());
         }
@@ -252,6 +255,6 @@ public class JNodeSpec extends JSlideSpec implements XMLStored {
             }
         }
 
-        return new JNodeSpec(type, edit, content, center, color, comment, nodeGroup);
+        return new JNodeData(type, edit, content, center, color, comment, nodeGroup);
     }    
 }

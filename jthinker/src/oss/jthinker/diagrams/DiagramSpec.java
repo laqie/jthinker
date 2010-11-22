@@ -31,6 +31,7 @@
 
 package oss.jthinker.diagrams;
 
+import oss.jthinker.datamodel.DiagramType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -53,7 +54,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import oss.jthinker.util.XMLStored;
-import oss.jthinker.widgets.JNodeSpec;
+import oss.jthinker.datamodel.JNodeData;
 
 /**
  * Container for packaging all information on diagram's structure
@@ -63,7 +64,7 @@ import oss.jthinker.widgets.JNodeSpec;
  */
 public class DiagramSpec implements XMLStored {
     public final List<JEdgeSpec> edgeSpecs;
-    public final List<JNodeSpec> nodeSpecs;
+    public final List<JNodeData> nodeSpecs;
     public final List<JLegSpec> legSpecs;
     public final DiagramType type;
     public final DiagramOptionSpec options = new DiagramOptionSpec();
@@ -79,7 +80,7 @@ public class DiagramSpec implements XMLStored {
         String typeStr = typeNode.getNodeValue();
         type = DiagramType.valueOf(typeStr);
         edgeSpecs = new LinkedList<JEdgeSpec>();
-        nodeSpecs = new LinkedList<JNodeSpec>();
+        nodeSpecs = new LinkedList<JNodeData>();
         legSpecs = new LinkedList<JLegSpec>();
 
         NodeList content = data.getChildNodes();
@@ -90,7 +91,7 @@ public class DiagramSpec implements XMLStored {
             Node n = content.item(i);
             String name = n.getNodeName();
             if (name.equals("node")) {
-                JNodeSpec spec = JNodeSpec.loadInstance(n);
+                JNodeData spec = JNodeData.loadInstance(n);
                 nodeSpecs.add(spec);
             } else if (name.equals("edge")) {
                 JEdgeSpec spec = new JEdgeSpec(n);
@@ -112,12 +113,12 @@ public class DiagramSpec implements XMLStored {
      * @param legSpecs list of diagram's legs
      * @param type type of the diagram
      */    
-    public DiagramSpec(List<JNodeSpec> nodeSpecs, List<JEdgeSpec> edgeSpecs,
+    public DiagramSpec(List<JNodeData> nodeSpecs, List<JEdgeSpec> edgeSpecs,
             List<JLegSpec> legSpecs, DiagramType type) {
         this.edgeSpecs = edgeSpecs != null ? edgeSpecs :
             new LinkedList<JEdgeSpec>();
         this.nodeSpecs = nodeSpecs != null ? nodeSpecs :
-            new LinkedList<JNodeSpec>();
+            new LinkedList<JNodeData>();
         this.legSpecs = legSpecs != null ? legSpecs :
             new LinkedList<JLegSpec>();
         this.type = type;
@@ -167,7 +168,7 @@ public class DiagramSpec implements XMLStored {
     public Element saveToXML(Document document) {
         Element result = document.createElement("diagram");
         result.setAttribute("type", type.toString());
-        for (JNodeSpec spec : nodeSpecs) {
+        for (JNodeData spec : nodeSpecs) {
             result.appendChild(spec.saveToXML(document));
         }
         for (JEdgeSpec spec : edgeSpecs){

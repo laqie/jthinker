@@ -33,7 +33,8 @@ package oss.jthinker.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * An array-like datatype that binds indexes to values. Differences from
@@ -155,8 +156,8 @@ public class GappedArray<T> implements Iterable<T> {
      * 
      * @return container's content as a vector with gaps omitted.
      */
-    public Vector<T> getContent() {
-        Vector<T> ret = new Vector<T>();
+    public List<T> getContent() {
+        List<T> ret = new LinkedList<T>();
         for (int i=0;i<_content.size();i++) {
             T t = _content.get(i);
             if (t != null) {
@@ -175,7 +176,7 @@ public class GappedArray<T> implements Iterable<T> {
      * Removes all gaps from the list.
      */
     public void relax() {
-        Vector<T> vector = getContent();
+        List<T> vector = getContent();
         _content.clear();
         _content.addAll(vector);
     }

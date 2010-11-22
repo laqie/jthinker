@@ -30,6 +30,7 @@
  */
 package oss.jthinker.diagrams;
 
+import oss.jthinker.datamodel.DiagramType;
 import java.awt.Dimension;
 import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.util.MutableTrigger;
@@ -152,7 +153,7 @@ public interface DiagramView extends JBackground {
      * 
      * @return diagram's controller.
      */    
-    ComponentManager getLinkController();
+    DiagramController getLinkController();
  
     /**
      * Returns a container for {@link JNodeEditor}-editor

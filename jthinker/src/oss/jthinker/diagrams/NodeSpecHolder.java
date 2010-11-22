@@ -34,10 +34,9 @@ package oss.jthinker.diagrams;
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
-import oss.jthinker.widgets.BorderType;
-import oss.jthinker.widgets.JNodeSpec;
-import static oss.jthinker.diagrams.NodeType.*;
-import static oss.jthinker.widgets.BorderType.*;
+import oss.jthinker.datamodel.BorderType;
+import oss.jthinker.datamodel.JNodeData;
+import oss.jthinker.datamodel.NodeType;
 
 /**
  * Holder of prototype nodespecs.
@@ -45,25 +44,15 @@ import static oss.jthinker.widgets.BorderType.*;
  * @author iappel
  */
 public class NodeSpecHolder {
-    private final Map<NodeType, JNodeSpec> typeToSpecMap =
-            new HashMap<NodeType, JNodeSpec>();
-    private final HashMap<NodeType, BorderType> typeToBorderMap =
-            new HashMap<NodeType, BorderType>();
+    private final Map<NodeType, JNodeData> typeToSpecMap =
+            new HashMap<NodeType, JNodeData>();
 
     private static NodeSpecHolder instance;    
     
     private NodeSpecHolder() {
-        typeToBorderMap.put(NodeType.ELLIPSE, BorderType.ELLIPSE);
-        typeToBorderMap.put(STATEMENT, ROUND_RECT);
-        typeToBorderMap.put(TASK, SHARP_RECT);
-        typeToBorderMap.put(OBSTACLE, HEXAGON);
-        
         for (NodeType nt : NodeType.values()) {
-            BorderType bt = typeToBorderMap.get(nt);
-            if (bt == null) {
-                throw new RuntimeException(nt.name());
-            }
-            JNodeSpec protoSpec = new JNodeSpec(bt, nt!=NodeType.ELLIPSE, "", null);
+            BorderType bt = nt.getBorderType();
+            JNodeData protoSpec = new JNodeData(bt, nt!=NodeType.ELLIPSE, "", null);
             typeToSpecMap.put(nt, protoSpec);
         }
     }
@@ -81,7 +70,7 @@ public class NodeSpecHolder {
      * @param nodeType node type
      * @return prototype spec
      */
-    public static JNodeSpec getSpec(NodeType nodeType) {
+    public static JNodeData getSpec(NodeType nodeType) {
         return getInstance().typeToSpecMap.get(nodeType);
     }
     
@@ -93,7 +82,7 @@ public class NodeSpecHolder {
      * @param p center point
      * @return new prototype-based node spec
      */
-    public static JNodeSpec clone(NodeType nodeType, String content, Point p) {
+    public static JNodeData clone(NodeType nodeType, String content, Point p) {
         return getSpec(nodeType).clone(content, p);
     }
     
@@ -103,8 +92,8 @@ public class NodeSpecHolder {
      * @param p center point
      * @return new prototype-based node spec
      */
-    public static JNodeSpec cloneEllipse(Point p) {
-        JNodeSpec proto = getSpec(NodeType.ELLIPSE);
+    public static JNodeData cloneEllipse(Point p) {
+        JNodeData proto = getSpec(NodeType.ELLIPSE);
         return proto.clone("        ", p);
     }
 }

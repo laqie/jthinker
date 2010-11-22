@@ -31,6 +31,7 @@
 
 package oss.jthinker.diagrams;
 
+import oss.jthinker.datamodel.DiagramType;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.Collection;
@@ -39,7 +40,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 import oss.jthinker.swingutils.SwingMapping;
 import oss.jthinker.util.GappedArray;
 import oss.jthinker.util.Mapping;
@@ -49,20 +49,20 @@ import oss.jthinker.widgets.AbstractDiagramOwner;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
-import oss.jthinker.widgets.JNodeSpec;
+import oss.jthinker.datamodel.JNodeData;
 
 /**
  * Container for sorted holding of components.
  *
  * @author iappel
  */
-public abstract class ComponentHolder extends AbstractDiagramOwner {
+public abstract class ComponentContainer extends AbstractDiagramOwner {
     private final GappedArray<JNode> _nodes = new GappedArray<JNode>();
     private final GappedArray<JEdge> _edges = new GappedArray<JEdge>();
     private final GappedArray<JLeg> _legs = new GappedArray<JLeg>();
     protected final DiagramView _view;
     protected final DiagramType _type;
-    protected boolean numberingEnabled;
+    protected boolean _numberingEnabled;
     
     /**
      * Creates a new ComponentHolder instance.
@@ -70,7 +70,7 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
      * @param view {@link DiagramView} that this holder serves.
      * @param type type of diagram
      */
-    public ComponentHolder(DiagramView view, DiagramType type) {
+    public ComponentContainer(DiagramView view, DiagramType type) {
         _view = view;
         _type = type;
     }
@@ -83,7 +83,7 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
     public void add(JNode node) {
         _nodes.add(node);
         _view.add(node);
-        node.enableNumbering(numberingEnabled);
+        node.enableNumbering(_numberingEnabled);
     }
     
     /**
@@ -254,9 +254,9 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
         return result;
     }
     
-    private List<JNodeSpec> saveNodeSpecs() {
+    private List<JNodeData> saveNodeSpecs() {
         _nodes.relax();
-        ArrayList<JNodeSpec> list = new ArrayList<JNodeSpec>();
+        ArrayList<JNodeData> list = new ArrayList<JNodeData>();
         for (JNode node : _nodes) {
             list.add(node.getNodeSpec());
         }
@@ -272,7 +272,7 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
     public DiagramSpec getDiagramSpec() {
         _nodes.relax();
         _edges.relax();
-        List<JNodeSpec> nodes = saveNodeSpecs();
+        List<JNodeData> nodes = saveNodeSpecs();
         List<JEdgeSpec> edges = saveEdgeSpecs();
         List<JLegSpec> legs = saveLegSpecs();
         return new DiagramSpec(nodes, edges, legs, _type);
@@ -293,7 +293,7 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
      * 
      * @return list of all holder's nodes
      */
-    public Vector<JNode> getAllNodes() {
+    public List<JNode> getAllNodes() {
         return _nodes.getContent();
     }
     
@@ -302,8 +302,8 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
      * 
      * @return list of all holder's wires
      */
-    public Vector<JLink> getAllWires() {
-        Vector<JLink> ret = new Vector<JLink>();
+    public List<JLink> getAllWires() {
+        List<JLink> ret = new ArrayList<JLink>();
         ret.addAll(_edges.getContent());
         ret.addAll(_legs.getContent());
         return ret;
@@ -326,7 +326,7 @@ public abstract class ComponentHolder extends AbstractDiagramOwner {
      */
     @Override
     public void enableNodeNumbering(boolean bool) {
-        numberingEnabled = bool;
+        _numberingEnabled = bool;
         for (JNode node : this.getAllNodes()) {
             node.enableNumbering(bool);
         }

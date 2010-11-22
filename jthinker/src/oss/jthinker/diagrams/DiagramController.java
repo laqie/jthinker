@@ -31,6 +31,7 @@
 
 package oss.jthinker.diagrams;
 
+import oss.jthinker.datamodel.DiagramType;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +42,7 @@ import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JNodeEditor;
-import oss.jthinker.widgets.JNodeSpec;
+import oss.jthinker.datamodel.JNodeData;
 import oss.jthinker.widgets.WidgetFactory;
 
 /**
@@ -50,11 +51,11 @@ import oss.jthinker.widgets.WidgetFactory;
  * 
  * @author iappel
  */
-public class ComponentManager extends ComponentHolder {
-    private final GroupHandler groupHandler;
-    private final GraphEngine<JNode> engine;
-    private final JNodeEditor.EditorContainer editorContainer;
-    private final WidgetFactory widgetFactory;
+public class DiagramController extends ComponentContainer {
+    private final GroupHandler _groupHandler;
+    private final GraphEngine<JNode> _graphEngine;
+    private final JNodeEditor.EditorContainer _editorContainer;
+    private final WidgetFactory _widgetFactory;
     
     /**
      * Creates a new component manager for given diagram's view and type.
@@ -62,12 +63,12 @@ public class ComponentManager extends ComponentHolder {
      * @param view visual renderer of the diagram.
      * @param type type of the diagram
      */
-    public ComponentManager(DiagramView view, DiagramType type) {
+    public DiagramController(DiagramView view, DiagramType type) {
         super(view, type);
-        groupHandler = new GroupHandler(view, this);
-        engine = new GraphEngine<JNode>(this, OrderingLevel.SUPPRESS_OVERLAP);
-        editorContainer = view.getEditorContainer();
-        widgetFactory = new WidgetFactory(this);
+        _groupHandler = new GroupHandler(view, this);
+        _graphEngine = new GraphEngine<JNode>(this, OrderingLevel.SUPPRESS_OVERLAP);
+        _editorContainer = view.getEditorContainer();
+        _widgetFactory = new WidgetFactory(this);
     }
 
     /** {@inheritDoc} */
@@ -88,13 +89,13 @@ public class ComponentManager extends ComponentHolder {
         JNode nodeA = edge.getPeerA();
         JNode nodeZ = edge.getPeerZ();
         remove(edge);
-        add(widgetFactory.produceEdge(nodeZ, nodeA));
+        add(_widgetFactory.produceEdge(nodeZ, nodeA));
     }
 
     /** {@inheritDoc} */
     public void delete(JNode node) {
         remove(node);
-        groupHandler.ungroup(node);
+        _groupHandler.ungroup(node);
     }
 
     /** {@inheritDoc} */
@@ -106,8 +107,8 @@ public class ComponentManager extends ComponentHolder {
             node.setLocation(place);
         }
         _view.dispatchMove();
-        groupHandler.updatePosition(node);
-        engine.updatePosition(node);
+        _groupHandler.updatePosition(node);
+        _graphEngine.updatePosition(node);
     }
     
     /** {@inheritDoc} */
@@ -122,7 +123,7 @@ public class ComponentManager extends ComponentHolder {
             return;
         }
         _view.disableMouseEdge(linkPeer);
-        JEdge edge = widgetFactory.produceEdge(linkPeer, end);
+        JEdge edge = _widgetFactory.produceEdge(linkPeer, end);
         add(edge);
         linkPeer = null;
     }
@@ -142,7 +143,7 @@ public class ComponentManager extends ComponentHolder {
             return;
         }
         _view.disableMouseEdge(linkPeer);
-        JLeg leg = widgetFactory.produceLeg(linkPeer, end);
+        JLeg leg = _widgetFactory.produceLeg(linkPeer, end);
         add(leg);
         linkPeer = null;
     }
@@ -156,28 +157,28 @@ public class ComponentManager extends ComponentHolder {
         List<JNode> nodes = new LinkedList<JNode>();
         List<JEdge> edges = new LinkedList<JEdge>();
         
-        for (JNodeSpec nodeSpec : spec.nodeSpecs) {
-            JNode node = widgetFactory.produceNode(nodeSpec);
+        for (JNodeData nodeSpec : spec.nodeSpecs) {
+            JNode node = _widgetFactory.produceNode(nodeSpec);
             add(node);
             nodes.add(node);
         }
         for (JEdgeSpec edgeSpec : spec.edgeSpecs) {
             int a = edgeSpec.idxA, z = edgeSpec.idxZ;
-            JEdge edge = widgetFactory.produceEdge(nodes.get(a), nodes.get(z));
+            JEdge edge = _widgetFactory.produceEdge(nodes.get(a), nodes.get(z));
             edge.setConflict(edgeSpec.conflict);
             edges.add(edge);
             add(edge);
         }
         for (JLegSpec legSpec : spec.legSpecs) {
             int a = legSpec.idxA, z = legSpec.idxZ;
-            JLeg leg = widgetFactory.produceLeg(nodes.get(a), edges.get(z));
+            JLeg leg = _widgetFactory.produceLeg(nodes.get(a), edges.get(z));
             add(leg);
         }
     }
 
     /** {@inheritDoc} */
     public GroupHandler getGroupHandler() {
-        return groupHandler;
+        return _groupHandler;
     }
 
     /**
@@ -186,12 +187,12 @@ public class ComponentManager extends ComponentHolder {
      * @return diagram layout engine
      */
     public GraphEngine<JNode> getGraphEngine() {
-        return engine;
+        return _graphEngine;
     }
 
     /** {@inheritDoc} */
     public JEdge add(JNode nodeA, JNode nodeZ) {
-        JEdge edge = widgetFactory.produceEdge(nodeA, nodeZ);
+        JEdge edge = _widgetFactory.produceEdge(nodeA, nodeZ);
         add(edge);
         return edge;
     }
@@ -204,8 +205,8 @@ public class ComponentManager extends ComponentHolder {
     }
 
     /** {@inheritDoc} */
-    public JNode add(JNodeSpec nodeSpec) {
-        JNode node = widgetFactory.produceNode(nodeSpec);
+    public JNode add(JNodeData nodeSpec) {
+        JNode node = _widgetFactory.produceNode(nodeSpec);
         add(node);
         return node;
     }
@@ -219,10 +220,10 @@ public class ComponentManager extends ComponentHolder {
  
     /** {@inheritDoc} */   
     public void startEditing(JNode node) {
-        JNodeEditor.startEditing(node, editorContainer);
+        JNodeEditor.startEditing(node, _editorContainer);
     }
 
     public WidgetFactory getWidgetFactory() {
-        return widgetFactory;
+        return _widgetFactory;
     }
 }

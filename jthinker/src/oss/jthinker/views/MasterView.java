@@ -42,7 +42,7 @@ import javax.swing.JMenuItem;
 import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.interop.DiagramPublisher;
 import oss.jthinker.interop.InteropUtils;
-import oss.jthinker.diagrams.DiagramType;
+import oss.jthinker.datamodel.DiagramType;
 import oss.jthinker.widgets.HTMLProducer;
 import oss.jthinker.widgets.JXPopupMenu;
 import static oss.jthinker.swingutils.ThinkerFileChooser.*;

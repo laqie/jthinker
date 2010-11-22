@@ -31,6 +31,7 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.datamodel.JNodeData;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
@@ -74,7 +75,7 @@ public class WidgetFactory {
         return wire;
     }
 
-    public JNode produceNode(JNodeSpec spec) {
+    public JNode produceNode(JNodeData spec) {
         JNode node = new JNode(nodeCallback, spec);
         node.setComponentPopupMenu(producePopupMenu(node, spec.isEditable()));
         if (spec.getGroup() != null) {

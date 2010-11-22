@@ -38,8 +38,7 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.util.HashMap;
 import javax.swing.border.LineBorder;
-
-import static oss.jthinker.widgets.BorderType.*;
+import oss.jthinker.datamodel.BorderType;
 
 /**
  * Builder for custom borders used in jThinker.
@@ -142,10 +141,10 @@ public abstract class BorderBuilder {
 
     static {
         instances = new HashMap<BorderType, BorderBuilder>();
-        instances.put(ELLIPSE, ellipticBuilder);
-        instances.put(HEXAGON, hexagonalBuilder);
-        instances.put(ROUND_RECT, roundedBuilder);
-        instances.put(SHARP_RECT, new BorderBuilder() {
+        instances.put(BorderType.ELLIPSE, ellipticBuilder);
+        instances.put(BorderType.HEXAGON, hexagonalBuilder);
+        instances.put(BorderType.ROUND_RECT, roundedBuilder);
+        instances.put(BorderType.SHARP_RECT, new BorderBuilder() {
             public LineBorder createBorder(Color color) {
                 return new LineBorder(color);
             }

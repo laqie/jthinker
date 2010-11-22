@@ -28,7 +28,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package oss.jthinker.diagrams;
+package oss.jthinker.datamodel;
 
 /**
  * List of the valid nodes in thinking processes diagrams
@@ -36,8 +36,24 @@ package oss.jthinker.diagrams;
  * @author iappel
  */
 public enum NodeType {
-    STATEMENT,
-    TASK,
-    OBSTACLE,
-    ELLIPSE
+    STATEMENT(BorderType.ROUND_RECT, true),
+    TASK(BorderType.SHARP_RECT, true),
+    OBSTACLE(BorderType.HEXAGON, true),
+    ELLIPSE(BorderType.ELLIPSE, true);
+
+    private final BorderType _borderType;
+    private final boolean _editable;
+
+    private NodeType(BorderType border, boolean editable) {
+        _borderType = border;
+        _editable = editable;
+    }
+
+    public BorderType getBorderType() {
+        return _borderType;
+    }
+
+    public boolean isEditable() {
+        return _editable;
+    }
 }
