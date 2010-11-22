@@ -64,6 +64,7 @@ public class JNodeModel extends AbstractTableModel {
                 _edited.setContent(_nameField.getText());
             }
         });
+        _nameField.setText(node.getContent());
 
         _backColor = new JColorComboBox();
         _backColor.addItemListener(new ItemListener() {
@@ -71,6 +72,7 @@ public class JNodeModel extends AbstractTableModel {
                 _edited.setColor(_backColor.getItemColor());
             }
         });
+        _backColor.setItemColor(node.getColor());
         
         _commentField = new JTextField();
         _commentField.addKeyListener(new KeyAdapter() {
@@ -79,6 +81,7 @@ public class JNodeModel extends AbstractTableModel {
                 _edited.setComment(_commentField.getText());
             }
         });
+        _commentField.setText(node.getComment());
     }
 
     /** {@inheritDpc} */

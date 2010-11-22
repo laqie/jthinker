@@ -31,10 +31,10 @@
 
 package oss.jthinker.views;
 
+import oss.jthinker.swingutils.ClickAdapter;
 import oss.jthinker.widgets.WidgetFactory;
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.logging.Level;
@@ -104,10 +104,13 @@ public class DiagramPane extends DocumentPane implements DiagramView {
             menu.add(new AddAction(this, menu, nk));
         }
         
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                propagateClick(e);
+        addMouseListener(new ClickAdapter() {
+            public void mouseLeftClicked(MouseEvent me) {
+                propagateLeftClick(me);
+            }
+
+            public void mouseRightClicked(MouseEvent me) {
+                propagateRightClick(me);
             }
         });
         setLayout(null);
@@ -168,7 +171,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * 
      * @param e event to proceed
      */
-    public void propagateClick(MouseEvent e) {
+    public void propagateLeftClick(MouseEvent e) {
         JLink activeEdge = null;
         for (JLink edge : linker.getAllWires()) {
             if (edge.isSwitched()) {
@@ -176,22 +179,35 @@ public class DiagramPane extends DocumentPane implements DiagramView {
                 break;
             }
         }
-        if (e.getButton() == MouseEvent.BUTTON1) {
-            if (activeEdge == null) {
-                return;
-            }
-            if (activeEdge instanceof JEdge) {
-                linker.onLinkingDone((JEdge)activeEdge);
-            }
-        } else if (e.getButton() == MouseEvent.BUTTON3) {
-            JPopupMenu menuToShow = menu;
-            if (activeEdge != null) {
-                menuToShow = linker.getWidgetFactory().producePopupMenu(activeEdge);
-            }
-            Point p = e.getComponent().getLocation();
-            p.translate(e.getX(), e.getY());
-            menuToShow.show(this, p.x, p.y);
+        
+        if (activeEdge == null) {
+            return;
         }
+        if (activeEdge instanceof JEdge) {
+            linker.onLinkingDone((JEdge)activeEdge);
+        }
+    }
+
+    public void propagateRightClick(MouseEvent e) {
+        if (mouseEdge != null) {
+            return;
+        }
+
+        JLink activeEdge = null;
+        for (JLink edge : linker.getAllWires()) {
+            if (edge.isSwitched()) {
+                activeEdge = edge;
+                break;
+            }
+        }
+
+        JPopupMenu menuToShow = menu;
+        if (activeEdge != null) {
+            menuToShow = linker.getWidgetFactory().producePopupMenu(activeEdge);
+        }
+        Point p = e.getComponent().getLocation();
+        p.translate(e.getX(), e.getY());
+        menuToShow.show(this, p.x, p.y);
     }
 
     /** {@inheritDoc} */

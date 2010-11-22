@@ -143,8 +143,8 @@ public class GroupHandler {
         Collection<String> groups = getGroupList();
         if (groups.isEmpty()) {
             int code = JOptionPane.showConfirmDialog(node,
-                    "No nodes defined, proceed with creation?",
-                    "No nodes defined for diagram",
+                    "No groups defined, proceed with creation?",
+                    "No groups defined for diagram",
                     JOptionPane.YES_NO_OPTION);
             if (code == JOptionPane.NO_OPTION) {
                 return;

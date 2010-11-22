@@ -31,17 +31,16 @@
 
 package oss.jthinker.widgets;
 
+import java.awt.event.MouseEvent;
 import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import oss.jthinker.swingutils.ClickAdapter;
 
 /**
  * {@see JSlide} instance that contains a {@see JLabelBundle} text and
@@ -53,26 +52,26 @@ public class JNode extends JSlide {
     private final HashSet<JComponent> peers = new HashSet<JComponent>();
     private final JNodeCallback host;
     private final JNodeSpec spec;
-    private WeakReference<JNodeModel> editorModelRef;
 
     private String comment, content;
     private boolean numbering;
     
     private void initListeners() {
         final JNode instance = this;
-        addMouseListener(new MouseAdapter() {
+        addMouseListener(new ClickAdapter() {
+            public void mouseLeftClicked(MouseEvent me) {
+                host.onLinkingDone(instance);
+            }
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1) {
-                    host.onLinkingDone(instance);
+            public void mouseRightClicked(MouseEvent me) {
+                if (me.getButton() != MouseEvent.BUTTON3) {
+                    JPopupMenu menu = instance.getComponentPopupMenu();
+                    menu.show(instance, me.getX(), me.getY());
                 }
             }
         });
 
         addComponentListener(new ComponentAdapter() {
-
-            @Override
             public void componentMoved(ComponentEvent e) {
                 host.onNodeMoved(JNode.this);
             }

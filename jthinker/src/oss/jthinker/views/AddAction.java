@@ -36,7 +36,6 @@ import oss.jthinker.widgets.JXPopupMenu;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
 import oss.jthinker.diagrams.NodeSpecHolder;
 import oss.jthinker.tocmodel.NodeType;
 import oss.jthinker.widgets.JNode;
@@ -96,6 +95,9 @@ public class AddAction extends AbstractAction {
             return;
         }
         linkPane.getLinkController().add(node);
+        if (node.getNodeSpec().isEditable()) {
+            linkPane.getLinkController().startEditing(node);
+        }
     }
     
     /**
@@ -108,19 +110,12 @@ public class AddAction extends AbstractAction {
      */
     public static JNode createNode(WidgetFactory factory, NodeType nodeType, Point center) {
         JNodeSpec protoSpec = NodeSpecHolder.getSpec(nodeType);
-        String s;
         if (protoSpec.isEditable()) {
-            s = JOptionPane.showInputDialog(null,
-                    "What to add?",
-                    nodeKindToString(nodeType),
-                    JOptionPane.QUESTION_MESSAGE);
-            if (s == null) {
-                return null;
-            }
+            JNodeSpec spec = protoSpec.clone("What to add?", center);
+            return factory.produceNode(spec);
         } else {
-            s = "          ";
+            JNodeSpec spec = protoSpec.clone("          ", center);
+            return factory.produceNode(spec);
         }
-        JNodeSpec result = protoSpec.clone(s, center);
-        return factory.produceNode(result);
     }
 }
