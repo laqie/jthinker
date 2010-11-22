@@ -1,21 +1,21 @@
 /*
  * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
- * 
+ *
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. 
+ * this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 
- * 
+ * and/or other materials provided with the distribution.
+ *
  * Neither the name of Ivan Appel nor the names of any other jThinker
  * contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission. 
- * 
+ * software without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -29,38 +29,38 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.views;
+package oss.jthinker.swingutils;
 
+import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import oss.jthinker.swingutils.ClickAdapter;
-import oss.jthinker.widgets.JLink;
 
-/**
- * Helper class for monitoring AbstractEdges.
- * 
- * @author iappel
- */
-public class MouseWatcher extends ClickAdapter {
-    private final JLink _edge;
-    private final DocumentPane _pane;
-
-    public MouseWatcher(JLink edge, DocumentPane pane) {
-        _edge = edge;
-        _pane = pane;
-    }
-
+public abstract class ClickAdapter extends MouseAdapter {
     @Override
-    public void mouseExited(MouseEvent e) {
-        _edge.setSwitched(false);
+    public final void mouseClicked(MouseEvent me) {
+        if (isLeftClick(me)) {
+            mouseLeftClicked(me);
+        } else if (isRightClick(me)) {
+            mouseRightClicked(me);
+        }
     }
 
-    @Override
-    public void mouseLeftClicked(MouseEvent me) {
-        _pane.propagateLeftClick(me);
+    private boolean isRightClick(MouseEvent e) {
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            return true;
+        }
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            int mask = InputEvent.META_MASK | InputEvent.CTRL_MASK;
+            return (mask & e.getModifiers()) != 0;
+        }
+        return false;
     }
 
-    @Override
-    public void mouseRightClicked(MouseEvent me) {
-        _pane.propagateRightClick(me);
+    private boolean isLeftClick(MouseEvent e) {
+        return e.getButton() == MouseEvent.BUTTON1 && !isRightClick(e);
     }
+
+    public abstract void mouseLeftClicked(MouseEvent me);
+
+    public abstract void mouseRightClicked(MouseEvent me);
 }

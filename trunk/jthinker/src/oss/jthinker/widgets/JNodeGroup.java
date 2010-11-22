@@ -30,12 +30,14 @@
  */
 package oss.jthinker.widgets;
 
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import javax.swing.JComponent;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 /**
@@ -57,7 +59,7 @@ public class JNodeGroup extends JComponent {
      * @param holder background, on which group is being painted
      */
     public JNodeGroup(String title, JBackground holder) {
-        this.border = new TitledBorder(title);
+        this.border = new TitledBorder(new EtchedBorder(Color.BLACK, Color.WHITE), title);
         setBorder(border);
         content = new HashSet<JComponent>();
         this.holder = holder;

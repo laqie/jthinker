@@ -118,7 +118,9 @@ public abstract class DocumentPane extends JBackgroundPane
      * 
      * @param e event to proceed
      */
-    public abstract void propagateClick(MouseEvent e);
+    public abstract void propagateLeftClick(MouseEvent e);
+
+    public abstract void propagateRightClick(MouseEvent e);
 
     /** {@inheritDoc} 
      * @param c component to add

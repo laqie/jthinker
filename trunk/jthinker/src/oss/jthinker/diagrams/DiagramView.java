@@ -153,7 +153,7 @@ public interface DiagramView extends JBackground {
      * 
      * @return diagram's controller.
      */    
-    LinkController getLinkController();
+    ComponentManager getLinkController();
  
     /**
      * Returns a container for {@link JNodeEditor}-editor
