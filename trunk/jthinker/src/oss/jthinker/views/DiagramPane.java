@@ -45,12 +45,10 @@ import oss.jthinker.diagrams.ComponentManager;
 import oss.jthinker.diagrams.DiagramOptionSpec;
 import oss.jthinker.diagrams.DiagramSpec;
 import oss.jthinker.graphs.GraphEngine;
-import oss.jthinker.tocmodel.DiagramType;
+import oss.jthinker.diagrams.DiagramType;
 import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.FileDiagramSpec;
-import oss.jthinker.tocmodel.DescriptionStorage;
-import oss.jthinker.tocmodel.DiagramDescription;
-import oss.jthinker.tocmodel.NodeType;
+import oss.jthinker.diagrams.NodeType;
 import oss.jthinker.util.TriggerEvent;
 import oss.jthinker.widgets.JLink;
 import oss.jthinker.widgets.JEdge;
@@ -83,8 +81,8 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * 
      * @param description description of the diagram
      */
-    public DiagramPane(DiagramDescription description) {
-        this(description, description.getTitle(), new DiagramOptionSpec());
+    public DiagramPane(DiagramType type) {
+        this(type, type.getTitle(), new DiagramOptionSpec());
     }
 
     /**
@@ -95,12 +93,11 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * @param title title to use
      * @param optionSpec description of diagram's settings
      */    
-    public DiagramPane(DiagramDescription description, String title,
-            DiagramOptionSpec optionSpec) {
+    public DiagramPane(DiagramType type, String title, DiagramOptionSpec optionSpec) {
         super(title);
         
         menu = new JXPopupMenu();
-        for (NodeType nk : description.possibleNodes()) {
+        for (NodeType nk : type.getAllowedNodeTypes()) {
             menu.add(new AddAction(this, menu, nk));
         }
         
@@ -114,7 +111,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
             }
         });
         setLayout(null);
-        type = description.getType();
+        this.type = type;
         linker = new ComponentManager(this, type);
         options = new DiagramOptions(this, optionSpec);
         linker.enableNodeNumbering(options.isNumberingEnabled());
@@ -126,8 +123,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * @param fspec diagram specification to apply.
      */    
     public DiagramPane(FileDiagramSpec fspec) {
-        this(DescriptionStorage.getEntity(fspec.type),
-                fspec.file.toString(), fspec.options);        
+        this(fspec.type, fspec.file.toString(), fspec.options);
         linker.setDiagramSpec(fspec);
         markModified(true);
         getFilenameTrigger().setState(fspec.file);

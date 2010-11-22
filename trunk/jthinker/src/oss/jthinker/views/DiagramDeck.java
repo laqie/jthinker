@@ -43,7 +43,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.xml.sax.SAXException;
 import oss.jthinker.diagrams.FileDiagramSpec;
-import oss.jthinker.tocmodel.DiagramDescription;
+import oss.jthinker.diagrams.DiagramType;
 import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerEvent;
 import oss.jthinker.util.TriggerListener;
@@ -73,9 +73,9 @@ public abstract class DiagramDeck extends JTabbedPane implements TriggerListener
      * 
      * @param desc description of the new diagram
      */
-    public void addLinkPane(DiagramDescription desc) {
-        DiagramPane linkPane = new DiagramPane(desc);
-        String title = desc.getTitle();
+    public void addLinkPane(DiagramType type) {
+        DiagramPane linkPane = new DiagramPane(type);
+        String title = type.getTitle();
         doAddPane(linkPane, title);
     }
 

@@ -29,7 +29,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.tocmodel;
+package oss.jthinker.diagrams;
+
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import static oss.jthinker.diagrams.NodeType.*;
 
 /**
  * List of the valid thinking processes diagrams
@@ -37,9 +43,45 @@ package oss.jthinker.tocmodel;
  *  * @author iappel
  */
 public enum DiagramType {
-    CURRENT_REALITY_TREE,
-    CONFLICT_RESOLUTION,
-    FUTURE_REALITY_TREE,
-    TRANSITION_TREE,
-    TRANSFORM_PLAN
+    CURRENT_REALITY_TREE("Current Reality Tree", STATEMENT, ELLIPSE),
+    CONFLICT_RESOLUTION("Conflict Resolution", true, STATEMENT),
+    FUTURE_REALITY_TREE("Future Reality Tree", STATEMENT, ELLIPSE, TASK),
+    TRANSITION_TREE("Prerequisite Tree", STATEMENT, ELLIPSE, TASK, OBSTACLE),
+    TRANSFORM_PLAN("Transform Tree", STATEMENT, ELLIPSE),
+    FREEFORM_DIAGRAM("Free-form Diagram", true, NodeType.values());
+
+    private final String title;
+    private final boolean conflictAllowed;
+    private final List<NodeType> allowedNodes;
+
+    private DiagramType(String title, NodeType... nodes) {
+        this(title, false, nodes);
+    }
+
+    private DiagramType(String title, boolean conflictAllowed, NodeType... nodes) {
+        this.title = title;
+        this.conflictAllowed = conflictAllowed;
+        //
+        List<NodeType> nodeTemp = new ArrayList<NodeType>();
+        nodeTemp.addAll(Arrays.asList(nodes));
+        allowedNodes = Collections.unmodifiableList(nodeTemp);
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<NodeType> getAllowedNodeTypes() {
+        return allowedNodes;
+    }
+
+    public boolean isConflictAllowed() {
+        return conflictAllowed;
+    }
+
+    private static <T> List<T> wrap(T... values) {
+        List<T> result = new ArrayList<T>();
+        result.addAll(Arrays.asList(values));
+        return Collections.unmodifiableList(result);
+    }
 }

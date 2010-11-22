@@ -42,11 +42,9 @@ import javax.swing.JMenuItem;
 import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.interop.DiagramPublisher;
 import oss.jthinker.interop.InteropUtils;
-import oss.jthinker.tocmodel.DiagramDescription;
-import oss.jthinker.tocmodel.DiagramType;
+import oss.jthinker.diagrams.DiagramType;
 import oss.jthinker.widgets.HTMLProducer;
 import oss.jthinker.widgets.JXPopupMenu;
-import static oss.jthinker.tocmodel.DescriptionStorage.getEntity;
 import static oss.jthinker.swingutils.ThinkerFileChooser.*;
 
 /**
@@ -71,15 +69,15 @@ public class MasterView extends DiagramDeck {
     private JCheckBoxMenuItem numberingItem;
     
     private class NewAction extends AbstractAction {
-        private final DiagramDescription description;
+        private final DiagramType diagramType;
         
         private NewAction(DiagramType type) {
-            super(getEntity(type).getTitle());
-            description = getEntity(type);
+            super(type.getTitle());
+            diagramType = type;
         }
         
         public void actionPerformed(ActionEvent e) {
-            addLinkPane(description);
+            addLinkPane(diagramType);
         }
     }
     

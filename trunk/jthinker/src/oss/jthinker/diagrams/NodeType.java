@@ -11,7 +11,7 @@
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution. 
- *
+ * 
  * Neither the name of Ivan Appel nor the names of any other jThinker
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission. 
@@ -28,42 +28,16 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-package oss.jthinker.tocmodel;
-
-import java.util.List;
+package oss.jthinker.diagrams;
 
 /**
- * Description of the diagram.
+ * List of the valid nodes in thinking processes diagrams
  * 
  * @author iappel
  */
-public interface DiagramDescription {
-    /**
-     * Lists types of nodes, that are valid on the diagram.
-     
-     * @return types of nodes, that are valid on the diagram.
-     */
-    List<NodeType> possibleNodes();
-
-    /**
-     * Lists types of links, that are valid on the diagram.
-     
-     * @return types of links, that are valid on the diagram.
-     */
-    List<LinkType> possibleLinks();
-    
-    /**
-     * Returns diagram type name.
-     
-     * @return diagram type name.
-     */
-    String getTitle();
-
-    /**
-     * Returns diagram's type.
-     * 
-     * @return diagram's type.
-     */
-    DiagramType getType();
+public enum NodeType {
+    STATEMENT,
+    TASK,
+    OBSTACLE,
+    ELLIPSE
 }

@@ -32,7 +32,6 @@ package oss.jthinker.diagrams;
 
 import java.awt.Dimension;
 import oss.jthinker.graphs.GraphEngine;
-import oss.jthinker.tocmodel.DiagramType;
 import oss.jthinker.util.MutableTrigger;
 import oss.jthinker.widgets.JBackground;
 import oss.jthinker.widgets.JEdge;
