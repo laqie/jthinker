@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.datamodel;
 
 /**
  * Enumeration of custom borders available.

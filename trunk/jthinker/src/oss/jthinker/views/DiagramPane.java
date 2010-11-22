@@ -41,14 +41,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
-import oss.jthinker.diagrams.ComponentManager;
+import oss.jthinker.diagrams.DiagramController;
 import oss.jthinker.diagrams.DiagramOptionSpec;
 import oss.jthinker.diagrams.DiagramSpec;
 import oss.jthinker.graphs.GraphEngine;
-import oss.jthinker.diagrams.DiagramType;
+import oss.jthinker.datamodel.DiagramType;
 import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.FileDiagramSpec;
-import oss.jthinker.diagrams.NodeType;
+import oss.jthinker.datamodel.NodeType;
 import oss.jthinker.util.TriggerEvent;
 import oss.jthinker.widgets.JLink;
 import oss.jthinker.widgets.JEdge;
@@ -71,7 +71,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     
     private JLink mouseEdge = null;
     private final JXPopupMenu menu;
-    private final ComponentManager linker;
+    private final DiagramController linker;
     private final DiagramType type;
     private final DiagramOptions options;
     
@@ -112,7 +112,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         });
         setLayout(null);
         this.type = type;
-        linker = new ComponentManager(this, type);
+        linker = new DiagramController(this, type);
         options = new DiagramOptions(this, optionSpec);
         linker.enableNodeNumbering(options.isNumberingEnabled());
     }
@@ -226,7 +226,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * 
      * @return controller of the view
      */
-    public ComponentManager getLinkController() {
+    public DiagramController getLinkController() {
         return linker;
     }
 

@@ -31,6 +31,7 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.datamodel.JSlideData;
 import oss.jthinker.swingutils.WindowUtils;
 import oss.jthinker.util.Switch;
 import java.awt.Color;
@@ -112,7 +113,7 @@ public class JSlide extends JPanel implements Switch {
      * 
      * @param slideSpec slide construction specification
      */
-    public JSlide(JSlideSpec slideSpec) {
+    public JSlide(JSlideData slideSpec) {
         this(slideSpec.getComponent(), slideSpec.getBorderBuilder(),
                 slideSpec.getBackground());
     }

@@ -29,13 +29,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
+package oss.jthinker.datamodel;
 
 import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
-import static oss.jthinker.diagrams.NodeType.*;
+import static oss.jthinker.datamodel.NodeType.*;
 
 /**
  * List of the valid thinking processes diagrams

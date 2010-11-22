@@ -29,19 +29,21 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.widgets;
+package oss.jthinker.datamodel;
 
 import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Color;
 import java.awt.Point;
 import javax.swing.JComponent;
+import oss.jthinker.widgets.BorderBuilder;
+import oss.jthinker.widgets.JSlide;
 
 /**
  * A {@see JSlide} construction specification.
  * 
  * @author iappel
  */
-public abstract class JSlideSpec {
+public abstract class JSlideData {
     private final Point slideCenter;
     private final BorderType borderType;
     private final Color background;
@@ -54,7 +56,7 @@ public abstract class JSlideSpec {
      * @param border desired border type for the slide
      * @param color background color for slide
      */
-    protected JSlideSpec(Point center, BorderType border, Color color) {
+    protected JSlideData(Point center, BorderType border, Color color) {
         slideCenter = center;
         borderType = border;
         background = color == null ? WindowUtils.getDefaultBackground() : color;
@@ -109,8 +111,8 @@ public abstract class JSlideSpec {
     @Override
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        if (obj instanceof JSlideSpec) {
-            JSlideSpec slideSpec = (JSlideSpec)obj;
+        if (obj instanceof JSlideData) {
+            JSlideData slideSpec = (JSlideData)obj;
             return slideSpec.borderType.equals(borderType) &&
                    slideSpec.background.equals(background) &&
                    slideSpec.slideCenter.equals(slideCenter);

@@ -31,6 +31,8 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.datamodel.JNodeData;
+import oss.jthinker.datamodel.BorderType;
 import java.awt.event.MouseEvent;
 import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Graphics;
@@ -51,7 +53,7 @@ import oss.jthinker.swingutils.ClickAdapter;
 public class JNode extends JSlide {
     private final HashSet<JComponent> peers = new HashSet<JComponent>();
     private final JNodeCallback host;
-    private final JNodeSpec spec;
+    private final JNodeData spec;
 
     private String comment, content;
     private boolean numbering;
@@ -84,7 +86,7 @@ public class JNode extends JSlide {
      * @param nodeHost object manager that should host this node
      * @param spec description of node's interior and content
      */
-    protected JNode(JNodeCallback nodeHost, JNodeSpec spec) {
+    protected JNode(JNodeCallback nodeHost, JNodeData spec) {
         super(spec);
         host = nodeHost;
         initListeners();
@@ -148,7 +150,7 @@ public class JNode extends JSlide {
      * 
      * @return node's building specification.
      */    
-    public JNodeSpec getNodeSpec() {
+    public JNodeData getNodeSpec() {
         String nodeGroup = host.getGroupHandler().getNodeGroupName(this);
         return spec.clone(content, WindowUtils.computeCenterPoint(this),
                 getColor(), comment, nodeGroup);

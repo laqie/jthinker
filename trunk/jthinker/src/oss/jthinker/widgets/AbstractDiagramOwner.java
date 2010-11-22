@@ -31,6 +31,7 @@
 
 package oss.jthinker.widgets;
 
+import oss.jthinker.datamodel.JNodeData;
 import oss.jthinker.graphs.AbstractGraphModel;
 
 /**
@@ -55,7 +56,7 @@ implements JNodeCallback, JEdgeCallback {
      * @param nodeSpec specification of the node to create
      * @return newly created node
      */
-    abstract public JNode add(JNodeSpec nodeSpec);
+    abstract public JNode add(JNodeData nodeSpec);
 
     /**
      * Removes several nodes from the manager and from the managed view.

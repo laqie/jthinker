@@ -37,12 +37,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import oss.jthinker.graphs.GraphEngine;
-import static oss.jthinker.diagrams.NodeType.*;
+import oss.jthinker.datamodel.NodeType;
 import oss.jthinker.util.Pair;
 import oss.jthinker.widgets.AbstractDiagramOwner;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeSpec;
+import oss.jthinker.datamodel.JNodeData;
 
 
 /**
@@ -76,7 +76,7 @@ public class DiagramInteractor {
         if (p == null) {
             throw new NullPointerException(_view.getClass().toString());
         }
-        JNodeSpec spec = NodeSpecHolder.clone(STATEMENT, "Type UDE here", p);
+        JNodeData spec = NodeSpecHolder.clone(NodeType.STATEMENT, "Type UDE here", p);
         JNode node = _manager.add(spec);
         node.setColor(Color.PINK);
         _view.editNode(node);
@@ -98,7 +98,7 @@ public class DiagramInteractor {
         if (p == null) {
             throw new NullPointerException();
         }
-        JNodeSpec spec = NodeSpecHolder.clone(STATEMENT, "Common reason", p);
+        JNodeData spec = NodeSpecHolder.clone(NodeType.STATEMENT, "Common reason", p);
         JNode node = _manager.add(spec);
         Iterator<JNode> iter = terms.iterator();
         JEdge edge1 = _manager.add(node, iter.next());
@@ -153,7 +153,7 @@ public class DiagramInteractor {
         edgeB.setVisible(false);
         
         Point p = _engine.centerPoint(target, sourceA, sourceB);
-        JNodeSpec spec = NodeSpecHolder.cloneEllipse(p);
+        JNodeData spec = NodeSpecHolder.cloneEllipse(p);
         
         JNode ellipseNode = _manager.add(spec);
         JEdge edgeX = _manager.add(sourceA, ellipseNode);

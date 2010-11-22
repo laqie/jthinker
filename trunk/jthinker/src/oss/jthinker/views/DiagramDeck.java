@@ -43,7 +43,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.xml.sax.SAXException;
 import oss.jthinker.diagrams.FileDiagramSpec;
-import oss.jthinker.diagrams.DiagramType;
+import oss.jthinker.datamodel.DiagramType;
 import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerEvent;
 import oss.jthinker.util.TriggerListener;

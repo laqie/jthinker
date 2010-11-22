@@ -37,10 +37,10 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import oss.jthinker.diagrams.NodeSpecHolder;
-import oss.jthinker.diagrams.NodeType;
+import oss.jthinker.datamodel.NodeType;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeSpec;
-import static oss.jthinker.diagrams.NodeType.*;
+import oss.jthinker.datamodel.JNodeData;
+import static oss.jthinker.datamodel.NodeType.*;
 
 /**
  * Action for adding node to {@link DiagramPane}.
@@ -109,12 +109,12 @@ public class AddAction extends AbstractAction {
      * @return a new node of given parametres
      */
     public static JNode createNode(WidgetFactory factory, NodeType nodeType, Point center) {
-        JNodeSpec protoSpec = NodeSpecHolder.getSpec(nodeType);
+        JNodeData protoSpec = NodeSpecHolder.getSpec(nodeType);
         if (protoSpec.isEditable()) {
-            JNodeSpec spec = protoSpec.clone("What to add?", center);
+            JNodeData spec = protoSpec.clone("What to add?", center);
             return factory.produceNode(spec);
         } else {
-            JNodeSpec spec = protoSpec.clone("          ", center);
+            JNodeData spec = protoSpec.clone("          ", center);
             return factory.produceNode(spec);
         }
     }
