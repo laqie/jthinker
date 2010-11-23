@@ -37,7 +37,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import oss.jthinker.graphs.OrderingLevel;
-import oss.jthinker.util.XMLStored;
 
 /**
  * Simple value holder for diagram's options.

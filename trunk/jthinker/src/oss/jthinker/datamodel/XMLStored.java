@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.util;
+package oss.jthinker.datamodel;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
