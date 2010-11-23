@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
+package oss.jthinker.datamodel;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -38,44 +38,50 @@ import org.w3c.dom.Node;
 import oss.jthinker.util.XMLStored;
 
 /**
- * Saveable presentation of a leg;
+ * Saveable presentation of the edge on diagram.
  * 
  * @author iappel
  */
-public class JLegSpec implements XMLStored {
-    public final int idxA, idxZ;
+public class JEdgeData implements XMLStored {
+    public final int idxA;
+    public final int idxZ;
+    public final boolean conflict;
 
     /**
      * Loads specification from XML data.
      * 
      * @param data XML node that contains description of edge.
      */
-    public JLegSpec(Node data) {
-        if (!data.getNodeName().equals("leg")) {
+    public JEdgeData(Node data) {
+        if (!data.getNodeName().equals("edge")) {
             throw new IllegalArgumentException(data.getNodeName());
         }
         NamedNodeMap map = data.getAttributes();
         idxA = Integer.parseInt(map.getNamedItem("start").getNodeValue());
         idxZ = Integer.parseInt(map.getNamedItem("end").getNodeValue());
-    }
-    
-    /**
-     * Creates a new JLegSpec instance.
-     * 
-     * @param idxA index of leg's start node
-     * @param idxZ index of leg's end edge
-     */
-    public JLegSpec(int idxA, int idxZ) {
-        this.idxA = idxA;
-        this.idxZ = idxZ;
+        Node cf = map.getNamedItem("conflict");
+        conflict = (cf == null) ? false : "true".equals(cf.getNodeValue());
     }
 
+    /**
+     * Creates a new JEdgeSpec instance.
+     * 
+     * @param idxA index of edge's start node
+     * @param idxZ index of edge's end node
+     * @param conflict true if line is "conflict-shaped"
+     */
+    public JEdgeData(int idxA, int idxZ, boolean conflict) {
+        this.idxA = idxA;
+        this.idxZ = idxZ;
+        this.conflict = conflict;
+    }
+    
     @Override
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        if (obj instanceof JLegSpec) {
-            JLegSpec legSpec = (JLegSpec)obj;
-            return (legSpec.idxA == idxA) && (legSpec.idxZ == idxZ);
+        if (obj instanceof JEdgeData) {
+            JEdgeData edgeSpec = (JEdgeData)obj;
+            return (edgeSpec.idxA == idxA) && (edgeSpec.idxZ == idxZ);
         } else {
             return super.equals(obj);
         }
@@ -85,13 +91,14 @@ public class JLegSpec implements XMLStored {
     /** {@inheritDoc} */
     public int hashCode() {
         return idxA + 42 * idxZ;
-    }
+    }    
 
     /** {@inheritDoc} */
     public Element saveToXML(Document document) {
-        Element result = document.createElement("leg");
+        Element result = document.createElement("edge");
         result.setAttribute("start",    Integer.toString(idxA));
         result.setAttribute("end",      Integer.toString(idxZ));
+        result.setAttribute("conflict", Boolean.toString(conflict));
         return result;
     }
 }

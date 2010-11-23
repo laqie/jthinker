@@ -32,6 +32,7 @@ package oss.jthinker.diagrams;
 
 import oss.jthinker.datamodel.DiagramType;
 import java.awt.Dimension;
+import oss.jthinker.datamodel.DiagramOptionData;
 import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.util.MutableTrigger;
 import oss.jthinker.widgets.JBackground;
@@ -160,4 +161,6 @@ public interface DiagramView extends JBackground {
      * of this diagram's nodes.
      */   
     JNodeEditor.EditorContainer getEditorContainer();
+
+    DiagramOptionData getDiagramOptionsData();
 }

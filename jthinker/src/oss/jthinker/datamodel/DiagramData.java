@@ -29,15 +29,15 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
+package oss.jthinker.datamodel;
 
-import oss.jthinker.datamodel.DiagramType;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.w3c.dom.Element;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -51,10 +51,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import oss.jthinker.util.XMLStored;
-import oss.jthinker.datamodel.JNodeData;
 
 /**
  * Container for packaging all information on diagram's structure
@@ -62,96 +59,49 @@ import oss.jthinker.datamodel.JNodeData;
  * 
  * @author iappel
  */
-public class DiagramSpec implements XMLStored {
-    public final List<JEdgeSpec> edgeSpecs;
-    public final List<JNodeData> nodeSpecs;
-    public final List<JLegSpec> legSpecs;
-    public final DiagramType type;
-    public final DiagramOptionSpec options = new DiagramOptionSpec();
+public class DiagramData implements XMLStored, DiagramDataSource {
+    private final List<JNodeData> _nodes = new ArrayList<JNodeData>();
+    private final List<JEdgeData> _edges = new ArrayList<JEdgeData>();
+    private final List<JLegData> _legs = new ArrayList<JLegData>();
+    private final DiagramType _type;
+    private final DiagramOptionData _options = new DiagramOptionData();
+    private final File _file;
 
-    protected DiagramSpec(Node data) {
-        if (!data.getNodeName().equals("diagram")) {
-            throw new IllegalArgumentException(data.getNodeName());
-        }
-        Node typeNode = data.getAttributes().getNamedItem("type");
-        if (typeNode == null) {
-            throw new IllegalArgumentException("Diagram type missing");
-        }
-        String typeStr = typeNode.getNodeValue();
-        type = DiagramType.valueOf(typeStr);
-        edgeSpecs = new LinkedList<JEdgeSpec>();
-        nodeSpecs = new LinkedList<JNodeData>();
-        legSpecs = new LinkedList<JLegSpec>();
-
-        NodeList content = data.getChildNodes();
-
-        DiagramOptionSpec tempOptions = null;
-        
-        for (int i = 0; i < content.getLength(); i++) {
-            Node n = content.item(i);
-            String name = n.getNodeName();
-            if (name.equals("node")) {
-                JNodeData spec = JNodeData.loadInstance(n);
-                nodeSpecs.add(spec);
-            } else if (name.equals("edge")) {
-                JEdgeSpec spec = new JEdgeSpec(n);
-                edgeSpecs.add(spec);
-            } else if (name.equals("leg")) {
-                JLegSpec spec = new JLegSpec(n);
-                boolean t = legSpecs.add(spec);
-            } else if (name.equals("options")) {
-                options.fill(new DiagramOptionSpec(n));
-            }
-        }
-    }
-
-    /**
-     * Creates a new DiagramSpec instance.
-     * 
-     * @param nodeSpecs list of diagram's nodes
-     * @param edgeSpecs list of diagram's edges
-     * @param legSpecs list of diagram's legs
-     * @param type type of the diagram
-     */    
-    public DiagramSpec(List<JNodeData> nodeSpecs, List<JEdgeSpec> edgeSpecs,
-            List<JLegSpec> legSpecs, DiagramType type) {
-        this.edgeSpecs = edgeSpecs != null ? edgeSpecs :
-            new LinkedList<JEdgeSpec>();
-        this.nodeSpecs = nodeSpecs != null ? nodeSpecs :
-            new LinkedList<JNodeData>();
-        this.legSpecs = legSpecs != null ? legSpecs :
-            new LinkedList<JLegSpec>();
-        this.type = type;
-    }
-
-    /**
-     * Copies a DiagramSpec from another instance.
-     * 
-     * @param spec specificatio to copy
-     */
-    public DiagramSpec(DiagramSpec spec) {
-        this(spec.nodeSpecs, spec.edgeSpecs, spec.legSpecs, spec.type);
-    }
-    
     /**
      * Creates a new empty DiagramSpec instance.
      * 
      * @param type diagram's type
      */
-    public DiagramSpec(DiagramType type) {
-        this(null, null, null, type);
+    public DiagramData(DiagramType type) {
+        _type = type;
+        _file = null;
+    }
+
+    public DiagramData(DiagramType type, File file) {
+        _type = type;
+        _file = file;
+    }
+
+    public final void load(DiagramDataSource datasource) {
+        _nodes.clear();
+        _nodes.addAll(datasource.getNodeData());
+        _edges.clear();
+        _edges.addAll(datasource.getEdgeData());
+        _legs.clear();
+        _legs.addAll(datasource.getLegData());
+        _options.fill(datasource.getOptions());
     }
     
     @Override
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        if (obj instanceof DiagramSpec) {
-            DiagramSpec spec = (DiagramSpec)obj;
-            return nodeSpecs.equals(spec.nodeSpecs) &&
-                    edgeSpecs.equals(spec.edgeSpecs) &&
-                    legSpecs.equals(spec.legSpecs) &&
-                    type.equals(spec.type) &&
-                    options.equals(spec.options);
+        if (obj instanceof DiagramData) {
+            DiagramData spec = (DiagramData)obj;
+            return _nodes.equals(spec._nodes) &&
+                   _edges.equals(spec._edges) &&
+                   _legs.equals(spec._legs) &&
+                   _type.equals(spec._type) &&
+                   _options.equals(spec._options);
         } else {
             return super.equals(obj);
         }
@@ -160,24 +110,24 @@ public class DiagramSpec implements XMLStored {
     @Override
     /** {@inheritDoc} */
     public int hashCode() {
-        return nodeSpecs.hashCode() + edgeSpecs.hashCode() +
-                legSpecs.hashCode() + type.hashCode() + options.hashCode();
+        return _nodes.hashCode() + _edges.hashCode() +
+               _legs.hashCode() + _type.hashCode() + _options.hashCode();
     }
 
     /** {@inheritDoc} */
     public Element saveToXML(Document document) {
         Element result = document.createElement("diagram");
-        result.setAttribute("type", type.toString());
-        for (JNodeData spec : nodeSpecs) {
+        result.setAttribute("type", _type.toString());
+        for (JNodeData spec : _nodes) {
             result.appendChild(spec.saveToXML(document));
         }
-        for (JEdgeSpec spec : edgeSpecs){
+        for (JEdgeData spec : _edges) {
             result.appendChild(spec.saveToXML(document));
         }
-        for (JLegSpec spec : legSpecs){
+        for (JLegData spec : _legs) {
             result.appendChild(spec.saveToXML(document));
         }
-        result.appendChild(options.saveToXML(document));
+        result.appendChild(_options.saveToXML(document));
         return result;
     }
    
@@ -249,5 +199,29 @@ public class DiagramSpec implements XMLStored {
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
+    }
+
+    public List<JNodeData> getNodeData() {
+        return Collections.unmodifiableList(_nodes);
+    }
+
+    public List<JEdgeData> getEdgeData() {
+        return Collections.unmodifiableList(_edges);
+    }
+
+    public List<JLegData> getLegData() {
+        return Collections.unmodifiableList(_legs);
+    }
+
+    public DiagramOptionData getOptions() {
+        return _options;
+    }
+
+    public DiagramType getType() {
+        return _type;
+    }
+
+    public File getFile() {
+        return _file;
     }
 }

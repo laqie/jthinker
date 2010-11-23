@@ -31,6 +31,10 @@
 
 package oss.jthinker.diagrams;
 
+import oss.jthinker.datamodel.DiagramData;
+import oss.jthinker.datamodel.DiagramOptionData;
+import oss.jthinker.datamodel.JLegData;
+import oss.jthinker.datamodel.JEdgeData;
 import oss.jthinker.datamodel.DiagramType;
 import java.awt.Point;
 import java.util.LinkedList;
@@ -153,23 +157,23 @@ public class DiagramController extends ComponentContainer {
      * 
      * @param spec specification to apply
      */
-    public void setDiagramSpec(DiagramSpec spec) {
+    public void setDiagramSpec(DiagramData spec) {
         List<JNode> nodes = new LinkedList<JNode>();
         List<JEdge> edges = new LinkedList<JEdge>();
         
-        for (JNodeData nodeSpec : spec.nodeSpecs) {
+        for (JNodeData nodeSpec : spec.getNodeData()) {
             JNode node = _widgetFactory.produceNode(nodeSpec);
             add(node);
             nodes.add(node);
         }
-        for (JEdgeSpec edgeSpec : spec.edgeSpecs) {
+        for (JEdgeData edgeSpec : spec.getEdgeData()) {
             int a = edgeSpec.idxA, z = edgeSpec.idxZ;
             JEdge edge = _widgetFactory.produceEdge(nodes.get(a), nodes.get(z));
             edge.setConflict(edgeSpec.conflict);
             edges.add(edge);
             add(edge);
         }
-        for (JLegSpec legSpec : spec.legSpecs) {
+        for (JLegData legSpec : spec.getLegData()) {
             int a = legSpec.idxA, z = legSpec.idxZ;
             JLeg leg = _widgetFactory.produceLeg(nodes.get(a), edges.get(z));
             add(leg);
@@ -198,13 +202,6 @@ public class DiagramController extends ComponentContainer {
     }
 
     /** {@inheritDoc} */
-    public void remove(JEdge... edges) {
-        for (JEdge edge : edges) {
-            super.remove(edge);
-        }
-    }
-
-    /** {@inheritDoc} */
     public JNode add(JNodeData nodeSpec) {
         JNode node = _widgetFactory.produceNode(nodeSpec);
         add(node);
@@ -225,5 +222,9 @@ public class DiagramController extends ComponentContainer {
 
     public WidgetFactory getWidgetFactory() {
         return _widgetFactory;
+    }
+
+    public DiagramOptionData getOptions() {
+        return _view.getDiagramOptionsData();
     }
 }

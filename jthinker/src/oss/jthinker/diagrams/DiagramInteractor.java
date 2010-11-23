@@ -76,7 +76,7 @@ public class DiagramInteractor {
         if (p == null) {
             throw new NullPointerException(_view.getClass().toString());
         }
-        JNodeData spec = NodeSpecHolder.clone(NodeType.STATEMENT, "Type UDE here", p);
+        JNodeData spec = NodeType.STATEMENT.cloneNodeData("Type UDE here", p);
         JNode node = _manager.add(spec);
         node.setColor(Color.PINK);
         _view.editNode(node);
@@ -98,7 +98,7 @@ public class DiagramInteractor {
         if (p == null) {
             throw new NullPointerException();
         }
-        JNodeData spec = NodeSpecHolder.clone(NodeType.STATEMENT, "Common reason", p);
+        JNodeData spec = NodeType.STATEMENT.cloneNodeData("Common reason", p);
         JNode node = _manager.add(spec);
         Iterator<JNode> iter = terms.iterator();
         JEdge edge1 = _manager.add(node, iter.next());
@@ -153,7 +153,7 @@ public class DiagramInteractor {
         edgeB.setVisible(false);
         
         Point p = _engine.centerPoint(target, sourceA, sourceB);
-        JNodeData spec = NodeSpecHolder.cloneEllipse(p);
+        JNodeData spec = NodeType.closeEllipseNodeData(p);
         
         JNode ellipseNode = _manager.add(spec);
         JEdge edgeX = _manager.add(sourceA, ellipseNode);
