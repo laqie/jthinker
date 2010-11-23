@@ -36,11 +36,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 class DummyDiagramDataSource implements DiagramDataSource {
+    private final DiagramType diagramType;
     private final List<JNodeData> nodeData = new ArrayList<JNodeData>();
     private final List<JEdgeData> edgeData = new ArrayList<JEdgeData>();
     private final List<JLegData> legData = new ArrayList<JLegData>();
 
     private DiagramOptionData options;
+
+    public DummyDiagramDataSource(DiagramType diagramType) {
+        this.diagramType = diagramType;
+    }
 
     public List<JNodeData> getNodeData() {
         return nodeData;
@@ -72,5 +77,9 @@ class DummyDiagramDataSource implements DiagramDataSource {
 
     public DiagramOptionData getOptions() {
         return options;
+    }
+
+    public DiagramType getDiagramType() {
+        return diagramType;
     }
 }

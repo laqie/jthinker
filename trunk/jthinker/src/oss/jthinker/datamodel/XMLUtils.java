@@ -32,10 +32,21 @@ package oss.jthinker.datamodel;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Pack of XML utility functions for saving and restoring diagrams.
@@ -102,5 +113,74 @@ public class XMLUtils {
         } else {
             return Color.WHITE;
         }
+    }
+
+    public static Node parseXML(String text)
+    throws SAXException, ParserConfigurationException, IOException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder parser = dbf.newDocumentBuilder();
+        InputSource source = new InputSource(new StringReader(text));
+        Document doc = parser.parse(source);
+        if (doc == null) {
+            throw new NullPointerException();
+        }
+
+        return doc.getFirstChild();
+    }
+
+    public static DiagramDataSource decodeXML(Node node) {
+        if (!node.getNodeName().equals("diagram")) {
+            throw new IllegalArgumentException(node.getNodeName());
+        }
+        Node typeNode = node.getAttributes().getNamedItem("type");
+        if (typeNode == null) {
+            throw new IllegalArgumentException("Diagram type missing");
+        }
+        DiagramType type = DiagramType.valueOf(typeNode.getNodeValue());
+
+        NodeList childNodes = node.getChildNodes();
+
+        DummyDiagramDataSource container = new DummyDiagramDataSource(type);
+
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node n = childNodes.item(i);
+            String name = n.getNodeName();
+            if (name.equals("node")) {
+               container.add(JNodeData.loadInstance(n));
+            } else if (name.equals("edge")) {
+                container.add(new JEdgeData(n));
+            } else if (name.equals("leg")) {
+                container.add(new JLegData(n));
+            } else if (name.equals("options")) {
+                container.set(new DiagramOptionData(n));
+            }
+        }
+
+        return container;
+    }
+
+    /**
+     * Loads a diagram specification from XML file.
+     *
+     * @param f XML file
+     * @return diagram specification
+     * @throws SAXException on parsing errors
+     * @throws IOException on I/O errors of loading a file
+     * @throws ParserConfigurationException on XML parser lookup problems     *
+     */
+    public static DiagramDataSource load(File f)
+    throws SAXException, IOException, ParserConfigurationException {
+        String content = loadFile(f);
+        Node xmlNode = parseXML(content);
+        return decodeXML(xmlNode);
+    }
+
+    public static String loadFile(File f)
+    throws IOException {
+        FileInputStream stream = new FileInputStream(f);
+        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+        char[] cData = new char[(int) f.length()];
+        reader.read(cData);
+        return new String(cData).trim();
     }
 }

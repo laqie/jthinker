@@ -32,8 +32,13 @@
 package oss.jthinker.datamodel;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -51,6 +56,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import oss.jthinker.util.XMLStored;
 
 /**
@@ -77,9 +86,20 @@ public class DiagramData implements XMLStored, DiagramDataSource {
         _file = null;
     }
 
-    public DiagramData(DiagramType type, File file) {
-        _type = type;
+    /**
+     * Creates a new DiagramSpec instance and loads information from
+     * file.
+     *
+     * @param file file to load
+     * @throws SAXException where there are problems parsing the file
+     * @throws IOException when there are problems reading the file
+     */
+    public DiagramData(File file)
+    throws SAXException, IOException, ParserConfigurationException {
         _file = file;
+        DiagramDataSource data = XMLUtils.load(file);
+        _type = data.getDiagramType();
+        load(data);
     }
 
     public final void load(DiagramDataSource datasource) {
@@ -130,20 +150,6 @@ public class DiagramData implements XMLStored, DiagramDataSource {
         result.appendChild(_options.saveToXML(document));
         return result;
     }
-   
-    /**
-     * Generates a new XML document that contains the diagram
-     *
-     * @return XML document with diagram's data
-     */ 
-    public Document generateXML() throws ParserConfigurationException {
-        DocumentBuilder builder =
-            DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        Document doc = builder.newDocument();
-        Element data = saveToXML(doc);
-        doc.appendChild(data);
-        return doc;
-    }
 
     public String renderXML() {
         StringWriter writer = new StringWriter();
@@ -178,7 +184,11 @@ public class DiagramData implements XMLStored, DiagramDataSource {
 
         try {
             writer = TransformerFactory.newInstance().newTransformer();
-            doc = generateXML();
+            DocumentBuilder builder =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            doc = builder.newDocument();
+            Element data = saveToXML(doc);
+            doc.appendChild(data);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex,
                     "Unable to save file due to internal problems",
@@ -217,7 +227,7 @@ public class DiagramData implements XMLStored, DiagramDataSource {
         return _options;
     }
 
-    public DiagramType getType() {
+    public DiagramType getDiagramType() {
         return _type;
     }
 

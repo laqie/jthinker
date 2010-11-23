@@ -395,4 +395,8 @@ implements DiagramDataSource {
     public Collection<JEdge> getAllEdges() {
         return _edges.getContent();
     }
+
+    public DiagramType getDiagramType() {
+        return _type;
+    }
 }
