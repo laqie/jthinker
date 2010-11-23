@@ -34,6 +34,8 @@ package oss.jthinker.datamodel;
 import java.util.List;
 
 public interface DiagramDataSource {
+    DiagramType getDiagramType();
+
     List<JNodeData> getNodeData();
 
     List<JEdgeData> getEdgeData();

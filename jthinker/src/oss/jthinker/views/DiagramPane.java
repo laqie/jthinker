@@ -122,7 +122,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * @param fspec diagram specification to apply.
      */    
     public DiagramPane(DiagramData data) {
-        this(data.getType(), data.getFile().getName(), data.getOptions());
+        this(data.getDiagramType(), data.getFile().getName(), data.getOptions());
         linker.setDiagramSpec(data);
         markModified(true);
         getFilenameTrigger().setState(data.getFile());
