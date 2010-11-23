@@ -31,6 +31,9 @@
 
 package oss.jthinker.diagrams;
 
+import oss.jthinker.datamodel.DiagramData;
+import oss.jthinker.datamodel.JLegData;
+import oss.jthinker.datamodel.JEdgeData;
 import oss.jthinker.datamodel.DiagramType;
 import java.awt.Dimension;
 import java.awt.Rectangle;
@@ -40,6 +43,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import oss.jthinker.datamodel.DiagramDataSource;
 import oss.jthinker.swingutils.SwingMapping;
 import oss.jthinker.util.GappedArray;
 import oss.jthinker.util.Mapping;
@@ -56,7 +60,8 @@ import oss.jthinker.datamodel.JNodeData;
  *
  * @author iappel
  */
-public abstract class ComponentContainer extends AbstractDiagramOwner {
+public abstract class ComponentContainer extends AbstractDiagramOwner
+implements DiagramDataSource {
     private final GappedArray<JNode> _nodes = new GappedArray<JNode>();
     private final GappedArray<JEdge> _edges = new GappedArray<JEdge>();
     private final GappedArray<JLeg> _legs = new GappedArray<JLeg>();
@@ -147,14 +152,16 @@ public abstract class ComponentContainer extends AbstractDiagramOwner {
      
      * @param edge edge to remove
      */
-    public void remove(JEdge edge) {
-        edge.getPeerA().unwatch(edge);
-        edge.getPeerZ().unwatch(edge);
-        for (JLeg leg : getLegs(edge)) {
-            remove(leg);
+    public void remove(JEdge... edges) {
+        for (JEdge edge : edges) {
+            edge.getPeerA().unwatch(edge);
+            edge.getPeerZ().unwatch(edge);
+            for (JLeg leg : getLegs(edge)) {
+                remove(leg);
+            }
+            _edges.remove(edge);
+            _view.remove(edge);
         }
-        _edges.remove(edge);
-        _view.remove(edge);
     }
 
     /**
@@ -218,43 +225,43 @@ public abstract class ComponentContainer extends AbstractDiagramOwner {
         return result;
     }    
 
-    private JEdgeSpec getEdgeSpec(JEdge edge) {
+    private JEdgeData getEdgeSpec(JEdge edge) {
         if (_edges.locate(edge) == -1) {
             throw new IllegalArgumentException("edge must be held by holder");
         }
         int idxA = _nodes.locate(edge.getPeerA());
         int idxZ = _nodes.locate(edge.getPeerZ());
-        return new JEdgeSpec(idxA, idxZ, edge.isConflict());
+        return new JEdgeData(idxA, idxZ, edge.isConflict());
     }
     
-    private JLegSpec getLegSpec(JLeg leg) {
+    private JLegData getLegSpec(JLeg leg) {
         if (_legs.locate(leg) == -1) {
             throw new IllegalArgumentException("leg must be held by holder");
         }
         int idxA = _nodes.locate(leg.getPeerA());
         int idxZ = _edges.locate(leg.getPeerZ());
-        return new JLegSpec(idxA, idxZ);
+        return new JLegData(idxA, idxZ);
     }
     
-    private List<JEdgeSpec> saveEdgeSpecs() {
+    public List<JEdgeData> getEdgeData() {
         _nodes.relax();
-        List<JEdgeSpec> result = new ArrayList<JEdgeSpec>();
+        List<JEdgeData> result = new ArrayList<JEdgeData>();
         for (JEdge edge : _edges) {
             result.add(getEdgeSpec(edge));
         }
         return result;
     }
 
-    private List<JLegSpec> saveLegSpecs() {
+    public List<JLegData> getLegData() {
         _nodes.relax();
-        List<JLegSpec> result = new ArrayList<JLegSpec>();
+        List<JLegData> result = new ArrayList<JLegData>();
         for (JLeg edge : _legs) {
             result.add(getLegSpec(edge));
         }
         return result;
     }
     
-    private List<JNodeData> saveNodeSpecs() {
+    public List<JNodeData> getNodeData() {
         _nodes.relax();
         ArrayList<JNodeData> list = new ArrayList<JNodeData>();
         for (JNode node : _nodes) {
@@ -269,13 +276,12 @@ public abstract class ComponentContainer extends AbstractDiagramOwner {
      * 
      * @return diagram-making specification
      */
-    public DiagramSpec getDiagramSpec() {
+    public DiagramData getDiagramSpec() {
         _nodes.relax();
         _edges.relax();
-        List<JNodeData> nodes = saveNodeSpecs();
-        List<JEdgeSpec> edges = saveEdgeSpecs();
-        List<JLegSpec> legs = saveLegSpecs();
-        return new DiagramSpec(nodes, edges, legs, _type);
+        DiagramData result = new DiagramData(_type);
+        result.load(this);
+        return result;
     }
 
     /**

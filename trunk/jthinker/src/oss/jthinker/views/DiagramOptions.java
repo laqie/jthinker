@@ -31,7 +31,7 @@
 
 package oss.jthinker.views;
 
-import oss.jthinker.diagrams.DiagramOptionSpec;
+import oss.jthinker.datamodel.DiagramOptionData;
 import oss.jthinker.graphs.OrderingLevel;
 
 /**
@@ -52,7 +52,7 @@ public class DiagramOptions {
      * @param diagram diagram to forward option changes to
      * @param spec initial option specification
      */
-    public DiagramOptions(DiagramPane diagram, DiagramOptionSpec spec) {
+    public DiagramOptions(DiagramPane diagram, DiagramOptionData spec) {
         numberNodes = spec.numbering;
         orderLevel = spec.orderingLevel;
         pane = diagram;
@@ -86,8 +86,8 @@ public class DiagramOptions {
      * @return new {@link DiagramOptionSpec} that contains all
      * options from this object.
      */
-    public DiagramOptionSpec getSpec() {
-        DiagramOptionSpec result = new DiagramOptionSpec();
+    public DiagramOptionData getSpec() {
+        DiagramOptionData result = new DiagramOptionData();
         result.numbering = numberNodes;
         result.orderingLevel = orderLevel;
         return result;

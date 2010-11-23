@@ -42,7 +42,8 @@ import javax.swing.JViewport;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.xml.sax.SAXException;
-import oss.jthinker.diagrams.FileDiagramSpec;
+import oss.jthinker.datamodel.DiagramData;
+import oss.jthinker.datamodel.DiagramDataFactory;
 import oss.jthinker.datamodel.DiagramType;
 import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerEvent;
@@ -87,8 +88,8 @@ public abstract class DiagramDeck extends JTabbedPane implements TriggerListener
      * @throws IOException on I/O errors of loading a file
      */
     public void addLinkPane(File file) throws IOException, SAXException {
-        FileDiagramSpec spec = new FileDiagramSpec(file);
-        doAddPane(new DiagramPane(spec), spec.file.toString());
+        DiagramData data = DiagramDataFactory.load(file);
+        doAddPane(new DiagramPane(data), file.toString());
     }
     
     private void doAddPane(DiagramPane pane, String title) {

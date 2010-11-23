@@ -29,7 +29,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.diagrams;
+package oss.jthinker.datamodel;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -44,7 +44,7 @@ import oss.jthinker.util.XMLStored;
  * 
  * @author iappel
  */
-public class DiagramOptionSpec implements XMLStored {
+public class DiagramOptionData implements XMLStored {
     public boolean numbering;
     public OrderingLevel orderingLevel;
 
@@ -52,7 +52,7 @@ public class DiagramOptionSpec implements XMLStored {
      * Creates a new instance of DiagramOptionSpec with all values
      * set to default.
      */
-    public DiagramOptionSpec() {
+    public DiagramOptionData() {
         numbering = true;
         orderingLevel = OrderingLevel.SUPPRESS_OVERLAP;
     }
@@ -63,7 +63,7 @@ public class DiagramOptionSpec implements XMLStored {
      * 
      * @param data XML node
      */
-    public DiagramOptionSpec(Node data) {
+    public DiagramOptionData(Node data) {
         NodeList nodeList = data.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
             if (!nodeList.item(i).hasAttributes()) {
@@ -83,8 +83,8 @@ public class DiagramOptionSpec implements XMLStored {
     @Override
     /** {@inheritDoc} */
     public boolean equals(Object obj) {
-        if (obj instanceof DiagramOptionSpec) {
-            DiagramOptionSpec spec = (DiagramOptionSpec)obj;
+        if (obj instanceof DiagramOptionData) {
+            DiagramOptionData spec = (DiagramOptionData)obj;
             
             return spec.numbering == numbering &&
                    spec.orderingLevel.equals(orderingLevel);
@@ -103,7 +103,7 @@ public class DiagramOptionSpec implements XMLStored {
      * 
      * @param spec specification to get values from.
      */
-    public void fill(DiagramOptionSpec spec) {
+    public void fill(DiagramOptionData spec) {
         if (spec == null) {
             return;
         }

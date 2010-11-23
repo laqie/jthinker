@@ -36,7 +36,6 @@ import oss.jthinker.widgets.JXPopupMenu;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
-import oss.jthinker.diagrams.NodeSpecHolder;
 import oss.jthinker.datamodel.NodeType;
 import oss.jthinker.widgets.JNode;
 import oss.jthinker.datamodel.JNodeData;
@@ -109,7 +108,7 @@ public class AddAction extends AbstractAction {
      * @return a new node of given parametres
      */
     public static JNode createNode(WidgetFactory factory, NodeType nodeType, Point center) {
-        JNodeData protoSpec = NodeSpecHolder.getSpec(nodeType);
+        JNodeData protoSpec = nodeType.getPrototype();
         if (protoSpec.isEditable()) {
             JNodeData spec = protoSpec.clone("What to add?", center);
             return factory.produceNode(spec);

@@ -42,12 +42,11 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import oss.jthinker.diagrams.DiagramController;
-import oss.jthinker.diagrams.DiagramOptionSpec;
-import oss.jthinker.diagrams.DiagramSpec;
+import oss.jthinker.datamodel.DiagramOptionData;
+import oss.jthinker.datamodel.DiagramData;
 import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.datamodel.DiagramType;
 import oss.jthinker.diagrams.DiagramView;
-import oss.jthinker.diagrams.FileDiagramSpec;
 import oss.jthinker.datamodel.NodeType;
 import oss.jthinker.util.TriggerEvent;
 import oss.jthinker.widgets.JLink;
@@ -82,7 +81,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * @param description description of the diagram
      */
     public DiagramPane(DiagramType type) {
-        this(type, type.getTitle(), new DiagramOptionSpec());
+        this(type, type.getTitle(), new DiagramOptionData());
     }
 
     /**
@@ -93,7 +92,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * @param title title to use
      * @param optionSpec description of diagram's settings
      */    
-    public DiagramPane(DiagramType type, String title, DiagramOptionSpec optionSpec) {
+    public DiagramPane(DiagramType type, String title, DiagramOptionData optionSpec) {
         super(title);
         
         menu = new JXPopupMenu();
@@ -122,11 +121,11 @@ public class DiagramPane extends DocumentPane implements DiagramView {
      * 
      * @param fspec diagram specification to apply.
      */    
-    public DiagramPane(FileDiagramSpec fspec) {
-        this(fspec.type, fspec.file.toString(), fspec.options);
-        linker.setDiagramSpec(fspec);
+    public DiagramPane(DiagramData data) {
+        this(data.getType(), data.getFile().getName(), data.getOptions());
+        linker.setDiagramSpec(data);
         markModified(true);
-        getFilenameTrigger().setState(fspec.file);
+        getFilenameTrigger().setState(data.getFile());
     }
     
     /** {@inheritDoc} */
@@ -330,8 +329,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         }
 
         File file = getFilenameTrigger().getState();
-        DiagramSpec spec = linker.getDiagramSpec();
-        spec.options.fill(options.getSpec());
+        DiagramData spec = linker.getDiagramSpec();
         
         try {
             spec.save(file);
@@ -381,5 +379,9 @@ public class DiagramPane extends DocumentPane implements DiagramView {
             // TODO: Error should be reported properly
             return null;
         }
+    }
+
+    public DiagramOptionData getDiagramOptionsData() {
+        return options.getSpec();
     }
 }
