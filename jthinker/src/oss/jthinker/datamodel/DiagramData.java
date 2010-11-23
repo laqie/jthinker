@@ -32,35 +32,15 @@
 package oss.jthinker.datamodel;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import org.w3c.dom.Element;
 import java.util.List;
-import javax.swing.JOptionPane;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import oss.jthinker.util.XMLStored;
 
 /**
  * Container for packaging all information on diagram's structure
@@ -151,66 +131,6 @@ public class DiagramData implements XMLStored, DiagramDataSource {
         return result;
     }
 
-    public String renderXML() {
-        StringWriter writer = new StringWriter();
-        saveToStream(writer);
-        return writer.toString();
-    }
-
-    /**
-     * Saves a diagram specification into an XML file.
-     * 
-     * @param f file to use
-     * @throws FileNotFoundException if the file exists but is a directory
-     *                   rather than a regular file, does not exist but cannot
-     *                   be created, or cannot be opened for any other reason
-     * {@see FileOutputStream}
-     */
-    public void save(File f) throws FileNotFoundException {
-        try {
-            PrintWriter printer = new PrintWriter(f, "UTF-8");
-            saveToStream(printer);
-	} catch (Exception ex) {
-	    JOptionPane.showMessageDialog(null, ex,
-		    "Unable to save file due to internal problems",
-		    JOptionPane.ERROR_MESSAGE);
-	    return;
-	}
-    }   
-
-    private void saveToStream(Writer printer) {
-        Document doc;
-        Transformer writer;
-
-        try {
-            writer = TransformerFactory.newInstance().newTransformer();
-            DocumentBuilder builder =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            doc = builder.newDocument();
-            Element data = saveToXML(doc);
-            doc.appendChild(data);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex,
-                    "Unable to save file due to internal problems",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(printer);
-
-        writer.setOutputProperty(OutputKeys.INDENT, "yes");
-
-        try {
-            writer.transform(source, result);
-        } catch (TransformerException ex) {
-            JOptionPane.showMessageDialog(null, ex,
-                    "Unable to save file due to internal problems",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-    }
-
     public List<JNodeData> getNodeData() {
         return Collections.unmodifiableList(_nodes);
     }
@@ -233,5 +153,13 @@ public class DiagramData implements XMLStored, DiagramDataSource {
 
     public File getFile() {
         return _file;
+    }
+
+    public void save(File f) throws FileNotFoundException {
+        XMLUtils.save(this, f);
+    }
+
+    public String renderXML() {
+        return XMLUtils.renderXML(this);
     }
 }

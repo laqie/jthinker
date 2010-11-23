@@ -34,12 +34,24 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -182,5 +194,65 @@ public class XMLUtils {
         char[] cData = new char[(int) f.length()];
         reader.read(cData);
         return new String(cData).trim();
+    }
+
+    public static void saveToStream(XMLStored object, Writer printer) {
+        Document doc;
+        Transformer writer;
+
+        try {
+            writer = TransformerFactory.newInstance().newTransformer();
+            DocumentBuilder builder =
+                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            doc = builder.newDocument();
+            Element data = object.saveToXML(doc);
+            doc.appendChild(data);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex,
+                    "Unable to save file due to internal problems",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(printer);
+
+        writer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        try {
+            writer.transform(source, result);
+        } catch (TransformerException ex) {
+            JOptionPane.showMessageDialog(null, ex,
+                    "Unable to save file due to internal problems",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
+
+    /**
+     * Saves a diagram specification into an XML file.
+     *
+     * @param f file to use
+     * @throws FileNotFoundException if the file exists but is a directory
+     *                   rather than a regular file, does not exist but cannot
+     *                   be created, or cannot be opened for any other reason
+     * {@see FileOutputStream}
+     */
+    public static void save(XMLStored stored, File f) throws FileNotFoundException {
+        try {
+            PrintWriter printer = new PrintWriter(f, "UTF-8");
+            saveToStream(stored, printer);
+	} catch (Exception ex) {
+	    JOptionPane.showMessageDialog(null, ex,
+		    "Unable to save file due to internal problems",
+		    JOptionPane.ERROR_MESSAGE);
+	    return;
+	}
+    }
+
+    public static String renderXML(XMLStored stored) {
+        StringWriter writer = new StringWriter();
+        saveToStream(stored, writer);
+        return writer.toString();
     }
 }
