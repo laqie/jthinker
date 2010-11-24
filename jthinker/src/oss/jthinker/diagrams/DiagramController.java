@@ -45,8 +45,9 @@ import oss.jthinker.widgets.GroupHandler;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeEditor;
+import oss.jthinker.widgets.JAttributeEditor;
 import oss.jthinker.datamodel.JNodeData;
+import oss.jthinker.widgets.JAttributeEditorContainer;
 import oss.jthinker.widgets.WidgetFactory;
 
 /**
@@ -58,7 +59,7 @@ import oss.jthinker.widgets.WidgetFactory;
 public class DiagramController extends ComponentContainer {
     private final GroupHandler _groupHandler;
     private final GraphEngine<JNode> _graphEngine;
-    private final JNodeEditor.EditorContainer _editorContainer;
+    private final JAttributeEditorContainer _editorContainer;
     private final WidgetFactory _widgetFactory;
     
     /**
@@ -217,7 +218,7 @@ public class DiagramController extends ComponentContainer {
  
     /** {@inheritDoc} */   
     public void startEditing(JNode node) {
-        JNodeEditor.startEditing(node, _editorContainer);
+        JAttributeEditor.startEditing(node, _editorContainer);
     }
 
     public WidgetFactory getWidgetFactory() {

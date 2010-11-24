@@ -31,8 +31,6 @@
 
 package oss.jthinker.datamodel;
 
-import oss.jthinker.datamodel.JSlideData;
-import oss.jthinker.datamodel.BorderType;
 import oss.jthinker.swingutils.WindowUtils;
 import java.awt.Color;
 import java.awt.Point;
