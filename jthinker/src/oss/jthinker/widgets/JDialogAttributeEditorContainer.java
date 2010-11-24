@@ -31,20 +31,33 @@
 
 package oss.jthinker.widgets;
 
+import java.awt.BorderLayout;
+import java.awt.Point;
+import javax.swing.JDialog;
+import oss.jthinker.swingutils.WindowUtils;
+
 /**
  *
- * @author vanya
+ * @author iappel
  */
-public interface JAttributeEditorContainer {
-        /**
-         * Displays the editor.
-         *
-         * @param editor editor to display
-         */
-        void displayEditor(JNode node, JAttributeEditor editor);
-
-        /**
-         * Hides the currently shown editor.
-         */
-        void hideEditor();
+public class JDialogAttributeEditorContainer extends JDialog implements JAttributeEditorContainer {
+    public JDialogAttributeEditorContainer() {
+        setTitle("Edit");
+        setLayout(new BorderLayout());
     }
+
+    public void displayEditor(JNode node, JAttributeEditor editor) {
+        add(editor, BorderLayout.CENTER);
+        pack();
+
+        Point nodeCenter = WindowUtils.computeAbsoluteCenterPoint(node);
+        setLocation(nodeCenter.x + node.getWidth(), nodeCenter.y - getHeight() / 4);
+
+        setAlwaysOnTop(true);
+        setVisible(true);
+    }
+
+    public void hideEditor() {
+        dispose();
+    }
+}

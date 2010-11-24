@@ -86,13 +86,13 @@ public class JAttributeEditor extends JPanel {
      * 
      * @param node node to start editing.
      */
-    public static void startEditing(JNode node, final JAttributeEditorContainer holder) {
+    public static void startEditing(final JNode node, final JAttributeEditorContainer holder) {
         final JAttributeEditor editor = new JAttributeEditor(new JNodeModel(node), holder);
         editor.setSize(300, 500);
         editor.setVisible(true);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                holder.displayEditor(editor);
+                holder.displayEditor(node, editor);
             }
         });
     }
