@@ -48,6 +48,7 @@ import oss.jthinker.widgets.JNode;
 import oss.jthinker.widgets.JAttributeEditor;
 import oss.jthinker.datamodel.JNodeData;
 import oss.jthinker.widgets.JAttributeEditorContainer;
+import oss.jthinker.widgets.JDialogAttributeEditorContainer;
 import oss.jthinker.widgets.WidgetFactory;
 
 /**
@@ -218,7 +219,8 @@ public class DiagramController extends ComponentContainer {
  
     /** {@inheritDoc} */   
     public void startEditing(JNode node) {
-        JAttributeEditor.startEditing(node, _editorContainer);
+        //JAttributeEditor.startEditing(node, _editorContainer);
+        JAttributeEditor.startEditing(node, new JDialogAttributeEditorContainer());
     }
 
     public WidgetFactory getWidgetFactory() {

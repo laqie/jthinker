@@ -49,6 +49,7 @@ import oss.jthinker.interop.CommunicationCallback;
 import oss.jthinker.interop.InteropException;
 import oss.jthinker.widgets.JAttributeEditor;
 import oss.jthinker.widgets.JAttributeEditorContainer;
+import oss.jthinker.widgets.JNode;
 
 /**
  * Main class of the application . Manages the application's startup
@@ -76,7 +77,7 @@ public class ApplicationMain implements CommunicationCallback {
         _editorContainer = new JAttributeEditorContainer() {
             private JAttributeEditor currentEditor = null;
         
-            public void displayEditor(final JAttributeEditor editor) {
+            public void displayEditor(JNode node, final JAttributeEditor editor) {
                 if (currentEditor != null) {
                     _impl.remove(currentEditor);
                 }
