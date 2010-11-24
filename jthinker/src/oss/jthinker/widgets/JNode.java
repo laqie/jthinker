@@ -241,4 +241,9 @@ public class JNode extends JSlide {
             return content;
         }
     }
+
+    @Override
+    public JPopupMenu getComponentPopupMenu() {
+        return WidgetFactory.producePopupMenu(host, this, true);
+    }
 }

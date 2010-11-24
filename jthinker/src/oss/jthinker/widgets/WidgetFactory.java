@@ -34,6 +34,8 @@ package oss.jthinker.widgets;
 import oss.jthinker.datamodel.JNodeData;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 /**
@@ -77,14 +79,13 @@ public class WidgetFactory {
 
     public JNode produceNode(JNodeData spec) {
         JNode node = new JNode(nodeCallback, spec);
-        node.setComponentPopupMenu(producePopupMenu(node, spec.isEditable()));
         if (spec.getGroup() != null) {
             nodeCallback.getGroupHandler().group(spec.getGroup(), node);
         }
         return node;
     }
 
-    private JPopupMenu producePopupMenu(final JNode node, boolean editable) {
+    public static JPopupMenu producePopupMenu(final JNodeCallback nodeCallback, final JNode node, boolean editable) {
         JPopupMenu menu = new JPopupMenu();
 
         menu.add(new AbstractAction("Link") {
@@ -107,13 +108,66 @@ public class WidgetFactory {
             }
         });
 
-        menu.add(new AbstractAction("Group") {
-            public void actionPerformed(ActionEvent e) {
-                nodeCallback.getGroupHandler().selectGroup(node);
+        JMenu groupingMenu = produceGroupingMenu(nodeCallback.getGroupHandler(), node);
+
+        menu.add(groupingMenu);
+
+        return menu;
+    }
+
+    public static JMenu produceGroupingMenu(final GroupHandler groupHandler, final JNode node) {
+        JMenu groupMenu = new JMenu("Group");
+
+
+        groupMenu.add(new AbstractAction("Create new node group") {
+            public void actionPerformed(ActionEvent ae) {
+                String groupName = JOptionPane.showInputDialog("Enter name for new group");
+                if (groupName != null) {
+                    groupHandler.group(groupName, node);
+                }
             }
         });
 
-        return menu;
+        final String myGroupName = groupHandler.getNodeGroupName(node);
+        if (myGroupName != null) {
+            groupMenu.add(new AbstractAction("Remove from '" + myGroupName + "'") {
+                public void actionPerformed(ActionEvent ae) {
+                    groupHandler.ungroup(node);
+                    checkGroupEmpty(myGroupName, groupHandler);
+                }
+            });
+        }
+
+        groupMenu.addSeparator();
+
+        for (final String groupName : groupHandler.getGroupList()) {
+            if (myGroupName == null || !groupName.equals(myGroupName)) {
+                groupMenu.add(new AbstractAction("Add to '" + groupName + "'") {
+                    public void actionPerformed(ActionEvent ae) {
+                        groupHandler.group(groupName, node);
+                        if (myGroupName != null) {
+                            checkGroupEmpty(myGroupName, groupHandler);
+                        }
+                    }
+                });
+            }
+        }
+
+        return groupMenu;
+    }
+
+    private static void checkGroupEmpty(String groupName, GroupHandler handler) {
+        if (!handler.getNodeGroup(groupName).hasContent()) {
+            String shortMessage = "Group '" + groupName + "' is empty";
+            String longMessage = shortMessage + ". Remove it?";
+            boolean delete = JOptionPane.showConfirmDialog(null,
+                longMessage,
+                shortMessage,
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+            if (delete) {
+                handler.removeGroup(groupName);
+            }
+        }
     }
 
     public JPopupMenu producePopupMenu(final JLeg leg) {
