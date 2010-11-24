@@ -35,11 +35,11 @@ import java.awt.Dimension;
 import oss.jthinker.datamodel.DiagramOptionData;
 import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.util.MutableTrigger;
+import oss.jthinker.widgets.JAttributeEditorContainer;
 import oss.jthinker.widgets.JBackground;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeEditor;
 
 /**
  * Base interface for a view for diagram.
@@ -160,7 +160,7 @@ public interface DiagramView extends JBackground {
      * Returns a container for {@link JNodeEditor}-editor
      * of this diagram's nodes.
      */   
-    JNodeEditor.EditorContainer getEditorContainer();
+    JAttributeEditorContainer getEditorContainer();
 
     DiagramOptionData getDiagramOptionsData();
 }

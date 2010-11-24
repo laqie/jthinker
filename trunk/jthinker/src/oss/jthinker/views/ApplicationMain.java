@@ -47,7 +47,8 @@ import oss.jthinker.diagrams.DiagramView;
 import oss.jthinker.diagrams.InteractorActionFactory;
 import oss.jthinker.interop.CommunicationCallback;
 import oss.jthinker.interop.InteropException;
-import oss.jthinker.widgets.JNodeEditor;
+import oss.jthinker.widgets.JAttributeEditor;
+import oss.jthinker.widgets.JAttributeEditorContainer;
 
 /**
  * Main class of the application . Manages the application's startup
@@ -60,7 +61,7 @@ public class ApplicationMain implements CommunicationCallback {
     private final MasterView _masterView;
     private final HelpView   _helpView;
     private final EntryPoint _impl;
-    private final JNodeEditor.EditorContainer _editorContainer;
+    private final JAttributeEditorContainer _editorContainer;
     private JToolBar _toolbar;
 
     private static ApplicationMain _singleton;
@@ -72,14 +73,14 @@ public class ApplicationMain implements CommunicationCallback {
         _singleton = this;
         _masterView = new MasterView(this);
         _helpView = new HelpView();
-        _editorContainer = new JNodeEditor.EditorContainer() {
-            private JNodeEditor currentEditor = null;
+        _editorContainer = new JAttributeEditorContainer() {
+            private JAttributeEditor currentEditor = null;
         
-            public void displayEditor(final JNodeEditor editor) {
+            public void displayEditor(final JAttributeEditor editor) {
                 if (currentEditor != null) {
                     _impl.remove(currentEditor);
                 }
-                _impl.add(editor, BorderLayout.SOUTH);
+                _impl.add(editor, BorderLayout.EAST);
                 _impl.validate();
                 currentEditor = editor;
             }
@@ -198,7 +199,7 @@ public class ApplicationMain implements CommunicationCallback {
         }
     }
 
-    protected static JNodeEditor.EditorContainer getNodeEditorContainer() {
+    protected static JAttributeEditorContainer getNodeEditorContainer() {
         return _singleton._editorContainer;
     }
 

@@ -31,6 +31,7 @@
 
 package oss.jthinker.views;
 
+import oss.jthinker.widgets.JAttributeEditorContainer;
 import oss.jthinker.swingutils.ClickAdapter;
 import oss.jthinker.widgets.WidgetFactory;
 import java.awt.Dimension;
@@ -53,7 +54,6 @@ import oss.jthinker.widgets.JLink;
 import oss.jthinker.widgets.JEdge;
 import oss.jthinker.widgets.JLeg;
 import oss.jthinker.widgets.JNode;
-import oss.jthinker.widgets.JNodeEditor;
 import oss.jthinker.swingutils.MouseLocator;
 import oss.jthinker.widgets.JXPopupMenu;
 
@@ -368,7 +368,7 @@ public class DiagramPane extends DocumentPane implements DiagramView {
     }
  
     /** {@inheritDoc} */   
-    public JNodeEditor.EditorContainer getEditorContainer() {
+    public JAttributeEditorContainer getEditorContainer() {
         return ApplicationMain.getNodeEditorContainer();
     }
 

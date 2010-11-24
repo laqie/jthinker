@@ -36,19 +36,19 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JComponent;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.table.AbstractTableModel;
 
 /**
  * Table model that fills the node editor dialog.
  * 
  * @author iappel
  */
-public class JNodeModel extends AbstractTableModel {
+public class JNodeModel implements JAttributeModel {
     private final JNode _edited;
-    private final JTextField _nameField;
+    private final JTextArea _nameField;
     private final JColorComboBox _backColor;
-    private final JTextField _commentField;
+    private final JTextArea _commentField;
 
     /**
      * Creates a new JNodeModel instance.
@@ -57,13 +57,17 @@ public class JNodeModel extends AbstractTableModel {
      */
     public JNodeModel(JNode node) {
         _edited = node;
-        _nameField = new JTextField();
+        _nameField = new JTextArea();
         _nameField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 _edited.setContent(_nameField.getText());
             }
         });
+        _nameField.setRows(7);
+        _nameField.setColumns(15);
+        _nameField.setWrapStyleWord(true);
+        _nameField.setLineWrap(true);
         _nameField.setText(node.getContent());
 
         _backColor = new JColorComboBox();
@@ -74,67 +78,23 @@ public class JNodeModel extends AbstractTableModel {
         });
         _backColor.setItemColor(node.getColor());
         
-        _commentField = new JTextField();
+        _commentField = new JTextArea();
         _commentField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 _edited.setComment(_commentField.getText());
             }
         });
+        _commentField.setRows(7);
+        _commentField.setColumns(15);
+        _commentField.setWrapStyleWord(true);
+        _commentField.setLineWrap(true);
+        _commentField.setText(node.getContent());
         _commentField.setText(node.getComment());
     }
 
-    /** {@inheritDpc} */
-    public int getColumnCount() {
-        return 2;
-    }
-
-    /** {@inheritDpc} */
-    public int getRowCount() {
+    public int getAttributeCount() {
         return 3;
-    }
-
-    /** {@inheritDpc} */
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (columnIndex + rowIndex * 2) {
-            case 0:
-                return "Name";
-            case 1:
-                return _nameField;
-            case 2:
-                return "Color";
-            case 3:
-                return _backColor;
-            case 4:
-                return "Comment";
-            case 5:
-                return _commentField;
-        }
-        throw new IllegalArgumentException();
-    }
-
-    @Override
-    /** {@inheritDpc} */    
-    public Class<?> getColumnClass(int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                return String.class;
-            case 1:
-                return JComponent.class;
-        }
-        throw new IllegalArgumentException();
-    }
-
-    @Override
-    /** {@inheritDpc} */
-    public String getColumnName(int column) {
-        return super.getColumnName(column);
-    }
-
-    @Override
-    /** {@inheritDpc} */
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 1;
     }
 
     /**
@@ -144,5 +104,31 @@ public class JNodeModel extends AbstractTableModel {
         _nameField.setText(_edited.getContent());
         _commentField.setText(_edited.getComment());
         _backColor.setItemColor(_edited.getColor());
+    }
+
+    public String getAttributeName(int index) {
+        switch (index) {
+            case 0:
+                return "Name";
+            case 1:
+                return "Color";
+            case 2:
+                return "Comment";
+            default:
+                throw new IndexOutOfBoundsException(index + "/3");
+        }
+    }
+
+    public JComponent getAttributeEditor(int index) {
+        switch (index) {
+            case 0:
+                return _nameField;
+            case 1:
+                return _backColor;
+            case 2:
+                return _commentField;
+            default:
+                throw new IndexOutOfBoundsException(index + "/3");
+        }
     }
 }
