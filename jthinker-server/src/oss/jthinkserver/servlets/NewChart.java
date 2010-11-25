@@ -31,22 +31,17 @@
 
 package oss.jthinkserver.servlets;
 
+import com.google.appengine.api.users.User;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.Enumeration;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse; 
-import com.google.appengine.api.mail.MailService;
-import com.google.appengine.api.mail.MailServiceFactory;
 
-import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import oss.jthinkserver.storage.Storage;

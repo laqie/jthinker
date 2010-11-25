@@ -44,7 +44,7 @@ import oss.jthinkserver.storage.Storage;
  * version of jThinker.
  */
 public class VersionInfo extends HttpServlet {
-    protected String VERSION_INFO = "0.4.0";
+    protected String VERSION_INFO = "0.4.1";
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) 
     throws IOException {
