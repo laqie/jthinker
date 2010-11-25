@@ -40,7 +40,7 @@ normally packaged with operating system)
 
 *Purpose:* Running jThinker on system other than Windows or Mac OS X.
 
-*Download link*: [http://jthinker.googlecode.com/files/jthinker-xplatform-0.4.0.zip jthinker-xplatform-0.4.0.zip]
+*Download link*: [http://jthinker.googlecode.com/files/jthinker-xplatform-0.4.1.zip jthinker-xplatform-0.4.1.zip]
 
 <hr>
 
