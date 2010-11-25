@@ -10,7 +10,7 @@
              category="tools"
              scaling="false" /> 
 <Content type="html"><![CDATA[
-<iframe src="http://rcm.amazon.com/e/cm?t=jthinkersoftw-20&o=1&p=14&l=st1&mode=books&search=constraints%2C%20productivity%2C%20business&fc1=000000&lt1=&lc1=3366FF&bg1=FFFFFF&f=ifr" marginwidth="0" marginheight="0" width="160" height="600" border="0" frameborder="0" style="border:none;" scrolling="no"></iframe>
+<SCRIPT charset="utf-8" type="text/javascript" src="http://ws.amazon.com/widgets/q?ServiceVersion=20070822&MarketPlace=US&ID=V20070822/US/jthinkersoftw-20/8001/490e101d-af40-4c93-8cbf-c9e10660b888"> </SCRIPT> <NOSCRIPT><A HREF="http://ws.amazon.com/widgets/q?ServiceVersion=20070822&MarketPlace=US&ID=V20070822%2FUS%2Fjthinkersoftw-20%2F8001%2F490e101d-af40-4c93-8cbf-c9e10660b888&Operation=NoScript">Amazon.com Widgets</A></NOSCRIPT>
 ]]>
 </Content>
 </Module>
