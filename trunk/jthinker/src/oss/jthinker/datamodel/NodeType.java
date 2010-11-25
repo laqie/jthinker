@@ -41,7 +41,7 @@ public enum NodeType {
     STATEMENT(BorderType.ROUND_RECT, true),
     TASK(BorderType.SHARP_RECT, true),
     OBSTACLE(BorderType.HEXAGON, true),
-    ELLIPSE(BorderType.ELLIPSE, true);
+    ELLIPSE(BorderType.ELLIPSE, false);
 
     private final BorderType _borderType;
     private final boolean _editable;
@@ -70,6 +70,6 @@ public enum NodeType {
     }
 
     public static JNodeData closeEllipseNodeData(Point p) {
-        return ELLIPSE.cloneNodeData("        ", p);
+        return ELLIPSE.cloneNodeData("", p);
     }
 }

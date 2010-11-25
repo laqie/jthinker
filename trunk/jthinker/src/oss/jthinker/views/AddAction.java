@@ -97,6 +97,8 @@ public class AddAction extends AbstractAction {
         if (node.getNodeSpec().isEditable()) {
             linkPane.getLinkController().startEditing(node);
         }
+        //linkPane.validate();
+        linkPane.repaint();
     }
     
     /**

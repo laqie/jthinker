@@ -251,6 +251,20 @@ public class JNodeData extends JSlideData implements XMLStored {
             }
         }
 
+        if (!edit) {
+            content = "";
+        }
+
         return new JNodeData(type, edit, content, center, color, comment, nodeGroup);
-    }    
+    }
+
+    public NodeType getNodeType() {
+        BorderType borderType = getBorderType();
+        for (NodeType nt : NodeType.values()) {
+            if (nt.getBorderType().equals(borderType)) {
+                return nt;
+            }
+        }
+        return null;
+    }
 }

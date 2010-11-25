@@ -89,7 +89,7 @@ public abstract class BorderBuilder {
     private static BorderBuilder ellipticBuilder = new BorderBuilder() {
 
         public LineBorder createBorder(Color color) {
-            return new CustomBorder(color, 10, 10) {
+            return new CustomBorder(color, 30, 0) {
 
                 @Override
                 protected void cleanArea(Graphics g, Rectangle area) {

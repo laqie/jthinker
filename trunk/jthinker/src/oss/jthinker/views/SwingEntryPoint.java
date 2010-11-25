@@ -117,7 +117,8 @@ public class SwingEntryPoint extends JFrame implements EntryPoint {
 
     /** {@inheritDoc} */
     public boolean globalPersistenceWrite() {
-        return _remoteServer != null;
+        //return _remoteServer != null;
+        return false;
     }
 
     /** {@inheritDoc} */

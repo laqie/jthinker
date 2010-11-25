@@ -244,6 +244,6 @@ public class JNode extends JSlide {
 
     @Override
     public JPopupMenu getComponentPopupMenu() {
-        return WidgetFactory.producePopupMenu(host, this, true);
+        return WidgetFactory.producePopupMenu(host, this, spec.getNodeType().isEditable());
     }
 }
