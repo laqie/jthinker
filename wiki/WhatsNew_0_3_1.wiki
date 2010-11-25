@@ -1,4 +1,4 @@
-#labels General,ReleaseNotes,Featured
+#labels General,ReleaseNotes
 jThinker 0.3.1, Nov 14 2008
 
 Changes from 0.3.0 to 0.3.1

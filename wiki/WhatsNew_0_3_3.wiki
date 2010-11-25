@@ -1,4 +1,3 @@
-#labels Featured
 *jThinker 0.3.3, Feb 04 2009*
 
 The major improvements since WhatsNew_0_3_1 are:
