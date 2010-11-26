@@ -181,7 +181,6 @@ public class ApplicationMain implements CommunicationCallback {
             String system = UIManager.getSystemLookAndFeelClassName();
             if ("Mac OS X".equals(System.getProperty("os.name"))) {
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
-                System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Test");
 	    }
             UIManager.setLookAndFeel(system);
         } catch (Throwable t) {

@@ -51,7 +51,6 @@ public class SwingEntryPoint extends JFrame implements EntryPoint {
     static {
         if ("Mac OS X".equals(System.getProperty("os.name"))) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Test");
         }
     }
 
