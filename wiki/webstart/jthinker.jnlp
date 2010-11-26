@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <jnlp
  spec="6.0+"
- codebase="http://jthinker.googlecode.com/svn/wiki"
+ codebase="http://jthinker.googlecode.com/svn/wiki/webstart"
  href="jthinker.jnlp">
  <information>
   <title>jThinker</title>
