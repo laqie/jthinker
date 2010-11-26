@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp
+ spec="6.0+"
+ codebase="http://jthinker.googlecode.com/svn/wiki"
+ href="jthinker.jnlp">
+ <information>
+  <title>jThinker</title>
+  <vendor>jThinker project</vendor>
+  <homepage href="http://code.google.com/p/jthinker" />
+  <offline-allowed />
+ </information>
+ <resources>
+  <j2se version="1.6+" />
+  <jar href="jthinker.jar" />
+ </resources>
+ <application-desc main-class="oss.jthinker.views.SwingEntryPoint" />
+</jnlp>
+
