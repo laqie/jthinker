@@ -31,11 +31,13 @@
 
 package oss.jthinker.views;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JViewport;
@@ -45,18 +47,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import oss.jthinker.datamodel.DiagramData;
 import oss.jthinker.datamodel.DiagramType;
-import oss.jthinker.util.Trigger;
 import oss.jthinker.util.TriggerEvent;
-import oss.jthinker.util.TriggerListener;
+import static oss.jthinker.swingutils.ThinkerFileChooser.*;
 
 /**
  * Tabbed pane that contains several {@link DiagramPane}s.
  * 
  * @author iappel
  */
-public abstract class DiagramDeck extends JTabbedPane implements TriggerListener<String> {
-    private final HashMap<Trigger<String>, DiagramPane> triggerPaneMap = 
-            new HashMap<Trigger<String>, DiagramPane>();
+public abstract class DiagramDeck extends JTabbedPane {
+    private static final Logger logger = Logger.getAnonymousLogger();
 
     /**
      * Creates a new instance of DiagramDeck.
@@ -95,21 +95,10 @@ public abstract class DiagramDeck extends JTabbedPane implements TriggerListener
     
     private void doAddPane(DiagramPane pane, String title) {
         JScrollPane scrollPane = new JScrollPane(pane);
-        this.addTab(title, scrollPane);
-        Trigger<String> trigger = pane.makeTitleTrigger();
-        trigger.addStateConsumer(this);
-        triggerPaneMap.put(trigger, pane);
-    }
-    
-    /**
-     * Updates title of the linked pane.
-     * 
-     * @param event tab change event
-     */
-    public void stateChanged(TriggerEvent<? extends String> event) {
-        int index = getDiagramIndex(triggerPaneMap.get(event.getSource()));
-        setTitleAt(index, event.getState());
-        contentChanged(getCurrentDiagram());
+        addTab(title, scrollPane);
+        setSelectedComponent(scrollPane);
+        int selectedIndex = getSelectedIndex();
+        setTabComponentAt(selectedIndex, new TabHeader(pane, this));
     }
     
     /**
@@ -129,7 +118,8 @@ public abstract class DiagramDeck extends JTabbedPane implements TriggerListener
     protected List<DiagramPane> getAllDiagrams() {
         ArrayList<DiagramPane> result = new ArrayList<DiagramPane>();
         for (int i=0;i<getTabCount();i++) {
-            result.add(getDiagram(i));
+            DiagramPane pane = getDiagram(i);
+            if (pane != null) result.add(pane);
         }
         return result;
     }
@@ -144,10 +134,15 @@ public abstract class DiagramDeck extends JTabbedPane implements TriggerListener
         if (i == -1) {
             return null;
         }
-        JScrollPane scrollPane = (JScrollPane)this.getComponentAt(i);
+        Component component = getComponentAt(i);
+        if (!(component instanceof JScrollPane)) return null;
+        JScrollPane scrollPane = (JScrollPane)component;
         JViewport viewport = (JViewport)scrollPane.getComponent(0);
-        DiagramPane result = (DiagramPane)viewport.getComponent(0);
-        return result;
+        component = viewport.getComponent(0);
+        if (component instanceof DiagramPane) {
+            return (DiagramPane)component;
+        }
+        return null;
     }
 
     /**
@@ -183,10 +178,30 @@ public abstract class DiagramDeck extends JTabbedPane implements TriggerListener
         return true;
     }
 
+
+    /**
+     * Loads a diagram from file.
+     */
+    public void loadNew() {
+        File file = chooseLoad(JTHINKER_FILES);
+        if (file == null) {
+            return;
+        }
+        try {
+            addLinkPane(file);
+        } catch (Throwable t) {
+            logger.log(Level.SEVERE, "Unable to open", t);
+        }
+    }
+
     /**
      * Method that is called each time the selection is changed.
      * 
      * @param pane newly selected diagram pane.
      */
     protected abstract void contentChanged(DiagramPane pane);
+
+    public void addDefaultPane() {
+        add("jThinker", new DefaultPane(this));
+    }
 }

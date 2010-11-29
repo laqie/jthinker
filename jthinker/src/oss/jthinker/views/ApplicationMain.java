@@ -98,7 +98,7 @@ public class ApplicationMain implements CommunicationCallback {
         initApplicationMenuBar();
 
         _impl.add(_masterView, BorderLayout.CENTER);
-        _masterView.contentChanged(null);
+        _masterView.addDefaultPane();
     }
 
     /**

@@ -2,20 +2,20 @@
  * Copyright (c) 2008, Ivan Appel <ivan.appel@gmail.com>
  * 
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * - Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. 
+ * this list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution. 
- * 
+ * and/or other materials provided with the distribution.
+ *
  * Neither the name of Ivan Appel nor the names of any other jThinker
  * contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission. 
- * 
+ * software without specific prior written permission.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -49,7 +49,7 @@ import oss.jthinker.swingutils.MouseLocator;
 /**
  * Helper container to assist {@link DiagramPane}. Contains tab
  * title-related triggers and {@link MouseLocator} instrumentation.
- * 
+ *
  * @author iappel
  */
 public abstract class DocumentPane extends JBackgroundPane
@@ -58,10 +58,10 @@ public abstract class DocumentPane extends JBackgroundPane
     private final MutableTrigger<Boolean> modifiedTrigger;
     private final Trigger<String> tabTitleTrigger;
     private HTMLProducer _imageMaker;
-    
+
     /**
      * Creates a new DocumentPane instance with given string as title.
-     * 
+     *
      * @param title string to use as a title.
      */
     public DocumentPane(String title) {
@@ -69,25 +69,25 @@ public abstract class DocumentPane extends JBackgroundPane
         FilenameTrigger tmp = new FilenameTrigger(filenameTrigger);
         tabTitleTrigger = new AssociatedTrigger<String>(title, tmp);
         modifiedTrigger = new MutableTrigger<Boolean>(false);
-        
+
         MouseLocator.getInstance().register(this);
         MouseLocator.getInstance().addStateConsumer(this);
     }
-    
+
    /**
      * Returns trigger that holds was the pane's diagram modified after
      * the last save or not.
-     * 
+     *
      * @return trigger that holds was the pane's diagram modified after
      * the last save or not.
      */
     public MutableTrigger<Boolean> getModifiedTrigger() {
         return modifiedTrigger;
     }
-    
+
     /**
      * Returns trigger that holds tab title.
-     * 
+     *
      * @return trigger that holds tab title.
      */
     public Trigger<String> getTitleTrigger() {
@@ -104,7 +104,7 @@ public abstract class DocumentPane extends JBackgroundPane
 
     /**
      * Returns trigger that holds tab document filename.
-     * 
+     *
      * @return trigger that holds tab document filename
      */
     public MutableTrigger<File> getFilenameTrigger() {
@@ -113,16 +113,16 @@ public abstract class DocumentPane extends JBackgroundPane
 
    /**
      * Dispatches click that happened somewhere on the pane (either on
-     * the pane itself or any components that propagate events to 
+     * the pane itself or any components that propagate events to
      * parent).
-     * 
+     *
      * @param e event to proceed
      */
     public abstract void propagateLeftClick(MouseEvent e);
 
     public abstract void propagateRightClick(MouseEvent e);
 
-    /** {@inheritDoc} 
+    /** {@inheritDoc}
      * @param c component to add
      */
     @Override
@@ -136,7 +136,18 @@ public abstract class DocumentPane extends JBackgroundPane
         return c;
     }
 
-    /** {@inheritDoc} 
+    @Override
+    public Component add(Component c, int index) {
+        if (c.getParent() == this) {
+            return c;
+        }
+        super.add(c, index);
+        MouseLocator.getInstance().register(c);
+        markModified(false);
+        return c;
+    }
+
+    /** {@inheritDoc}
      * @param c component to remove
      */
     @Override
@@ -146,10 +157,10 @@ public abstract class DocumentPane extends JBackgroundPane
         validate();
         repaint();
     }
-    
+
     /**
      * Checks either document is saved or not.
-     * 
+     *
      * @return true is document is saved and false otherwise.
      */
     public boolean isSaved() {
@@ -159,7 +170,7 @@ public abstract class DocumentPane extends JBackgroundPane
     /**
      * Creates a trigger that holds document's title. This trigger's
      * state is title with "(*)" added when document is not saved.
-     * 
+     *
      * @return trigger that holds document's title
      */
     public Trigger<String> makeTitleTrigger() {
@@ -171,7 +182,7 @@ public abstract class DocumentPane extends JBackgroundPane
 
     /**
      * Returns an image producer associated with this component.
-     * 
+     *
      * @return image producer of this component.
      */
     public HTMLProducer getImageMaker() {
