@@ -30,6 +30,7 @@
  */
 package oss.jthinker.views;
 
+import javax.swing.Action;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -42,7 +43,6 @@ import javax.swing.JMenuItem;
 import oss.jthinker.graphs.OrderingLevel;
 import oss.jthinker.interop.DiagramPublisher;
 import oss.jthinker.interop.InteropUtils;
-import oss.jthinker.datamodel.DiagramType;
 import oss.jthinker.widgets.HTMLProducer;
 import oss.jthinker.widgets.JXPopupMenu;
 import static oss.jthinker.swingutils.ThinkerFileChooser.*;
@@ -53,8 +53,6 @@ import static oss.jthinker.swingutils.ThinkerFileChooser.*;
  * @author iappel
  */
 public class MasterView extends DiagramDeck {
-    private static final Logger logger = Logger.getAnonymousLogger();
-    private final JXPopupMenu popupMenu;
     private final ApplicationMain container;
 
     private JMenuItem openItem;
@@ -67,35 +65,6 @@ public class MasterView extends DiagramDeck {
     private JCheckBoxMenuItem orderingOffItem;
     private JCheckBoxMenuItem orderingOverlapItem;
     private JCheckBoxMenuItem numberingItem;
-    
-    private class NewAction extends AbstractAction {
-        private final DiagramType diagramType;
-        
-        private NewAction(DiagramType type) {
-            super(type.getTitle());
-            diagramType = type;
-        }
-        
-        public void actionPerformed(ActionEvent e) {
-            addLinkPane(diagramType);
-        }
-    }
-    
-    private class CloseAction extends AbstractAction {
-        private CloseAction() {
-            super("Close");
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            Point p = popupMenu.getLastDisplayLocation();
-            int i = indexAtLocation(p.x, p.y);
-            DiagramPane pane = getDiagram(i);
-            if (pane == null || !pane.askedSave()) {
-                return;
-            }
-            removeTabAt(i);
-        }
-    }
 
     private class NumberingOptionAction extends AbstractAction {
         private NumberingOptionAction() {
@@ -149,9 +118,6 @@ public class MasterView extends DiagramDeck {
      * @param mainframe application main frame.
      */
     public MasterView(ApplicationMain appMain) {
-        popupMenu = new JXPopupMenu();
-        popupMenu.add(new CloseAction());
-        setComponentPopupMenu(popupMenu);
         container = appMain;
     }
 
@@ -197,19 +163,14 @@ public class MasterView extends DiagramDeck {
         JMenu fileMenu = new JMenu("File");
 
         JMenu newSubMenu = new JMenu("New");
-        for (DiagramType type : DiagramType.values()) {
-            newSubMenu.add(new NewAction(type));
+        for (Action newDiagramAction : NewDiagramAction.createAll(this)) {
+            newSubMenu.add(newDiagramAction);
         }
         fileMenu.add(newSubMenu);
 
-        AbstractAction action = new AbstractAction("Open") {
-            public void actionPerformed(ActionEvent e) {
-                loadNew();
-            }
-        };
-        openItem = new JMenuItem(action);
+        openItem = new JMenuItem(new LoadDiagramAction(this));
         
-        action = new AbstractAction("Save") {
+        Action action = new AbstractAction("Save") {
             public void actionPerformed(ActionEvent e) {
                 saveCurrent(false);
             }
@@ -310,21 +271,6 @@ public class MasterView extends DiagramDeck {
         diaoptMenu.add(groupingItem);
         
         return diaoptMenu;
-    }
-    
-    /**
-     * Loads a diagram from file.
-     */
-    public void loadNew() {
-        File file = chooseLoad(JTHINKER_FILES);
-        if (file == null) {
-            return;
-        }
-        try {
-            addLinkPane(file);
-        } catch (Throwable t) {
-            logger.log(Level.SEVERE, "Unable to open", t);
-        }
     }
 
     private void updateMenus(boolean flag) {
