@@ -29,43 +29,23 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package oss.jthinker.views;
+package oss.jthinker.swingutils;
 
-import java.awt.BorderLayout;
-import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import oss.jthinker.swingutils.ClickAdapter;
-import oss.jthinker.swingutils.JTriggeredLabel;
+import oss.jthinker.util.Trigger;
+import oss.jthinker.util.TriggerEvent;
+import oss.jthinker.util.TriggerListener;
 
 /**
  *
  * @author iappel
  */
-public class TabHeader extends JPanel {
-    private final DiagramDeck _diagramDeck;
-    private final DiagramPane _diagramPane;
+public class JTriggeredLabel extends JLabel implements TriggerListener<String> {
+    public JTriggeredLabel(Trigger<String> trigger) {
+        super(trigger.getState());
+    }
 
-    public TabHeader(DiagramPane pane, DiagramDeck deck) {
-        super(new BorderLayout());
-        _diagramDeck = deck;
-        _diagramPane = pane;
-        
-        add(new JTriggeredLabel(pane.makeTitleTrigger()), BorderLayout.WEST);
-        JLabel crossLabel = new JLabel("[x]");
-        crossLabel.addMouseListener(new ClickAdapter() {
-            public void mouseRightClicked(MouseEvent me) {
-            }
-
-            public void mouseLeftClicked(MouseEvent me) {
-                if (!_diagramPane.askedSave()) {
-                    return;
-                }
-                int index = _diagramDeck.getDiagramIndex(_diagramPane);
-                _diagramDeck.removeTabAt(index);
-            }
-        });
-        add(crossLabel, BorderLayout.EAST);
-        setOpaque(false);
+    public void stateChanged(TriggerEvent<? extends String> event) {
+        setText(event.getState());
     }
 }
