@@ -45,4 +45,14 @@
     <servlet-name>ext-newchart</servlet-name>
     <url-pattern>/newchart</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>cron-version-archive</servlet-name>
+    <servlet-class>oss.jthinkserver.servlets.ArchiveTask</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>cron-version-archive</servlet-name>
+    <url-pattern>/crontasks/version-archive</url-pattern>
+  </servlet-mapping>
 </web-app>
