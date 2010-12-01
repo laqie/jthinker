@@ -77,6 +77,24 @@ public class LogEntry {
         _entryType = type;
         _entryDateTime = new Date();
         _extraInfo = extra;
-    } 
+    }
+
+    public LogEntry(LogEntryType type, String extra, Date date) {
+        _entryType = type;
+        _entryDateTime = date;
+        _extraInfo = extra;
+    }
+
+    public Date getEntryDateTime() {
+        return _entryDateTime;
+    }
+
+    public int getExtraDataAsInt() {
+        return Integer.parseInt(_extraInfo);
+    }
+
+    public void setExtraData(int value) {
+        _extraInfo = "" + value;
+    }
 } 
 

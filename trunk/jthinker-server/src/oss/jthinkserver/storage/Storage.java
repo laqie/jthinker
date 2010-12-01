@@ -30,6 +30,8 @@
  */
 package oss.jthinkserver.storage;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -133,6 +135,49 @@ public class Storage {
             throw new NullPointerException();
         }
         sess.setPngContent(rawData);
+    }
+
+    public static void archiveVersionCheck() {
+        Query entryQuery = createQuery(LogEntry.class);
+        entryQuery.setFilter("_entryType == entryTypeArg");
+        entryQuery.declareParameters("LogEntryType entryTypeArg");
+        Query summaryQuery = null;
+
+        try {
+            List<LogEntry> entries = (List<LogEntry>)entryQuery.execute(LogEntryType.versionCheck);
+            if (entries.isEmpty()) return;
+            LogEntry entry = entries.get(0);
+
+            Date entryDateTime = entry.getEntryDateTime();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(entryDateTime);
+            cal.set(Calendar.HOUR, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            Date entryDate = cal.getTime();
+
+            summaryQuery = createQuery(LogEntry.class);
+            summaryQuery.setFilter("_entryType == entryTypeArg && _entryDateTime == entryDateArg");
+            summaryQuery.declareParameters("oss.jthinkserver.storage.LogEntryType entryTypeArg, java.util.Date entryDateArg");
+            List<LogEntry> summaries = (List<LogEntry>)summaryQuery.execute(LogEntryType.versionCheckDaily, entryDate);
+            if (summaries.isEmpty()) {
+                LogEntry summary = new LogEntry(LogEntryType.versionCheckDaily, "1", entryDate);
+                getManager().makePersistent(summary);
+            } else {
+                LogEntry summary = summaries.get(0);
+                summary.setExtraData(summary.getExtraDataAsInt() + 1);
+            }
+
+            getManager().deletePersistent(entry);
+        } finally {
+            entryQuery.closeAll();
+
+            if (summaryQuery != null) {
+                summaryQuery.closeAll();
+            }
+        }
     }
 }
 

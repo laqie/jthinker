@@ -38,5 +38,6 @@ public enum LogEntryType {
     /**
      * Access to /internal/version servlet.
      */
-    versionCheck
+    versionCheck,
+    versionCheckDaily
 }
