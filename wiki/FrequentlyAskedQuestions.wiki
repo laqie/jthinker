@@ -28,4 +28,4 @@ First, if you are an experienced Java developer, you can join the development te
 
 Second, if you are an experienced TOC practioner, you can send me some proposals on what improvements are really needed by TOC experts.
 
-Third, if you want to encourage work by donating some money, you can [https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=559176 https://www.paypal.com/en_GB/i/btn/btn_donate_SM.gif] via PayPal. 
+Alternatively, if you want to hire a software engineer and you live in a country warmer than Russia, you may consider me too ;-) My LinkedIn CV is [http://ru.linkedin.com/in/soundwell here].
