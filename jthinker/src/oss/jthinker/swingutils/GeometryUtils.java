@@ -34,6 +34,7 @@ package oss.jthinker.swingutils;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
 /**
@@ -84,6 +85,11 @@ public class GeometryUtils {
         double AD = (AD_BD + AB) / 2;
         double CDs = ACs - (AD * AD);
         return Math.sqrt(CDs);
+    }
+
+    public static double distanceToLineSegment(Point2D p, Point2D endA, Point2D endZ) {
+        Line2D l = new Line2D.Double(endA, endZ);
+        return l.ptSegDist(p);
     }
 
     /**

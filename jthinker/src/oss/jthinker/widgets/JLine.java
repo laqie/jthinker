@@ -230,7 +230,7 @@ public class JLine extends JComponent {
      * @return geometric distance from point to line.
      */    
     public double distanceToPoint(Point a) {
-        return GeometryUtils.distanceToLine(a, _endA, _endZ);
+        return GeometryUtils.distanceToLineSegment(a, _endA, _endZ);
     }
 
     // Draws an arrowhead at endZ
