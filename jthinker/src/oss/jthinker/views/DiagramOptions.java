@@ -54,8 +54,8 @@ public class DiagramOptions {
      */
     public DiagramOptions(DiagramPane diagram, DiagramOptionData spec) {
         numberNodes = spec.numbering;
-        orderLevel = spec.orderingLevel;
         pane = diagram;
+        setOrderingLevel(spec.orderingLevel);
     }
 
     /**
