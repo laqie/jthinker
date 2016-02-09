@@ -35,7 +35,6 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -59,6 +58,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import oss.jthinker.util.Colors;
 
 /**
  * Pack of XML utility functions for saving and restoring diagrams.
@@ -85,24 +85,10 @@ public class XMLUtils {
 
     public static Element toXML(Color c, Document document) {
         Element result = document.createElement("color");
-        
-        String name;
-        if (c.equals(Color.WHITE)) {
-            name = "white";
-        } else if (c.equals(Color.CYAN)) {
-            name = "cyan";
-        } else if (c.equals(Color.YELLOW)) {
-            name = "yellow";
-        } else if (c.equals(Color.PINK)) {
-            name = "pink";
-        } else if (c.equals(Color.GREEN)) {
-            name = "green";
-        } else {
-            name = "white";
-        }
-        
+
+        String name = Colors.toString(c);
         result.setAttribute("name", name);
-        
+
         return result;
     }
 
@@ -112,19 +98,8 @@ public class XMLUtils {
         }
         NamedNodeMap map = n.getAttributes();
         String s = map.getNamedItem("name").getNodeValue();
-        if (s.equals("white")) {
-            return Color.WHITE;
-        } else if (s.equals("green")) {
-            return Color.GREEN;
-        } else if (s.equals("pink")) {
-            return Color.PINK;
-        } else if (s.equals("cyan")) {
-            return Color.CYAN;
-        } else if (s.equals("yellow")) {
-            return Color.YELLOW;
-        } else {
-            return Color.WHITE;
-        }
+
+        return Colors.fromString(s);
     }
 
     public static Node parseXML(String text)

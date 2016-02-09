@@ -34,6 +34,9 @@ import java.awt.Color;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+import oss.jthinker.util.UIColor;
+import oss.jthinker.util.Colors;
+
 /**
  * Combo-box that allows to choose a color.
  * 
@@ -60,11 +63,9 @@ public class JColorComboBox extends JComboBox {
      * Creates a new instance of JColorComboBox.
      */
     public JColorComboBox() {
-        addItem(Color.WHITE, "White");
-        addItem(Color.PINK, "Pink");
-        addItem(Color.YELLOW, "Yellow");
-        addItem(Color.CYAN, "Cyan");
-        addItem(Color.GREEN, "Green");
+        for (UIColor c: Colors.getColors()) {
+            addItem(c.getColor(), c.getTitle());
+        }
     }
 
     private void addItem(Color c, String name) {

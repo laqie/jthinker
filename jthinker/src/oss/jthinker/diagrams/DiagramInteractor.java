@@ -31,13 +31,13 @@
 
 package oss.jthinker.diagrams;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.util.Collection;
 import java.util.Iterator;
 import javax.swing.JOptionPane;
 import oss.jthinker.graphs.GraphEngine;
 import oss.jthinker.datamodel.NodeType;
+import oss.jthinker.util.Colors;
 import oss.jthinker.util.Pair;
 import oss.jthinker.widgets.AbstractDiagramOwner;
 import oss.jthinker.widgets.JEdge;
@@ -78,7 +78,7 @@ public class DiagramInteractor {
         }
         JNodeData spec = NodeType.STATEMENT.cloneNodeData("Type UDE here", p);
         JNode node = _manager.add(spec);
-        node.setColor(Color.PINK);
+        node.setColor(Colors.PINK.getColor());
         _view.editNode(node);
     }
     
