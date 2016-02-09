@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <project name="jThinker" default="invoke">
-  <property name="base.dir" location="/export/home/vanya/oss/jthinker" />
-  <property name="src.dir" location="${base.dir}/trunk/jthinker/src" />
-  <property name="tests.dir" location="${base.dir}/trunk/jthinker/test" />
+  <property name="base.dir" location="." />
+  <property name="src.dir" location="${base.dir}/src" />
+  <property name="tests.dir" location="${base.dir}/test" />
   <property name="classes.dir" location="${base.dir}/classes" />
   <property name="jars.dir" location="${base.dir}/distro" />
   <property name="docs.dir" location="${base.dir}/javadoc" />

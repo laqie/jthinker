@@ -36,6 +36,7 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import oss.jthinker.views.DiagramPane;
 
 /**
  * Translator of mouse pointer movement events to trigger-driven
@@ -97,7 +98,9 @@ public class MouseLocator extends Trigger<Point> implements MouseMotionListener 
     public synchronized void mouseMoved(MouseEvent e) {
         Component comp = e.getComponent();
         Point place = e.getPoint().getLocation();
-        place.translate(comp.getX(), comp.getY());
+        if (!(comp instanceof DiagramPane)) {
+            place.translate(comp.getX(), comp.getY());
+        }
         setState(place);
     }
 }

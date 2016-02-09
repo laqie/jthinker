@@ -34,8 +34,10 @@ package oss.jthinker.views;
 import oss.jthinker.widgets.JAttributeEditorContainer;
 import oss.jthinker.swingutils.ClickAdapter;
 import oss.jthinker.widgets.WidgetFactory;
+
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Component;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.logging.Level;
@@ -200,8 +202,11 @@ public class DiagramPane extends DocumentPane implements DiagramView {
         if (activeEdge != null) {
             menuToShow = linker.getWidgetFactory().producePopupMenu(activeEdge);
         }
-        Point p = e.getComponent().getLocation();
-        p.translate(e.getX(), e.getY());
+        Point p = e.getPoint().getLocation();
+        Component comp = e.getComponent();
+        if (!(comp instanceof DiagramPane)) {
+            p.translate(comp.getX(), comp.getY());
+        }
         menuToShow.show(this, p.x, p.y);
     }
 
