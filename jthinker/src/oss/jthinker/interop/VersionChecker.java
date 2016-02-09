@@ -6,7 +6,7 @@ import java.util.List;
  * Utility class for checking version of jThinker.
  */
 public class VersionChecker {
-    public static final String CURRENT_VERSION = "0.4.1";
+    public static final String CURRENT_VERSION = "0.4.2";
 
     /**
      * Checks the version of application against the last
