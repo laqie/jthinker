@@ -40,6 +40,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import oss.jthinker.widgets.JLabelBundle;
+import oss.jthinker.datamodel.BorderType;
 
 /**
  * A {@link JNode} construction specification.
@@ -80,7 +81,9 @@ public class JNodeData extends JSlideData implements XMLStored {
             Point center, Color color, String comment, String nodeGroup) {
         super(center, borderType, color);
         this.editable = editable;
-        this.content = content == null ? "" : content;
+        String newContent = content == null ? "" : content;
+        newContent = borderType == BorderType.ELLIPSE ? "          " : newContent;
+        this.content = newContent;
         this.comment = comment == null ? "" : comment;
         this.groupName = nodeGroup;
     }
